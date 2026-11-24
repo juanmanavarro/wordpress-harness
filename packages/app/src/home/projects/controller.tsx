@@ -1,11 +1,10 @@
-import { useDirectoryPicker } from "@/workspaces/selection/picker"
+import { useAddProjectDialog } from "@/workspaces/selection/project-form"
 import { useServerActionsController } from "@/servers/registry/controller"
 import { useSettingsCommand } from "@/settings/command"
 import { useLanguage } from "@/runtime/i18n/language"
 import { usePlatform } from "@/runtime/platform/platform"
 import { ServerConnection } from "@/runtime/server/registry"
 import { isServerFailed } from "@/runtime/server/health-machine"
-import { homeProjectDirectories } from "@/shell/layout/helpers"
 import { Persist, persisted } from "@/runtime/persistence/storage"
 import { createResource } from "solid-js"
 import { Schema } from "effect"
@@ -20,7 +19,7 @@ export const HomeServersSchema = Schema.Struct({
 export function createHomeProjectsController(home: HomeController) {
   const platform = usePlatform()
 
-  const pickDirectory = useDirectoryPicker()
+  const addProject = useAddProjectDialog()
 
   const language = useLanguage()
 
@@ -39,11 +38,9 @@ export function createHomeProjectsController(home: HomeController) {
   )
 
   function choose(conn: ServerConnection.Any) {
-    pickDirectory({
+    void addProject({
       server: conn,
-      title: language.t("command.project.open"),
-      multiple: true,
-      onSelect: (result) => home.project.add(conn, homeProjectDirectories(result)),
+      onSaved: (project) => home.project.registered(conn, project.worktree),
     })
   }
 
@@ -81,7 +78,6 @@ export function createHomeProjectsController(home: HomeController) {
         if (actions.authenticate(conn, (next) => home.project.select(next, directory))) return
         home.project.select(conn, directory)
       },
-      add: home.project.add,
       openNewSession: actions.openNewSession,
       canImportSession: actions.canImportSession,
       importingSession: actions.importingSession,

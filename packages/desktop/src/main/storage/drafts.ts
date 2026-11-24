@@ -116,6 +116,37 @@ export function createDraftStore(
   }
 }
 
+/** Removes the documents selected by a project cleanup and only the blobs those documents owned exclusively. */
+export function removeOwnedDrafts(db: Database, owns: (key: string) => boolean) {
+  const keys = db
+    .select({ key: document.key })
+    .from(document)
+    .all()
+    .filter(({ key }) => owns(key))
+
+  if (keys.length === 0) return
+
+  const owned = sql`SELECT value FROM json_each(${JSON.stringify(keys.map(({ key }) => key))})`
+
+  const candidates = db
+    .all<{ id: string }>(
+      sql`
+      SELECT DISTINCT id FROM (${storedWithKeys}) WHERE key IN (${owned}) AND id IS NOT NULL
+    `,
+    )
+    .map(({ id }) => id)
+
+  db.run(sql`DELETE FROM ${document} WHERE ${document.key} IN (${owned})`)
+
+  if (candidates.length > 0) {
+    db.run(sql`
+      DELETE FROM ${blobs}
+      WHERE ${blobs.id} IN (SELECT value FROM json_each(${JSON.stringify(candidates)}))
+        AND ${blobs.id} NOT IN (${stored})
+    `)
+  }
+}
+
 function json(value: string) {
   return value.startsWith("{") || value.startsWith("[")
 }
@@ -165,18 +196,20 @@ function createDraftGc(db: Database, input: { collectDelay?: number; onError?: (
   return { dispatch }
 }
 
-// Every blob id a stored document references.
-const stored = sql`
-  SELECT json_extract(node.value, '$.id')
+// Every blob id a stored document references, and the key of each document that references it.
+const storedWithKeys = sql`
+  SELECT ${document.key} AS key, json_extract(node.value, '$.id') AS id
   FROM ${document}, json_tree(${document.value}) AS node
   WHERE json_valid(${document.value}) AND node.key = 'blob' AND node.type = 'object'
     AND json_type(node.value, '$.id') = 'text'
-  UNION
-  SELECT chunk.value
+  UNION ALL
+  SELECT ${document.key} AS key, chunk.value AS id
   FROM ${document}, json_tree(${document.value}) AS node, json_each(node.value, '$.ids') AS chunk
   WHERE json_valid(${document.value}) AND node.key = 'blob' AND node.type = 'object'
     AND json_type(node.value, '$.ids') = 'array'
 `
+
+const stored = sql`SELECT id FROM (${storedWithKeys})`
 
 // Drops blobs no stored document references and nothing has touched since `before`, and returns the oldest
 // `touched_at` among the unreferenced blobs it kept.

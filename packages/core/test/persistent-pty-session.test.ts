@@ -6,9 +6,11 @@ import { LayerNode } from "@opencode/util/effect/layer-node"
 import { Database } from "@opencode/core/database/database"
 import { Bus } from "@opencode/core/bus"
 import { Instance } from "@opencode/core/instance/service"
+import { KV } from "@opencode/core/kv"
 import { Location } from "@opencode/core/location"
 import { PersistentPty } from "@opencode/core/persistent-pty"
 import { Project } from "@opencode/core/project"
+import { LegacyProjectsReceipt } from "@opencode/core/project/purge-legacy"
 import { AbsolutePath } from "@opencode/core/schema"
 import { Session } from "@opencode/core/session"
 import { SessionExecution } from "@opencode/core/session/execution"
@@ -19,7 +21,7 @@ import { SessionEnvironment } from "@opencode/core/session/environment"
 import { LocationServiceMap } from "@opencode/core/location-services"
 import { Removed, Updated } from "@opencode/schema/persistent-pty"
 import { Pty } from "@opencode/schema/pty"
-import { fakeDaemon } from "./fixture/persistent-pty-daemon"
+import { fakeDaemon, terminal } from "./fixture/persistent-pty-daemon"
 import { it } from "./lib/effect"
 import { globalProjectNode } from "./lib/project"
 import { offlineModels } from "./fixture/models"
@@ -35,6 +37,38 @@ const transport = Layer.succeed(
 )
 
 describe("PersistentPty session cleanup", () => {
+  it.live("removes terminals for sessions in the upgrade receipt with one list per restart", () =>
+    Effect.gen(function* () {
+      const daemon = yield* fakeDaemon()
+      daemon.processes.push(terminal(1, "ses_removed"), terminal(2, "ses_removed2"), terminal(3, "ses_other_removed"))
+
+      const kv = yield* KV.Service
+      yield* kv.set(LegacyProjectsReceipt, {
+        projects: [{ id: "previous-project", directories: ["/previous"] }],
+        sessions: [
+          { id: "ses_removed", directory: "/previous" },
+          { id: "ses_other_removed", directory: "/previous" },
+        ],
+      })
+
+      const upgrade = AppNodeBuilder.build(PersistentPty.configured(daemon.options), [
+        KV.node.replace(Layer.succeed(KV.Service, kv)),
+      ])
+
+      yield* Layer.build(upgrade).pipe(Effect.scoped)
+      expect(daemon.processes.map((process) => process.id)).toEqual([2])
+      expect(daemon.ops.filter((op) => op === "list")).toHaveLength(1)
+
+      yield* Layer.build(upgrade).pipe(Effect.scoped)
+      expect(daemon.processes.map((process) => process.id)).toEqual([2])
+      expect(daemon.ops.filter((op) => op === "list")).toHaveLength(2)
+      expect(daemon.requests.filter((request) => request.op === "terminate")).toEqual([
+        { op: "terminate", id: 1 },
+        { op: "terminate", id: 3 },
+      ])
+    }).pipe(Effect.provide(AppNodeBuilder.build(KV.node))),
+  )
+
   it.live("removes a deleted session's terminals", () =>
     Effect.gen(function* () {
       const daemon = yield* fakeDaemon()

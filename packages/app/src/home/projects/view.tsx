@@ -663,6 +663,11 @@ function HomeProjectRow(
         class="disabled:opacity-60"
         data-selected={props.selected ? "" : undefined}
         aria-current={props.selected ? "page" : undefined}
+        title={
+          props.project.experimental?.wordpress
+            ? `${props.project.experimental.wordpress.url}\n${props.project.worktree}`
+            : props.project.worktree
+        }
         disabled={serverUnreachable()}
         onClick={() => props.onSelectProject(props.server, props.project.worktree)}
       >

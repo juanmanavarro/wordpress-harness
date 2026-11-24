@@ -3,11 +3,12 @@ import type { OpenCodeEvent, SessionMessageInfo } from "@opencode/client/promise
 import { Permission } from "@opencode/schema/permission"
 import { artifactKind, artifactMime } from "@opencode/util/artifact"
 import { Model } from "@opencode/schema/model"
+import type { Project } from "@opencode/schema/project"
 import { Worktree } from "@opencode/schema/worktree"
 import { Effect, Layer, Option, Predicate, Schema } from "effect"
 import { HttpRouter, HttpServer, HttpServerResponse } from "effect/http"
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api"
-import { SERVER } from "./app"
+import { project, SERVER } from "./app"
 import {
   MockApi,
   MockBadRequest,
@@ -78,6 +79,8 @@ export interface MockServerConfig {
   // Runs on GET /api/location for a named directory before it answers, as the server registers the project of a
   // directory it resolves.
   onLocationGet?: (directory: string) => void
+  projectCreateError?: () => string | undefined
+  onConnectWordPress?: (projectID: string, input: Project.ConnectWordPressInput) => string | undefined
   sessions: MockSession[]
   pageMessages: (
     sessionId: string,
@@ -624,6 +627,26 @@ function mockHandlers(
 ) {
   const noContent = Effect.succeed(HttpApiSchema.NoContent.make())
   const configEntries = config.configEntries ?? []
+  const registered = new Map<string, ReturnType<typeof project>>()
+  const wordpressUrls = new Map<string, string>()
+  const wordpressConnections = new Map<string, { username: string }>()
+  const projects = () => {
+    const seed = projectSeed(config)
+
+    return [
+      ...registered.values(),
+      ...(config.projects
+        ? resolve(config.projects)
+        : [{ ...projectFields(config), canonical: seed?.canonical ?? seed?.worktree ?? config.directory }]),
+    ].map((item) => {
+      if (!Predicate.isObject(item) || !Predicate.isString(item.id)) return item
+      const url = wordpressUrls.get(item.id)
+      const meta = item.experimental
+      if (!url || !Predicate.isObject(meta) || !Predicate.isObject(meta.wordpress)) return item
+
+      return { ...item, experimental: { ...meta, wordpress: { ...meta.wordpress, url } } }
+    })
+  }
 
   // Without a persistent PTY config the mock is a server with a working daemon and no terminals, since the desktop
   // lists a session's terminals whenever its side panel renders.
@@ -927,19 +950,51 @@ function mockHandlers(
                   data: { resources: [], templates: [] },
                 }),
           ),
-        projectList: () =>
+        projectList: () => Effect.sync(projects),
+        projectCleanup: () => Effect.succeed({ data: { projects: [], sessions: [] } }),
+        wordpressConnection: ({ params }) => Effect.sync(() => wordpressConnections.get(params.projectID) ?? null),
+        connectWordPress: ({ params, payload }) =>
+          Effect.suspend(() => {
+            const error = config.onConnectWordPress?.(params.projectID, payload)
+            if (error) return Effect.fail(new MockBadRequest({ message: error }))
+            const connection = { username: payload.username }
+            wordpressConnections.set(params.projectID, connection)
+            return Effect.succeed(connection)
+          }),
+        disconnectWordPress: ({ params }) =>
           Effect.sync(() => {
-            if (config.projects) return resolve(config.projects)
-            const seed = projectSeed(config)
+            wordpressConnections.delete(params.projectID)
+            return null
+          }),
+        projectCreate: ({ payload }) =>
+          Effect.suspend(() => {
+            const error = config.projectCreateError?.()
+            if (error) return Effect.fail(new MockBadRequest({ message: error }))
+            const item = project({
+              id: `project-wordpress-${registered.size + 1}`,
+              directory: payload.directory.replaceAll("\\", "/"),
+              name: payload.name,
+              experimental: { wordpress: { directory: payload.directory.replaceAll("\\", "/"), url: payload.url } },
+            })
+            registered.set(item.id, item)
 
-            return [{ ...projectFields(config), canonical: seed?.canonical ?? seed?.worktree ?? config.directory }]
+            return Effect.succeed(item)
           }),
         projectUpdate: (ctx) =>
-          Effect.succeed({
-            ...projectFields(config),
-            ...ctx.payload,
-            id: ctx.params.projectID,
-            canonical: projectSeed(config)?.canonical ?? config.directory,
+          Effect.sync(() => {
+            const experimental = ctx.payload.experimental
+            if (Predicate.isObject(experimental) && Predicate.isString(experimental.wordpressUrl))
+              wordpressUrls.set(ctx.params.projectID, experimental.wordpressUrl)
+            const item = projects().find((item) => Predicate.isObject(item) && item.id === ctx.params.projectID)
+            const { experimental: _, ...patch } = ctx.payload
+
+            return {
+              ...projectFields(config),
+              canonical: projectSeed(config)?.canonical ?? config.directory,
+              ...(Predicate.isObject(item) ? item : {}),
+              ...patch,
+              id: ctx.params.projectID,
+            }
           }),
         configShells: () => Effect.succeed(config.shells ?? []),
         configUpdate: () => noContent,
@@ -976,7 +1031,7 @@ function mockHandlers(
 
             if (requested) config.onLocationGet?.(requested)
 
-            return location(config, requested || config.directory)
+            return location(config, requested || config.directory, [...registered.values()])
           }),
         permissionRequests: () =>
           Effect.suspend(() =>
@@ -1484,8 +1539,8 @@ function mockHandlers(
 }
 
 // The requested workspace (directory) inside its listed project, else inside the configured project.
-function location(config: MockServerConfig, directory = config.directory) {
-  const listed = (config.projects ? resolve(config.projects) : [])
+function location(config: MockServerConfig, directory = config.directory, registered: readonly unknown[] = []) {
+  const listed = [...registered, ...(config.projects ? resolve(config.projects) : [])]
     .flatMap((item) => Option.toArray(decodeProject(item)))
     .find((item) =>
       [item.canonical ?? item.worktree, ...(item.sandboxes ?? [])].some(

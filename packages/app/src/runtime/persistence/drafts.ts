@@ -531,7 +531,7 @@ function split(text: string) {
   return pieces
 }
 
-export function createBrowserDraftStore(): DraftStore {
+export function createBrowserDraftStore() {
   const request = indexedDB.open("opencode-drafts", 1)
   request.addEventListener("upgradeneeded", () => {
     request.result.createObjectStore("documents")
@@ -583,7 +583,7 @@ export function createBrowserDraftStore(): DraftStore {
     })
   }
 
-  return createDraftStore({
+  const store = createDraftStore({
     get: async (key) => ((await get("documents", key)) as string | undefined) ?? null,
     set: async (key, value, strict) => {
       // One readwrite transaction over both stores: IndexedDB serialises overlapping readwrite
@@ -626,6 +626,48 @@ export function createBrowserDraftStore(): DraftStore {
     },
     getBlob: async (id) => ((await get("blobs", id)) as Blob | undefined) ?? null,
   })
+
+  return {
+    ...store,
+    async purgeDocuments(owns: (key: string) => boolean) {
+      const transaction = (await db).transaction(["documents", "blobs"], "readwrite")
+      const documents = transaction.objectStore("documents").openCursor()
+      const blobs = transaction.objectStore("blobs")
+      const candidates = new Set<string>()
+      const retained = new Set<string>()
+      let complete = true
+
+      documents.addEventListener("success", () => {
+        const cursor = documents.result
+
+        if (!cursor) {
+          if (complete) candidates.forEach((id) => !retained.has(id) && blobs.delete(id))
+
+          return
+        }
+
+        const owned = owns(String(cursor.key))
+
+        if (typeof cursor.value === "string") {
+          try {
+            const ids = owned ? candidates : retained
+            referenced(cursor.value).forEach((id) => ids.add(id))
+          } catch {
+            // An unreadable retained document makes shared blob ownership uncertain.
+            if (!owned) complete = false
+          }
+        } else if (!owned) complete = false
+
+        if (owned) cursor.delete()
+        cursor.continue()
+      })
+
+      return new Promise<void>((resolve, reject) => {
+        transaction.addEventListener("complete", () => resolve())
+        transaction.addEventListener("abort", () => reject(transaction.error))
+      })
+    },
+  }
 }
 
 // Every blob id a serialized document (or array of documents) references.

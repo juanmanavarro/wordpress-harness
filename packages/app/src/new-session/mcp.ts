@@ -8,7 +8,12 @@ import { useTabs } from "@/shell/tabs/tabs"
 import { showToast } from "@/shell/notifications/toast"
 import { useWorkspaceLocation } from "@/workspaces/location"
 
-export function createDraftMcpControls(input: { draftID: string; worktree: () => string; preparing: () => boolean }) {
+export function createDraftMcpControls(input: {
+  draftID: string
+  worktree: () => string
+  mainDirectory: () => string
+  preparing: () => boolean
+}) {
   const tabs = useTabs()
   const location = useWorkspaceLocation()
   const server = useServer()
@@ -22,7 +27,9 @@ export function createDraftMcpControls(input: { draftID: string; worktree: () =>
   const directory = createMemo(() => {
     const selected = input.worktree()
 
-    return selected === "main" || selected === "create" ? location().directory : selected
+    if (selected === "main") return input.mainDirectory()
+
+    return selected === "create" ? location().directory : selected
   })
 
   const states = createMemo(() => {

@@ -5,6 +5,7 @@ import { Database } from "./database.js"
 import { storedAbsolutePath } from "./path.js"
 import { SessionMessageTable, SessionTable } from "../session/sql.js"
 import { SessionV1 } from "@opencode/schema/session-v1"
+import { LegacyCleanup } from "@opencode/schema/project"
 import { SessionMessage } from "../session/message.js"
 import { SessionSchema } from "../session/schema.js"
 import { KVTable } from "../kv/sql.js"
@@ -19,6 +20,7 @@ import { Agent } from "@opencode/schema/agent"
 import { Project } from "../project.js"
 import { AbsolutePath } from "../schema.js"
 import { ProjectTable } from "../project/sql.js"
+import { LegacyProjectsReceipt } from "../project/purge-legacy.js"
 
 export type SourceMessage = {
   readonly id: string
@@ -98,6 +100,7 @@ type Options = {
 }
 
 type MigrationState = { readonly phase: "sessions"; readonly cursor?: string } | { readonly phase: "completed" }
+type PurgedLegacy = { readonly projects: ReadonlySet<string>; readonly sessions: ReadonlySet<string> }
 
 type RuntimeState =
   | { readonly status: "idle" }
@@ -222,6 +225,7 @@ const EVENT_DELETE_BATCH_SIZE = 1_000
 const decodeJson = Schema.decodeUnknownOption(Schema.fromJsonString(Schema.Unknown))
 const decodeMessage = Schema.decodeUnknownOption(SessionV1.Info)
 const decodePart = Schema.decodeUnknownOption(SessionV1.Part)
+const decodePurgeReceipt = Schema.decodeUnknownOption(LegacyCleanup)
 let runtimeState: RuntimeState = { status: "idle" }
 
 export function transformSession(input: TransformInput): TransformResult {
@@ -548,6 +552,7 @@ export function run(
       const state = yield* readState(db)
       if (state?.phase === "completed") return { status: "completed" as const }
       if (!(yield* hasLegacySessions(db))) return { status: "completed" as const }
+      const purged = yield* readPurgeReceipt(db)
       const now = Date.now()
       yield* db.run(sql`
           INSERT OR IGNORE INTO project (id, worktree, time_created, time_updated, time_active, sandboxes)
@@ -557,7 +562,8 @@ export function run(
         yield* db
           .transaction((tx) =>
             Effect.gen(function* () {
-              while (true) {
+              // The Harpress purge already removed the deleted event streams. Preserve existing survivors.
+              while (purged === undefined) {
                 yield* tx.run(sql`
                     DELETE FROM event
                     WHERE rowid IN (SELECT rowid FROM event LIMIT ${EVENT_DELETE_BATCH_SIZE})
@@ -583,7 +589,7 @@ export function run(
           : 0
       const denominator = sourceTotal + legacyTotal
       updateProgress({ label: "Migrating sessions", numerator: migrated, denominator })
-      yield* importNextDatabase(db, nextPath(options, global.data), (completed) => {
+      yield* importNextDatabase(db, nextPath(options, global.data), purged, (completed) => {
         updateProgress({ label: "Migrating sessions", numerator: migrated + completed, denominator })
       })
       updateProgress({ label: "Migrating sessions", numerator: migrated + sourceTotal, denominator })
@@ -614,6 +620,9 @@ export function run(
           ORDER BY id DESC LIMIT 1
         `)
         if (!nextID) break
+        const skip =
+          purged !== undefined &&
+          (purged.projects.has(nextID.project_id) || purged.sessions.has(nextID.id) || nextID.imported !== 0)
         const projectID = projects.has(nextID.project_id) ? nextID.project_id : Project.ID.global
         // Legacy ACP sessions can store a cwd relative to an unknown process directory.
         // Use the project worktree instead, and leave the original V1 row intact.
@@ -622,6 +631,7 @@ export function run(
             ? nextID.directory
             : (storedAbsolutePath(projects.get(projectID) ?? path.parse(global.data).root) ?? "")
         const unowned =
+          !skip &&
           projectID === Project.ID.global &&
           nextID.workspace_id === null &&
           !nextID.imported &&
@@ -635,7 +645,8 @@ export function run(
           }
           directories.set(directory, Option.getOrUndefined(resolved))
         }
-        const owner = unowned ? directories.get(directory) : undefined
+        const resolved = unowned ? directories.get(directory) : undefined
+        const owner = resolved && !purged?.projects.has(resolved.project.id) ? resolved : undefined
         yield* db
           .transaction((tx) =>
             Effect.gen(function* () {
@@ -647,6 +658,7 @@ export function run(
                   set: { value: { phase: "sessions", cursor: nextID.id }, time_updated: Date.now() },
                 })
                 .run()
+              if (skip) return
               if (projectID !== nextID.project_id)
                 yield* Effect.logWarning("Reassigned V1 session with missing project", {
                   sessionID: nextID.id,
@@ -826,6 +838,7 @@ function countNextSessions(sourcePath: string | undefined) {
 function importNextDatabase(
   db: Database.Interface["db"],
   sourcePath: string | undefined,
+  purged: PurgedLegacy | undefined,
   onProgress: (completed: number) => void,
 ): Effect.Effect<void, unknown> {
   if (!sourcePath || !existsSync(sourcePath)) return Effect.void
@@ -847,6 +860,10 @@ function importNextDatabase(
       )
       const sessions = selectNextRows<NextSession>(source, "session", NEXT_SESSION_COLUMNS)
       for (const [index, session] of sessions.entries()) {
+        if (purged?.projects.has(session.project_id) || purged?.sessions.has(session.id)) {
+          onProgress(index + 1)
+          continue
+        }
         const project = projects.get(session.project_id)
         const projectID = project ? session.project_id : Project.ID.global
         if (!project) {
@@ -1214,6 +1231,25 @@ function readState(db: Database.Interface["db"]): Effect.Effect<MigrationState |
     .get()
     .pipe(
       Effect.map((row) => parseState(row?.value)),
+      Effect.orDie,
+    )
+}
+
+function readPurgeReceipt(db: Database.Interface["db"]): Effect.Effect<PurgedLegacy | undefined> {
+  return db
+    .select({ value: KVTable.value })
+    .from(KVTable)
+    .where(eq(KVTable.key, LegacyProjectsReceipt))
+    .get()
+    .pipe(
+      Effect.map((row) => {
+        const receipt = Option.getOrUndefined(decodePurgeReceipt(row?.value))
+        if (!receipt) return
+        return {
+          projects: new Set(receipt.projects.map((project) => project.id)),
+          sessions: new Set(receipt.sessions.map((session) => session.id)),
+        }
+      }),
       Effect.orDie,
     )
 }

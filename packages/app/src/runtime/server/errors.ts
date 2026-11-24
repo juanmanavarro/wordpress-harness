@@ -38,6 +38,21 @@ export function formatServerError(cause: unknown, translate?: Translator, fallba
 
   if (
     Predicate.isObjectOrArray(unwrapped) &&
+    Predicate.hasProperty(unwrapped, "kind") &&
+    Predicate.isString(unwrapped.kind) &&
+    unwrapped.kind.startsWith("wordpress-connection:") &&
+    Predicate.hasProperty(unwrapped, "message") &&
+    Predicate.isString(unwrapped.message)
+  ) {
+    return tr(
+      translate,
+      `project.wordpress.error.${unwrapped.kind.slice("wordpress-connection:".length)}`,
+      unwrapped.message,
+    )
+  }
+
+  if (
+    Predicate.isObjectOrArray(unwrapped) &&
     Predicate.hasProperty(unwrapped, "message") &&
     Predicate.isString(unwrapped.message) &&
     unwrapped.message

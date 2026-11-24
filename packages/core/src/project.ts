@@ -2,7 +2,7 @@ export * as Project from "./project.js"
 
 import { Cache, Context, Duration, Effect, Layer, Schedule, Schema, Scope } from "effect"
 import { ChildProcess } from "effect/process"
-import { and, asc, desc, eq, gte, isNotNull, isNull, lt, lte, ne, sql } from "drizzle-orm"
+import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, lte, ne, sql } from "drizzle-orm"
 import path from "path"
 import { AbsolutePath } from "./schema.js"
 import { Bus } from "./bus.js"
@@ -33,9 +33,16 @@ export interface Info extends Schema.Schema.Type<typeof Info> {}
 export const UpdateInput = ProjectSchema.UpdateInput
 export type UpdateInput = ProjectSchema.UpdateInput
 
+export type CreateWordPressInput = ProjectSchema.CreateWordPressInput
+
 export class NotFoundError extends Schema.TaggedError<NotFoundError>()("Project.NotFoundError", {
   projectID: ID,
 }) {}
+
+export class InvalidWordPressProjectError extends Schema.TaggedError<InvalidWordPressProjectError>()(
+  "Project.InvalidWordPressProjectError",
+  { message: Schema.String, field: Schema.Literals(["url", "directory"]) },
+) {}
 
 export interface Resolved {
   readonly previous?: ID
@@ -89,7 +96,8 @@ export interface ActivateOptions {
 
 export interface Interface {
   readonly list: (input?: ListInput) => Effect.Effect<ReadonlyArray<Info>>
-  readonly update: (input: UpdateInput) => Effect.Effect<Info, NotFoundError>
+  readonly update: (input: UpdateInput) => Effect.Effect<Info, NotFoundError | InvalidWordPressProjectError>
+  readonly createWordPress: (input: CreateWordPressInput) => Effect.Effect<Info, InvalidWordPressProjectError>
   /** Records Project activity for recency ordering, at most once per minute per Project. */
   readonly activate: (projectID: ID, options?: ActivateOptions) => Effect.Effect<void>
   /** Resolves the owning Project, persisting it unless `persist` is false. */
@@ -123,7 +131,20 @@ function fromRow(row: typeof ProjectTable.$inferSelect): Info {
       archived: row.time_archived ?? undefined,
     },
     sandboxes: row.sandboxes,
+    experimental:
+      row.wordpress_url && row.wordpress_directory
+        ? { wordpress: { url: row.wordpress_url, directory: row.wordpress_directory } }
+        : undefined,
   }
+}
+
+function validWordPressUrl(value: string) {
+  const url = URL.parse(value)
+  return url?.protocol === "https:" && !!url.hostname && !url.username && !url.password
+}
+
+function invalidWordPressUrl() {
+  return new InvalidWordPressProjectError({ field: "url", message: "Enter a valid HTTPS URL for the WordPress site." })
 }
 
 const layer = Layer.effect(
@@ -138,7 +159,7 @@ const layer = Layer.effect(
     const scope = yield* Scope.Scope
 
     const announcing = new Set<string>()
-    const persist = Effect.fnUntraced(function* (project: Resolved) {
+    const persist = Effect.fnUntraced(function* (project: Resolved, adoptSessions: boolean) {
       const previous = yield* db
         .select({ canonical: ProjectTable.worktree })
         .from(ProjectTable)
@@ -183,6 +204,22 @@ const layer = Layer.effect(
           directory: project.directory,
           strategy: project.vcs.type === "git" ? Worktree.StrategyID.make("git") : undefined,
         })
+      // Explicit site registrations own their sessions. Git discovery must not transfer other sessions into them.
+      if (!adoptSessions) {
+        yield* db
+          .insert(WorktreeTable)
+          .values(
+            directories.map((item) => ({
+              project_id: item.projectID,
+              directory: item.directory,
+              strategy: item.strategy,
+            })),
+          )
+          .onConflictDoNothing()
+          .run()
+          .pipe(Effect.orDie)
+        return project
+      }
       // A missing directory row means this directory's resolution is a new durable
       // fact. The row insert commits atomically with the event, so a crash between
       // checks retries on the next resolve instead of stranding the announcement.
@@ -207,6 +244,7 @@ const layer = Layer.effect(
             .where(
               and(
                 isNull(ProjectTable.vcs),
+                isNull(ProjectTable.wordpress_url),
                 gte(ProjectTable.worktree, directory),
                 lte(ProjectTable.worktree, AbsolutePath.make(directory + "\uffff")),
               ),
@@ -259,11 +297,19 @@ const layer = Layer.effect(
     })
 
     const update = Effect.fn("Project.update")(function* (input: UpdateInput) {
+      const wordpressUrl = input.experimental?.wordpressUrl
+      if (wordpressUrl !== undefined && !validWordPressUrl(wordpressUrl)) return yield* invalidWordPressUrl()
+
       const row = yield* db
         .update(ProjectTable)
         .set({
           worktree: input.canonical,
           name: input.name === undefined ? undefined : input.name || null,
+          wordpress_url: wordpressUrl,
+          wordpress_connection:
+            wordpressUrl === undefined
+              ? undefined
+              : sql`CASE WHEN ${ProjectTable.wordpress_url} = ${wordpressUrl} THEN ${ProjectTable.wordpress_connection} ELSE NULL END`,
           icon_url_override: input.icon?.override === undefined ? undefined : input.icon.override || null,
           icon_color: input.icon?.color === undefined ? undefined : input.icon.color || null,
           commands:
@@ -274,7 +320,12 @@ const layer = Layer.effect(
                 : null,
           time_updated: Date.now(),
         })
-        .where(eq(ProjectTable.id, input.projectID))
+        .where(
+          and(
+            eq(ProjectTable.id, input.projectID),
+            wordpressUrl === undefined ? undefined : isNotNull(ProjectTable.wordpress_directory),
+          ),
+        )
         .returning()
         .get()
         .pipe(Effect.orDie)
@@ -423,9 +474,7 @@ const layer = Layer.effect(
       }
     })
 
-    const resolve = Effect.fn("Project.resolve")(function* (input: AbsolutePath, options?: ResolveOptions) {
-      const save = (project: Resolved) => (options?.persist === false ? Effect.succeed(project) : persist(project))
-      const directory = AbsolutePath.make(yield* fs.resolve(input))
+    const discover = Effect.fnUntraced(function* (directory: AbsolutePath): Effect.fn.Return<Resolved> {
       const native = yield* fs.up({ targets: [".git", ".hg"], start: directory, mode: "first" }).pipe(
         Effect.map((matches) => matches[0]),
         Effect.orElseSucceed(() => undefined),
@@ -439,23 +488,108 @@ const layer = Layer.effect(
               Effect.tap((entry) => (entry.cacheable ? Effect.void : Cache.invalidate(gitCache, key))),
             )
           : yield* gitDiscover(dotGit)
-        if (discovered.resolved) return yield* save(discovered.resolved)
+        if (discovered.resolved) return discovered.resolved
       }
 
       const hg = native && path.basename(native) === ".hg" ? yield* hgDiscover(AbsolutePath.make(native)) : undefined
       if (hg) {
-        return yield* save({
+        return {
           ...hg,
           canonical: hg.directory,
-        })
+        }
       }
 
-      return yield* save({
+      return {
         id: ID.make(Hash.fast(`directory:${directory}`)),
         directory,
         canonical: directory,
         vcs: undefined,
-      })
+      }
+    })
+
+    const resolve = Effect.fn("Project.resolve")(function* (input: AbsolutePath, options?: ResolveOptions) {
+      const directory = AbsolutePath.make(yield* fs.resolve(input))
+      const discovered = yield* discover(directory)
+      const parents = [directory]
+      for (let parent = path.dirname(directory); parent !== parents.at(-1); parent = path.dirname(parent))
+        parents.push(AbsolutePath.make(parent))
+      const registered = yield* db
+        .select({ id: ProjectTable.id, canonical: ProjectTable.worktree })
+        .from(ProjectTable)
+        .where(inArray(ProjectTable.wordpress_directory, parents))
+        .orderBy(desc(sql`length(${ProjectTable.wordpress_directory})`))
+        .get()
+        .pipe(Effect.orDie)
+      const linked =
+        registered || !discovered.vcs || discovered.directory === discovered.canonical
+          ? []
+          : yield* db
+              .select({ id: ProjectTable.id, canonical: ProjectTable.worktree })
+              .from(WorktreeTable)
+              .innerJoin(ProjectTable, eq(ProjectTable.id, WorktreeTable.project_id))
+              .where(
+                and(
+                  eq(WorktreeTable.directory, discovered.directory),
+                  isNotNull(WorktreeTable.strategy),
+                  isNotNull(ProjectTable.wordpress_url),
+                ),
+              )
+              .limit(2)
+              .all()
+              .pipe(Effect.orDie)
+      const owner = registered ?? (linked.length === 1 ? linked[0] : undefined)
+      const project = owner ? { ...discovered, ...owner } : discovered
+      return options?.persist === false ? project : yield* persist(project, owner === undefined)
+    })
+
+    const createWordPress = Effect.fn("Project.createWordPress")(function* (input: CreateWordPressInput) {
+      if (!validWordPressUrl(input.url)) return yield* invalidWordPressUrl()
+      if (!path.isAbsolute(input.directory) || !(yield* fs.isDir(input.directory)))
+        return yield* new InvalidWordPressProjectError({
+          field: "directory",
+          message: "Choose an existing working folder on this server.",
+        })
+
+      const directory = AbsolutePath.make(yield* fs.resolve(input.directory))
+      const resolved = yield* discover(directory)
+      const id = ID.make(Hash.fast(`wordpress-directory:${directory}`))
+      const fields = { name: input.name, wordpress_url: input.url, wordpress_directory: directory }
+      const time = now()
+      const row = yield* db
+        .insert(ProjectTable)
+        .values({
+          id,
+          worktree: resolved.canonical,
+          vcs: resolved.vcs?.type,
+          sandboxes: [],
+          time_active: time,
+          ...fields,
+        })
+        .onConflictDoUpdate({
+          target: ProjectTable.id,
+          set: { ...fields, time_updated: time, time_active: time, time_archived: null },
+          setWhere: isNull(ProjectTable.wordpress_url),
+        })
+        .returning()
+        .get()
+        .pipe(Effect.orDie)
+      if (!row) {
+        const existing = yield* db.select().from(ProjectTable).where(eq(ProjectTable.id, id)).get().pipe(Effect.orDie)
+        if (
+          existing?.name === input.name &&
+          existing.wordpress_url === input.url &&
+          existing.wordpress_directory === directory
+        )
+          return fromRow(existing)
+        return yield* new InvalidWordPressProjectError({
+          field: "directory",
+          message: "This working folder already belongs to a WordPress project.",
+        })
+      }
+
+      const project = fromRow(row)
+      yield* bus.publish(ProjectSchema.Event.Updated, project)
+      return project
     })
 
     const sweep = Effect.fn("Project.sweep")(function* () {
@@ -504,7 +638,7 @@ const layer = Layer.effect(
       )
     })
 
-    return Service.of({ list, update, activate, resolve, sweep })
+    return Service.of({ list, update, createWordPress, activate, resolve, sweep })
   }),
 )
 

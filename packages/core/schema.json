@@ -1,8 +1,8 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "6fdb1fc8-74cd-4f15-8faa-e109d3030da9",
-  "prevIds": ["74cace2e-430e-4672-bf3b-eba14ae0c399"],
+  "id": "ab975e3e-1163-43c3-ab17-01ab71ecf06f",
+  "prevIds": ["c1206f40-99b3-4630-916c-3bb6313f4f0f"],
   "ddl": [
     {
       "name": "account_state",
@@ -1027,6 +1027,36 @@
       "default": null,
       "generated": null,
       "name": "name",
+      "entityType": "columns",
+      "table": "project"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "wordpress_url",
+      "entityType": "columns",
+      "table": "project"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "wordpress_directory",
+      "entityType": "columns",
+      "table": "project"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "wordpress_connection",
       "entityType": "columns",
       "table": "project"
     },

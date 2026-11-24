@@ -237,6 +237,7 @@
         "@effect/sql-sqlite-node": "catalog:",
         "@ff-labs/fff-bun": "0.10.5",
         "@ff-labs/fff-node": "0.10.5",
+        "@harpress/wordpress": "workspace:*",
         "@lydell/node-pty": "catalog:",
         "@modelcontextprotocol/client": "2.4.0",
         "@modelcontextprotocol/core": "2.4.0",
@@ -895,6 +896,20 @@
         "@types/pacote": "11.1.8",
         "@typescript/native": "catalog:",
         "jsqr": "1.4.0",
+      },
+    },
+    "packages/wordpress": {
+      "name": "@harpress/wordpress",
+      "version": "2.4.1",
+      "dependencies": {
+        "@opencode/schema": "workspace:*",
+        "effect": "catalog:",
+      },
+      "devDependencies": {
+        "@tsconfig/bun": "catalog:",
+        "@types/bun": "catalog:",
+        "@typescript/native": "catalog:",
+        "typescript": "catalog:",
       },
     },
     "services/data": {
@@ -1598,6 +1613,8 @@
     "@graphql-typed-document-node/core": ["@graphql-typed-document-node/core@3.2.0", "", { "peerDependencies": { "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0" } }, "sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ=="],
 
     "@happy-dom/global-registrator": ["@happy-dom/global-registrator@20.0.11", "", { "dependencies": { "@types/node": "^20.0.0", "happy-dom": "^20.0.11" } }, "sha512-GqNqiShBT/lzkHTMC/slKBrvN0DsD4Di8ssBk4aDaVgEn+2WMzE6DXxq701ndSXj7/0cJ8mNT71pM7Bnrr6JRw=="],
+
+    "@harpress/wordpress": ["@harpress/wordpress@workspace:packages/wordpress"],
 
     "@hona/strobe": ["@hona/strobe@0.44.1", "", { "optionalDependencies": { "@hona/strobe-darwin-arm64": "0.44.1", "@hona/strobe-darwin-x64": "0.44.1", "@hona/strobe-linux-arm64": "0.44.1", "@hona/strobe-linux-x64": "0.44.1", "@hona/strobe-win32-arm64": "0.44.1", "@hona/strobe-win32-x64": "0.44.1" }, "bin": { "strobe": "bin/strobe.js" } }, "sha512-9HKNumRLqJm9OlAPCSNcB8HykhF5F7I4wcTwRf+CJ78xzDcMUSIekjRWz8MjpsTL5t4GdIckmMtyY7duiwo46A=="],
 

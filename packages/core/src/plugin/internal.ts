@@ -17,6 +17,7 @@ import { Provider } from "../provider.js"
 import { Command } from "../command.js"
 import { Config } from "../config.js"
 import { Credential } from "../credential.js"
+import { Database } from "../database/database.js"
 import { llmClient } from "../effect/app-node-platform.js"
 import { ConfigAgentPlugin } from "../config/plugin/agent.js"
 import { ConfigCommandPlugin } from "../config/plugin/command.js"
@@ -129,6 +130,7 @@ import { OptimizePlugin } from "./optimize.js"
 import { VcsGitPlugin } from "./vcs/git.js"
 import { VerbosityPlugin } from "./verbosity.js"
 import { WarmingPlugin } from "./warming.js"
+import { WordPressPlugin } from "./wordpress.js"
 import { WellKnownPlugin } from "../wellknown/plugin.js"
 
 const services = [
@@ -144,6 +146,7 @@ const services = [
   Command.Service,
   Config.Service,
   Credential.Service,
+  Database.Service,
   Bus.Service,
   Environment.Service,
   FileAccess.Service,
@@ -208,6 +211,7 @@ export const requirements = LayerNode.group([
   Command.node,
   Config.node,
   Credential.node,
+  Database.node,
   Bus.node,
   Environment.node,
   FileAccess.node,
@@ -277,6 +281,7 @@ const pre = [
   CommandPlugin.Plugin,
   GoalPlugin.Plugin,
   SkillPlugin.Plugin,
+  WordPressPlugin,
   VcsHgPlugin.Plugin,
   ModelsDevPlugin,
   ...ProviderPlugins,

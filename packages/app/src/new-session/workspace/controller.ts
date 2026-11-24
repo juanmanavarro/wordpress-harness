@@ -2,7 +2,7 @@ import { createEffect, createMemo, createResource, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useWorkspaceLocation } from "@/workspaces/location"
 import { useServerSDK } from "@/runtime/server/client"
-import { useData } from "@/runtime/server/current"
+import { useData, useServer } from "@/runtime/server/current"
 import { useSettings } from "@/settings/model"
 import { useTabs } from "@/shell/tabs/tabs"
 import { ServerConnection } from "@/runtime/server/registry"
@@ -59,6 +59,7 @@ export function createNewSessionWorkspaceController(input: {
 }) {
   const sdk = useWorkspaceLocation()
   const serverSDK = useServerSDK()
+  const server = useServer()
   const data = useData()
   const settings = useSettings()
   const tabs = useTabs()
@@ -170,13 +171,23 @@ export function createNewSessionWorkspaceController(input: {
     }),
   )
 
-  // A draft opened from a worktree session keeps that worktree as its directory; Local still runs in the main checkout.
+  // Branch searches and new worktrees use the repository's own checkout root.
   const projectRoot = createMemo(
     () =>
       data.location.info({ directory: sdk().directory })?.project.canonical ??
       currentProject()?.worktree ??
       sdk().directory,
   )
+
+  // A site's working folder can be a subdirectory of the checkout or on a linked worktree.
+  const projectDirectory = createMemo(
+    () =>
+      currentProject()?.experimental?.wordpress?.directory ??
+      server.ctx.projects.forDirectory(sdk().directory)?.experimental?.wordpress?.directory ??
+      projectRoot(),
+  )
+
+  const selectedRoot = () => (value() === "main" ? projectDirectory() : projectRoot())
 
   createEffect(() => {
     void Promise.all([
@@ -186,8 +197,8 @@ export function createNewSessionWorkspaceController(input: {
     ]).catch(() => undefined)
   })
   createEffect(() => {
-    if ((value() !== "main" && value() !== "create") || sameDirectory(projectRoot(), sdk().directory)) return
-    void data.location.vcs.sync({ directory: projectRoot() }).catch(() => undefined)
+    if ((value() !== "main" && value() !== "create") || sameDirectory(selectedRoot(), sdk().directory)) return
+    void data.location.vcs.sync({ directory: selectedRoot() }).catch(() => undefined)
   })
   // Only the selected worktree feeds the branch label. Syncing every worktree in the inventory boots
   // each one on the server, which then emits `agent.updated` and makes the client run the full
@@ -205,7 +216,7 @@ export function createNewSessionWorkspaceController(input: {
   const branch = createMemo(() =>
     resolveNewSessionBranch({
       worktree: value(),
-      root: projectRoot(),
+      root: selectedRoot(),
       createBranch: input.selectedBranch(),
       worktreeBranch: (worktree) => data.location.vcs.info({ directory: worktree })?.branch.current,
     }),
@@ -213,7 +224,7 @@ export function createNewSessionWorkspaceController(input: {
 
   // A missing checkout is loading; a loaded checkout may have a detached HEAD.
   const checkout = createMemo(() => {
-    const info = data.location.vcs.info({ directory: checkoutDirectory(value(), projectRoot()) })
+    const info = data.location.vcs.info({ directory: checkoutDirectory(value(), selectedRoot()) })
 
     return info ? { branch: info.branch.current } : undefined
   })
@@ -272,6 +283,7 @@ export function createNewSessionWorkspaceController(input: {
     },
     project: {
       root: projectRoot,
+      directory: projectDirectory,
       workspaces: worktreeDirectories,
       managed: managedWorktrees,
       git: visible,

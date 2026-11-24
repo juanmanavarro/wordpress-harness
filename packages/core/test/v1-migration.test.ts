@@ -8,6 +8,7 @@ import { SessionMessage } from "@opencode/core/session/message"
 import { SessionSchema } from "@opencode/core/session/schema"
 import { SessionTable } from "@opencode/core/session/sql"
 import { Project } from "@opencode/core/project"
+import { LegacyProjectsReceipt } from "@opencode/core/project/purge-legacy"
 import { Agent } from "@opencode/schema/agent"
 import { ProjectTable } from "@opencode/core/project/sql"
 import { AbsolutePath } from "@opencode/core/schema"
@@ -913,6 +914,61 @@ describe("V1Migration database workflow", () => {
     )
   })
 
+  test("imports surviving V1 sessions after a Harpress legacy project purge", async () => {
+    await using tmp = await tmpdir()
+    const standalone = path.join(tmp.path, "standalone")
+    await fs.mkdir(standalone)
+    await database(
+      Effect.gen(function* () {
+        const { db } = yield* Database.Service
+        const projects = yield* Project.Service
+        const previousOwner = yield* projects.resolve(AbsolutePath.make(standalone), { persist: false })
+        yield* db.run(sql`
+          INSERT INTO kv (key, value, time_created, time_updated)
+          VALUES (${LegacyProjectsReceipt}, ${JSON.stringify({
+            projects: [
+              { id: "legacy", directories: [] },
+              { id: previousOwner.id, directories: [standalone] },
+            ],
+            sessions: [{ id: "ses_purged", directory: "" }],
+          })}, 0, 0)
+        `)
+        yield* db.run(sql`
+          INSERT INTO project (id, worktree, wordpress_url, wordpress_directory, time_created, time_updated, sandboxes)
+          VALUES ('retained', '/current', 'https://example.com', '/current', 0, 0, '[]')
+        `)
+        yield* db.run(sql`
+          INSERT INTO session (id, project_id, directory, slug, title, version, time_created, time_updated)
+          VALUES ('ses_old', 'legacy', '/legacy', 'old', 'Legacy', '1', 0, 0),
+            ('ses_purged', 'global', '', 'purged', 'Purged by ID', '1', 0, 0),
+            ('ses_unowned', 'global', ${standalone}, 'standalone', 'Standalone', '1', 0, 0),
+            ('ses_current', 'retained', '/current', 'current', 'Old source copy', '1', 0, 0),
+            ('ses_retained', 'retained', '/current', 'retained', 'Retained V1', '1', 0, 0)
+        `)
+        yield* db.run(sql`
+          INSERT INTO session_v2 (id, project_id, directory, slug, title, version, time_created, time_updated)
+          VALUES ('ses_current', 'retained', '/current', 'current', 'Current', '2', 0, 0)
+        `)
+        yield* db.run("INSERT INTO event_sequence (aggregate_id, seq) VALUES ('ses_current', 0)")
+        yield* db.run(sql`
+          INSERT INTO event (id, aggregate_id, seq, type, data)
+          VALUES ('event_current', 'ses_current', 0, 'session.renamed.1', '{}')
+        `)
+        expect(yield* V1Migration.status()).toEqual({ status: "required" })
+        expect(yield* V1Migration.run()).toEqual({ status: "completed" })
+        expect(yield* V1Migration.status()).toEqual({ status: "completed" })
+        expect(yield* db.all("SELECT id FROM project ORDER BY id")).toEqual([{ id: "global" }, { id: "retained" }])
+        expect(yield* db.all("SELECT id, project_id FROM session_v2 ORDER BY id")).toEqual([
+          { id: "ses_current", project_id: "retained" },
+          { id: "ses_retained", project_id: "retained" },
+          { id: "ses_unowned", project_id: "global" },
+        ])
+        expect(yield* db.all("SELECT id FROM event")).toEqual([{ id: "event_current" }])
+        expect(yield* db.get("SELECT seq FROM event_sequence WHERE aggregate_id = 'ses_current'")).toEqual({ seq: 0 })
+      }),
+    )
+  })
+
   test("yields while clearing stale events in batches", async () => {
     await database(
       Effect.gen(function* () {
@@ -942,7 +998,7 @@ describe("V1Migration database workflow", () => {
     )
   })
 
-  test("imports previous V2 sessions and messages containing apostrophes", async () => {
+  test("imports previous V2 sessions and messages outside the Harpress purge receipt", async () => {
     await using tmp = await tmpdir()
     const filename = path.join(tmp.path, "opencode-next.db")
     const sqlite = await import("bun:sqlite")
@@ -969,6 +1025,8 @@ describe("V1Migration database workflow", () => {
       );
       INSERT INTO project VALUES (
         'next-project', 'C:/Users/sewer', 'git', 'Source project', NULL, NULL, NULL, 1, 2, NULL, '[]', NULL
+      ), (
+        'legacy', '/legacy', NULL, 'Purged project', NULL, NULL, NULL, 1, 2, NULL, '[]', NULL
       );
       INSERT INTO session (
         id, project_id, slug, directory, title, version, agent, model, time_created, time_updated
@@ -976,7 +1034,9 @@ describe("V1Migration database workflow", () => {
         ('ses_next', 'next-project', 'next', 'C:/Users/sewer', 'Imported', '2', 'build',
           '{"id":"model","providerID":"provider"}', 10, 20),
         ('ses_existing', 'next-project', 'source-existing', '/tmp/next', 'Source existing', '2', NULL, NULL, 11, 21),
-        ('ses_orphan', 'missing-project', 'orphan', '/tmp/orphan', 'Orphan', '2', NULL, NULL, 12, 22);
+        ('ses_orphan', 'missing-project', 'orphan', '/tmp/orphan', 'Orphan', '2', NULL, NULL, 12, 22),
+        ('ses_removed', 'next-project', 'deleted', '/tmp/deleted', 'Purged by ID', '2', NULL, NULL, 13, 23),
+        ('ses_owned', 'legacy', 'owned', '/legacy', 'Purged by project', '2', NULL, NULL, 14, 24);
       INSERT INTO session_message VALUES
         ('msg_next', 'ses_next', 'user', 4, 12, 13, '{"text":"from next''s history","time":{"created":12}}'),
         ('msg_source_existing', 'ses_existing', 'user', 2, 12, 13, '{"text":"source","time":{"created":12}}'),
@@ -987,6 +1047,12 @@ describe("V1Migration database workflow", () => {
     await database(
       Effect.gen(function* () {
         const { db } = yield* Database.Service
+        yield* db.run(sql`
+          INSERT INTO kv (key, value, time_created, time_updated)
+          VALUES (${LegacyProjectsReceipt},
+            '{"projects":[{"id":"legacy","directories":[]}],"sessions":[{"id":"ses_removed","directory":"/tmp/deleted"}]}',
+            0, 0)
+        `)
         yield* db.run(sql`
           INSERT INTO project (id, worktree, name, time_created, time_updated, sandboxes)
           VALUES ('next-project', '/tmp/current', 'Current project', 1, 2, '[]')
@@ -1007,6 +1073,8 @@ describe("V1Migration database workflow", () => {
         expect(yield* V1Migration.status()).toEqual({
           status: "completed",
         })
+        expect(yield* db.all("SELECT id FROM session_v2 WHERE id IN ('ses_owned','ses_removed')")).toEqual([])
+        expect(yield* db.all("SELECT id FROM project WHERE id = 'legacy'")).toEqual([])
         expect(yield* db.get(sql`SELECT title, agent, model FROM session_v2 WHERE id = 'ses_next'`)).toEqual({
           title: "Imported",
           agent: "build",

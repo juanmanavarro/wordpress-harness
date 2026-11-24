@@ -14,6 +14,13 @@ export const ProjectTable = sqliteTable("project", {
   worktree: absoluteColumn().notNull(),
   vcs: text().$type<ProjectSchema.Vcs["type"]>(),
   name: text(),
+  wordpress_url: text(),
+  wordpress_directory: absoluteColumn(),
+  wordpress_connection: text({ mode: "json" }).$type<{
+    username: string
+    applicationPassword: string
+    restUrl: string
+  }>(),
   icon_url: text(),
   icon_url_override: text(),
   icon_color: text(),

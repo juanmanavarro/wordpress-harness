@@ -1,4 +1,3 @@
-import { useLanguage } from "@/runtime/i18n/language"
 import { ServerConnection, useServers } from "@/runtime/server/registry"
 import { useGlobal } from "@/runtime/server/runtime"
 import type { Project } from "@/runtime/server/types"
@@ -8,7 +7,7 @@ import { useLayout } from "@/shell/state/layout"
 import { tabKey, useTabs } from "@/shell/tabs/tabs"
 import { tabProjectDirectory } from "@/shell/tabs/project-sessions"
 import { pathKey } from "@/workspaces/path-key"
-import { useDirectoryPicker } from "@/workspaces/selection/picker"
+import { useAddProjectDialog } from "@/workspaces/selection/project-form"
 import { createProjectActions } from "./actions"
 
 type StartTarget =
@@ -25,11 +24,9 @@ export function useProjectStart() {
 
   const settings = useSettingsSurface()
 
-  const language = useLanguage()
-
   const tabs = useTabs()
 
-  const picker = useDirectoryPicker()
+  const addProject = useAddProjectDialog()
 
   const actions = createProjectActions()
 
@@ -97,15 +94,7 @@ export function useProjectStart() {
       return true
     }
 
-    picker({
-      server: conn,
-      title: language.t("session.new.project.add"),
-      onSelect(result) {
-        const directory = Array.isArray(result) ? result[0] : result
-
-        if (directory) void global.serverCtx(server)?.projects.add(directory)
-      },
-    })
+    void addProject({ server: conn })
 
     return false
   }

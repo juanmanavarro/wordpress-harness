@@ -247,6 +247,15 @@ import type {
   ExperimentalPersistentPtyRemoveOutput,
   ExperimentalPersistentPtyConnectTokenInput,
   ExperimentalPersistentPtyConnectTokenOutput,
+  ExperimentalProjectCleanupOutput,
+  ExperimentalProjectCreateInput,
+  ExperimentalProjectCreateOutput,
+  ExperimentalProjectWordpressConnectionInput,
+  ExperimentalProjectWordpressConnectionOutput,
+  ExperimentalProjectConnectWordPressInput,
+  ExperimentalProjectConnectWordPressOutput,
+  ExperimentalProjectDisconnectWordPressInput,
+  ExperimentalProjectDisconnectWordPressOutput,
   ExperimentalAutomationCreateInput,
   ExperimentalAutomationCreateOutput,
   ExperimentalAutomationListInput,
@@ -1296,7 +1305,13 @@ const EndpointProjectUpdate = (raw: RawClient["server.project"]) => (input: Proj
   preserveEffect<ProjectUpdateOutput>()(
     raw["project.update"]({
       params: { projectID: input["projectID"] },
-      payload: { canonical: input["canonical"], name: input["name"], icon: input["icon"], commands: input["commands"] },
+      payload: {
+        canonical: input["canonical"],
+        name: input["name"],
+        icon: input["icon"],
+        commands: input["commands"],
+        experimental: input["experimental"],
+      },
     }).pipe(Effect.mapError(mapClientError)),
   )
 
@@ -1624,6 +1639,47 @@ const EndpointExperimentalPersistentPtyConnectToken =
       ),
     )
 
+const EndpointExperimentalProjectCleanup = (raw: RawClient["server.experimental"]) => () =>
+  preserveEffect<ExperimentalProjectCleanupOutput>()(
+    raw["project.cleanup"]({}).pipe(
+      Effect.mapError(mapClientError),
+      Effect.map((value) => value.data),
+    ),
+  )
+
+const EndpointExperimentalProjectCreate =
+  (raw: RawClient["server.experimental"]) => (input: ExperimentalProjectCreateInput) =>
+    preserveEffect<ExperimentalProjectCreateOutput>()(
+      raw["project.create"]({
+        payload: { name: input["name"], url: input["url"], directory: input["directory"] },
+      }).pipe(Effect.mapError(mapClientError)),
+    )
+
+const EndpointExperimentalProjectWordpressConnection =
+  (raw: RawClient["server.experimental"]) => (input: ExperimentalProjectWordpressConnectionInput) =>
+    preserveEffect<ExperimentalProjectWordpressConnectionOutput>()(
+      raw["project.wordpressConnection"]({ params: { projectID: input["projectID"] } }).pipe(
+        Effect.mapError(mapClientError),
+      ),
+    )
+
+const EndpointExperimentalProjectConnectWordPress =
+  (raw: RawClient["server.experimental"]) => (input: ExperimentalProjectConnectWordPressInput) =>
+    preserveEffect<ExperimentalProjectConnectWordPressOutput>()(
+      raw["project.connectWordPress"]({
+        params: { projectID: input["projectID"] },
+        payload: { url: input["url"], username: input["username"], applicationPassword: input["applicationPassword"] },
+      }).pipe(Effect.mapError(mapClientError)),
+    )
+
+const EndpointExperimentalProjectDisconnectWordPress =
+  (raw: RawClient["server.experimental"]) => (input: ExperimentalProjectDisconnectWordPressInput) =>
+    preserveEffect<ExperimentalProjectDisconnectWordPressOutput>()(
+      raw["project.disconnectWordPress"]({ params: { projectID: input["projectID"] } }).pipe(
+        Effect.mapError(mapClientError),
+      ),
+    )
+
 const EndpointExperimentalAutomationCreate =
   (raw: RawClient["server.experimental"]) => (input: ExperimentalAutomationCreateInput) =>
     preserveEffect<ExperimentalAutomationCreateOutput>()(
@@ -1798,6 +1854,13 @@ const adaptGroupExperimental = (raw: RawClient["server.experimental"]) => ({
     snapshot: EndpointExperimentalPersistentPtySnapshot(raw),
     remove: EndpointExperimentalPersistentPtyRemove(raw),
     connectToken: EndpointExperimentalPersistentPtyConnectToken(raw),
+  },
+  project: {
+    cleanup: EndpointExperimentalProjectCleanup(raw),
+    create: EndpointExperimentalProjectCreate(raw),
+    wordpressConnection: EndpointExperimentalProjectWordpressConnection(raw),
+    connectWordPress: EndpointExperimentalProjectConnectWordPress(raw),
+    disconnectWordPress: EndpointExperimentalProjectDisconnectWordPress(raw),
   },
   automation: {
     create: EndpointExperimentalAutomationCreate(raw),

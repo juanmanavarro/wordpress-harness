@@ -333,6 +333,13 @@ export type SessionStatus =
 
 export type PersistentPtyHandoff = { directory: string; instanceID: string; ticket: string; expiresAt: number }
 
+export type ProjectLegacyCleanup = {
+  projects: Array<{ id: string; directories: Array<string> }>
+  sessions: Array<{ id: string; directory: string }>
+}
+
+export type ProjectWordPressConnection = { username: string }
+
 export type AutomationID = string
 
 export type AutomationTriggerAt = { type: "at"; at: string; tz?: string }
@@ -842,6 +849,7 @@ export type Project = {
   commands?: ProjectCommands
   time: ProjectTime
   sandboxes: Array<string>
+  experimental?: { wordpress?: { url: string; directory: AbsolutePath } }
 }
 
 export type PermissionRequest = {
@@ -1933,6 +1941,7 @@ export type ProjectUpdated = {
     commands?: ProjectCommands
     time: ProjectTime
     sandboxes: Array<string>
+    experimental?: { wordpress?: { url: string; directory: AbsolutePath } }
   }
 }
 
@@ -4406,6 +4415,7 @@ export type ProjectUpdateInput = {
   readonly name?: string | undefined
   readonly icon?: { readonly url?: string; readonly override?: string; readonly color?: string } | undefined
   readonly commands?: { readonly start?: string } | undefined
+  readonly experimental?: { readonly wordpressUrl?: string } | undefined
 }
 
 export type ProjectUpdateOutput = Project
@@ -4740,6 +4750,29 @@ export type ExperimentalMediaGetOutput = globalThis.Uint8Array
 export type ExperimentalBlobGetInput = { readonly id: string }
 
 export type ExperimentalBlobGetOutput = globalThis.Uint8Array
+
+export type ExperimentalProjectCleanupOutput = { data: ProjectLegacyCleanup }["data"]
+
+export type ExperimentalProjectCreateInput = { readonly name: string; readonly url: string; readonly directory: string }
+
+export type ExperimentalProjectCreateOutput = Project
+
+export type ExperimentalProjectWordpressConnectionInput = { readonly projectID: string }
+
+export type ExperimentalProjectWordpressConnectionOutput = ProjectWordPressConnection | null
+
+export type ExperimentalProjectConnectWordPressInput = {
+  readonly projectID: string
+  readonly url: string
+  readonly username: string
+  readonly applicationPassword: string
+}
+
+export type ExperimentalProjectConnectWordPressOutput = ProjectWordPressConnection | null
+
+export type ExperimentalProjectDisconnectWordPressInput = { readonly projectID: string }
+
+export type ExperimentalProjectDisconnectWordPressOutput = ProjectWordPressConnection | null
 
 export type ExperimentalAutomationCreateInput = {
   readonly sessionID?: string | undefined

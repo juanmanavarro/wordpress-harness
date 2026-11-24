@@ -1,3 +1,4 @@
+import { LegacyProjectCleanupInput } from "@opencode/app/project-cleanup"
 import { Schema } from "effect"
 import { Rpc, RpcGroup } from "effect/rpc"
 import { Transferable } from "effect/workers"
@@ -40,6 +41,11 @@ export const DraftsGetBlob = Rpc.make("DraftsGetBlob", {
   success: Schema.NullOr(Transferable.Uint8Array),
 })
 
+export const StorageCleanupLegacyProjects = Rpc.make("StorageCleanupLegacyProjects", {
+  payload: LegacyProjectCleanupInput,
+  success: Schema.Array(Schema.String),
+})
+
 export const StorageRpcs = RpcGroup.make(
   StorageItems,
   StorageUpdate,
@@ -49,4 +55,5 @@ export const StorageRpcs = RpcGroup.make(
   DraftsDelete,
   DraftsPutBlob,
   DraftsGetBlob,
+  StorageCleanupLegacyProjects,
 )

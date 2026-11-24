@@ -21,6 +21,7 @@ import { ProjectOptions } from "./project-options"
 import { SettingsList } from "@/settings/list"
 import { SettingsRow } from "@/settings/row"
 import { createEditProjectModel } from "./project-model"
+import { ProjectWordPressConnection } from "./project-wordpress"
 import "./project.css"
 
 export const SettingsProjectGeneral: Component<{
@@ -32,6 +33,14 @@ export const SettingsProjectGeneral: Component<{
   const model = createEditProjectModel(props)
   const servers = useSettingsServers()
   const registry = useServers()
+  const wordpressProject = createMemo(
+    () => {
+      const wordpress = props.project.experimental?.wordpress
+      if (props.project.id && wordpress) return { id: props.project.id, url: wordpress.url }
+    },
+    undefined,
+    { equals: (prev, next) => prev?.id === next?.id && prev?.url === next?.url },
+  )
 
   return (
     <>
@@ -85,6 +94,38 @@ export const SettingsProjectGeneral: Component<{
               <SaveFailed when={model.view().failed.name} onRetry={() => model.retry("name")} />
             </div>
           </SettingsRow>
+
+          <Show when={props.project.experimental?.wordpress}>
+            <SettingsRow title={language.t("project.productionUrl")} description={undefined}>
+              <div class="project-settings-name">
+                <TextInput
+                  type="url"
+                  value={model.view().productionUrl}
+                  aria-label={language.t("project.productionUrl")}
+                  invalid={model.view().invalidProductionUrl || model.view().failed.productionUrl}
+                  onInput={(event) => model.editProductionUrl(event.currentTarget.value)}
+                  onBlur={model.saveProductionUrl}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") event.currentTarget.blur()
+                  }}
+                />
+                <Show when={model.view().invalidProductionUrl}>
+                  <span class="text-12-regular text-v2-state-fg-danger">
+                    {language.t("project.productionUrl.https")}
+                  </span>
+                </Show>
+                <SaveFailed when={model.view().failed.productionUrl} onRetry={() => model.retry("productionUrl")} />
+              </div>
+            </SettingsRow>
+            <SettingsRow title={language.t("project.workingFolder")} description={undefined}>
+              <code dir="ltr" class="min-w-0 break-all text-13-regular text-v2-text-text-muted">
+                {props.project.worktree}
+              </code>
+            </SettingsRow>
+            <Show when={wordpressProject()} keyed>
+              {(wordpress) => <ProjectWordPressConnection projectID={wordpress.id} url={wordpress.url} />}
+            </Show>
+          </Show>
 
           <SettingsRow
             title={language.t("dialog.project.edit.icon")}

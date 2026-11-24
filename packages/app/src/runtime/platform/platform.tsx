@@ -3,6 +3,7 @@ import type { AsyncStorage, SyncStorage } from "@solid-primitives/storage"
 import type { Accessor } from "solid-js"
 import type { DesktopMenuAction, DesktopZoomLevel } from "@/shell/commands/desktop-menu"
 import type { DraftStore } from "@/runtime/persistence/drafts"
+import type { LegacyProjectCleanup } from "@/runtime/persistence/project-cleanup"
 import type { Bridge } from "@opencode/plugin/gui/host"
 
 type PickerPaths = string | string[] | null
@@ -109,6 +110,8 @@ type PlatformBase = {
 
   /** Prompt drafts, history, and their blobs. */
   draftStore?: DraftStore
+
+  cleanupLegacyProjectStorage?(input: LegacyProjectCleanup): Promise<readonly string[]>
 
   /** Fetch override */
   fetch?: typeof fetch

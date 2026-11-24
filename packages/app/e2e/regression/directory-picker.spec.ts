@@ -12,7 +12,11 @@ async function openPicker(page: Page, input: Pick<MockServerConfig, "fileList" |
   await openSettings(page, { name: "Picker", seed: { tabs: [] }, ...input })
   await page.getByTestId("settings-screen").getByRole("tab", { name: "Projects", exact: true }).click()
   await page.getByRole("button", { name: "Add project", exact: true }).click()
-  const picker = page.getByRole("dialog", { name: "Open project", exact: true })
+  await page
+    .getByRole("dialog", { name: "Add project", exact: true })
+    .getByRole("button", { name: "Choose folder", exact: true })
+    .click()
+  const picker = page.getByRole("dialog", { name: "Working folder", exact: true })
   await expect(picker.getByRole("button", { name: "Select folder", exact: true })).toBeEnabled()
 
   return picker
@@ -88,7 +92,11 @@ test("the folder picker's tree scrolls with the mouse wheel inside the modal", a
   await page.getByTestId("settings-screen").getByRole("tab", { name: "Projects", exact: true }).click()
   listing = true
   await page.getByRole("button", { name: "Add project", exact: true }).click()
-  const picker = page.getByRole("dialog", { name: "Open project", exact: true })
+  await page
+    .getByRole("dialog", { name: "Add project", exact: true })
+    .getByRole("button", { name: "Choose folder", exact: true })
+    .click()
+  const picker = page.getByRole("dialog", { name: "Working folder", exact: true })
 
   const scrollTop = () =>
     page.evaluate(

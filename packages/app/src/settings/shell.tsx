@@ -104,7 +104,7 @@ export function SettingsScreen() {
   const project = (server: ServerConnection.Any, directory: string) =>
     global
       .serverCtx(ServerConnection.key(server))
-      ?.projects.list()
+      ?.projects.unique()
       .find((item) => item.worktree === directory)
 
   const targetServer = createMemo(() => {

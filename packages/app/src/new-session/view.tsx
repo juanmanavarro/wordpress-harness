@@ -4,6 +4,7 @@ import { Keybind } from "@opencode/ui/keybind"
 import { useCommand } from "@/shell/commands/command"
 import { Match, Show, Switch, createComputed, createMemo, createSignal, onCleanup, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
+import { Dynamic } from "solid-js/web"
 import { createResizeObserver } from "@solid-primitives/resize-observer"
 import {
   displayName,
@@ -115,7 +116,9 @@ function NewSessionTips(props: { selection: ComposerModel["model"]["selection"];
 // Keeps as many leading segments as fit, then "…/", then the last two segments. The cut always lands on a slash.
 function fitPath(value: string, width: number, font: string) {
   const separator = value.includes("/") ? "/" : "\\"
-  const parts = value.split(separator)
+  const scheme = /^https:\/\//i.exec(value)?.[0] ?? ""
+  const parts = value.slice(scheme.length).split(separator)
+  if (scheme) parts[0] = scheme + parts[0]
   const context = document.createElement("canvas").getContext("2d")
 
   if (!context) return { text: value, minimum: 0 }
@@ -192,7 +195,14 @@ function NewSessionLocation(props: {
 
     if (selection === "create") return
 
-    return selection === "main" ? props.workspace.project.root() : selection
+    return selection === "main" ? props.workspace.project.directory() : selection
+  }
+
+  const productionUrl = () => props.project.experimental?.wordpress?.url
+
+  const displayedLocation = () => {
+    const directory = path()
+    return directory && (productionUrl() ?? directory)
   }
 
   createComputed(() =>
@@ -211,7 +221,7 @@ function NewSessionLocation(props: {
     return checkout && (checkout.branch || language.t("session.location.noBranch"))
   }
 
-  const fitted = createMemo(() => fitPath(path() ?? "", layout.width, layout.font))
+  const fitted = createMemo(() => fitPath(displayedLocation() ?? "", layout.width, layout.font))
 
   return (
     <div class="relative flex min-h-9 min-w-0 items-center gap-3 ps-2 pe-1.5 text-[13px] font-[440] leading-[var(--line-height-compact)] tracking-[-0.04px]">
@@ -321,17 +331,17 @@ function NewSessionLocation(props: {
           </Show>
         </div>
       </div>
-      {/* An open tooltip can outlive this row; keep its path instead of a stale Show accessor. */}
-      <Show when={path()} keyed>
-        {(directory) => (
+      {/* An open tooltip can outlive this row; keep its value instead of a stale Show accessor. */}
+      <Show when={displayedLocation()} keyed>
+        {(location) => (
           <div
             class="flex min-w-0 flex-1 justify-end pe-1.5 @max-[560px]:hidden"
             style={{ "min-width": `min(50%, ${Math.ceil(fitted().minimum) + 6}px)` }}
           >
             <Tooltip
               placement="top"
-              value={directory}
-              disabled={fitted().text === directory && fitted().minimum <= layout.width}
+              value={location}
+              disabled={fitted().text === location && fitted().minimum <= layout.width}
               class="flex min-w-0 flex-1"
               contentClass="max-w-[calc(100vw-32px)] break-all"
             >
@@ -347,17 +357,25 @@ function NewSessionLocation(props: {
                 class="flex min-w-0 flex-1 items-center justify-end"
                 dir="ltr"
               >
-                <span
+                <Dynamic
+                  component={productionUrl() ? "a" : "span"}
+                  href={productionUrl()}
+                  target={productionUrl() ? "_blank" : undefined}
+                  rel={productionUrl() ? "noopener noreferrer" : undefined}
                   data-slot="new-session-location-path"
-                  class="min-w-0 cursor-text select-text overflow-hidden whitespace-nowrap text-v2-text-text-faint [direction:rtl] [text-align:end]"
-                  onCopy={(event) => {
+                  class="min-w-0 select-text overflow-hidden whitespace-nowrap text-v2-text-text-faint [direction:rtl] [text-align:end]"
+                  classList={{
+                    "hover:text-v2-text-text-base hover:underline focus-visible:underline": !!productionUrl(),
+                    "cursor-text": !productionUrl(),
+                  }}
+                  onCopy={(event: ClipboardEvent) => {
                     if (!event.clipboardData || window.getSelection()?.toString() !== fitted().text) return
-                    event.clipboardData.setData("text/plain", directory)
+                    event.clipboardData.setData("text/plain", location)
                     event.preventDefault()
                   }}
                 >
                   <bdi dir="ltr">{fitted().text}</bdi>
-                </span>
+                </Dynamic>
               </span>
             </Tooltip>
           </div>

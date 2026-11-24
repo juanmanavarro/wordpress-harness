@@ -90,6 +90,11 @@ export function createDesktopStorage(api: ElectronAPI) {
 
   return {
     storage,
+    cleanupLegacyProjectStorage: async (input: Parameters<ElectronAPI["cleanupLegacyProjectStorage"]>[0]) => {
+      await flush()
+
+      return api.cleanupLegacyProjectStorage(input)
+    },
     draftStore: createDraftStore({
       get: api.draftGet,
       set: api.draftSet,

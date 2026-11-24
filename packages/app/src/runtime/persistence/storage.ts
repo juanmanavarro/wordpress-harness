@@ -1,14 +1,19 @@
 import { Platform, usePlatform } from "@/runtime/platform/platform"
 import { messageSync, type AsyncStorage, type SyncStorage } from "@solid-primitives/storage"
-import { checksum } from "@opencode/util/encode"
 import { createSignal, onCleanup, untrack, type Accessor } from "solid-js"
 import { createStore, type SetStoreFunction, type Store } from "solid-js/store"
 import { Option, Predicate, Schema } from "effect"
-import { pathKey } from "@/workspaces/path-key"
 import { ScopedKey, ServerScope } from "@/runtime/server/scope"
 import { persistStore } from "./persist"
 import { canWriteBackHydration } from "./persist-machine"
 import { Persistence } from "./schema"
+import { draftStorage, serverWorkspaceStorage, workspaceStorageAliases } from "./storage-keys"
+import {
+  legacyProjectCleanupDraftIDs,
+  legacyProjectCleanupMarker,
+  planLegacyProjectCleanup,
+  type LegacyProjectCleanup,
+} from "./project-cleanup"
 import {
   canEvict,
   INITIAL_LOCAL_STORAGE_STATE,
@@ -349,51 +354,20 @@ async function relocateStoredValueAsync(input: {
   return null
 }
 
-function workspaceStorage(dir: string) {
-  const head = (dir.slice(0, 12) || "workspace").replace(/[^a-zA-Z0-9._-]/g, "-")
-  const sum = checksum(dir) ?? "0"
-
-  return `opencode.workspace.${head}.${sum}.dat`
-}
-
-function draftStorage(draftID: string) {
-  const head = (draftID.slice(0, 12) || "draft").replace(/[^a-zA-Z0-9._-]/g, "-")
-  const sum = checksum(draftID) ?? "0"
-
-  return `opencode.draft.${head}.${sum}.dat`
-}
-
 function windowStorage(windowID: string) {
   const safe = (windowID || "browser").replace(/[^a-zA-Z0-9._-]/g, "-")
 
   return `${WINDOW_STORAGE}.${safe}.dat`
 }
 
-function workspaceStorageAliases(dir: string) {
-  const storage = workspaceStorage(pathKey(dir))
-  const result = new Set<string>()
-  const raw = workspaceStorage(dir)
-
-  if (raw !== storage) result.add(raw)
-
-  const key = pathKey(dir)
-  const drive = key.length >= 3 && key[1] === ":" && key[2] === "/"
-
-  if (drive) {
-    const backslash = workspaceStorage(key.replaceAll("/", "\\"))
-
-    if (backslash !== storage) result.add(backslash)
-  }
-
-  if (result.size === 0) return
-
-  return [...result]
-}
-
 function serverWorkspaceTarget(scope: ServerScope, dir: string, key: string): PersistTarget {
-  if (scope !== ServerScope.local) return { storage: workspaceStorage(ScopedKey.from(scope, pathKey(dir))), key }
+  const storage = serverWorkspaceStorage(scope, dir)
 
-  return { storage: workspaceStorage(pathKey(dir)), workspaceStorageAliases: workspaceStorageAliases(dir), key }
+  if (scope !== ServerScope.local) return { storage, key }
+
+  const aliases = workspaceStorageAliases(dir)
+
+  return { storage, workspaceStorageAliases: aliases.length ? aliases : undefined, key }
 }
 
 /** A `localStorage` view whose `setItem` reports whether the value was stored. */
@@ -438,6 +412,61 @@ function localStorageView(prefix?: string): LocalStorageView {
 }
 
 const DRAFT_PERSISTED_KEYS = ["prompt", "comments", "file-view", "layout"]
+
+export async function cleanupLegacyBrowserStorage(
+  input: LegacyProjectCleanup,
+  purgeDocuments: (owns: (key: string) => boolean) => Promise<void>,
+) {
+  const marker = `${GLOBAL_STORAGE}:${legacyProjectCleanupMarker(input)}`
+  const applied = localStorage.getItem(marker)
+
+  if (applied !== null) return legacyProjectCleanupDraftIDs(applied)
+
+  const rows = Object.keys(localStorage).flatMap((storedKey) => {
+    const value = localStorage.getItem(storedKey)
+
+    if (value === null) return []
+    const separator = storedKey.startsWith(LOCAL_PREFIX) ? storedKey.indexOf(":") : -1
+
+    return [
+      separator === -1
+        ? { name: "default.dat", key: storedKey, value, storedKey }
+        : { name: storedKey.slice(0, separator), key: storedKey.slice(separator + 1), value, storedKey },
+    ]
+  })
+
+  const plan = planLegacyProjectCleanup(input, rows)
+
+  // The window records establish ownership for standalone drafts. Keep them available until the blob transaction commits.
+  await purgeDocuments(plan.ownsDocument)
+
+  const concurrent = localStorage.getItem(marker)
+
+  if (concurrent !== null) return legacyProjectCleanupDraftIDs(concurrent)
+
+  for (const row of rows) {
+    const value = localStorage.getItem(row.storedKey)
+
+    if (value === null) continue
+
+    if (plan.owns(row.name, row.key) && value === row.value) {
+      localStorage.removeItem(row.storedKey)
+      cacheDelete(row.storedKey)
+
+      continue
+    }
+
+    const changed = plan.rewriteTabs({ ...row, value })
+
+    if (!changed) continue
+    localStorage.setItem(row.storedKey, changed.value)
+    cacheSet(row.storedKey, changed.value)
+  }
+
+  localStorage.setItem(marker, JSON.stringify(plan.draftIDs))
+
+  return plan.draftIDs
+}
 
 export function draftPersistedKeys() {
   return DRAFT_PERSISTED_KEYS

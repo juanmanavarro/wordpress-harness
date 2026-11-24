@@ -78,7 +78,7 @@ type Started = Awaited<ReturnType<NewSessionComposerAdapter["start"]>>
 export function createNewSessionComposerAdapter(props: {
   draftID: string
   worktree: () => string
-  root: () => string
+  projectDirectory: () => string
   branch: () => string | undefined
   submitted: () => void
   mcp: DraftMcpControls
@@ -103,7 +103,7 @@ export function createNewSessionComposerAdapter(props: {
     working: () => false,
     submitted: props.submitted,
     start(selection, submission, message) {
-      const projectDirectory = props.root()
+      const projectDirectory = props.projectDirectory()
       const worktree = props.worktree()
       const directory = worktree === "main" ? projectDirectory : worktree
       const sessionID = Session.ID.create()

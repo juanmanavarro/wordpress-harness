@@ -43,7 +43,7 @@ import { Persist, persisted, removePersisted } from "@/runtime/persistence/stora
 import { useGlobal, type ServerCtx } from "@/runtime/server/runtime"
 import { ServerConnection, useServers } from "@/runtime/server/registry"
 import { isServerIncompatible } from "@/runtime/server/health-machine"
-import { useDirectoryPicker } from "@/workspaces/selection/picker"
+import { useAddProjectDialog } from "@/workspaces/selection/project-form"
 import { SessionRouteKey, SessionStateKey, type ServerScope } from "@/runtime/server/scope"
 import { findSessionTab, tabKey, useTabs, type Tab } from "@/shell/tabs/tabs"
 import { openNotificationSession } from "@/shell/notifications/notification"
@@ -984,7 +984,7 @@ export function createPluginAttachment(apis: HostApis) {
 
   // An open-project request waits until its server is listed (e.g. an SSH server that just connected), for at most
   // `PROJECT_REQUEST_TTL_MS`; a newer request replaces it.
-  const picker = useDirectoryPicker()
+  const addProject = useAddProjectDialog()
   const [projectState, setProjectState] = createSignal(createProjectRequestState())
   let projectTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -1005,17 +1005,12 @@ export function createPluginAttachment(apis: HostApis) {
       const server = untrack(() => listedServer(effect.server))
 
       if (!server) return
-      untrack(() =>
-        picker({
+      void untrack(() =>
+        addProject({
           server,
           title: effect.title,
-          onSelect: (value) => {
-            const directory = Array.isArray(value) ? value[0] : value
-
-            if (!directory) return
-            const key = ServerConnection.key(server)
-            void global.serverCtx(key)?.projects.add(directory)
-            void tabs.newDraft({ server: key, directory })
+          onSaved: (project) => {
+            void tabs.newDraft({ server: ServerConnection.key(server), directory: project.worktree })
           },
         }),
       )

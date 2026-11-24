@@ -42,8 +42,6 @@ type HomeSelectionBase = {
   /** The selection storage holds, as last read or written. */
   readonly stored: HomeProjectSelection
   readonly servers: readonly HomeServerSnapshot[]
-  /** A project add whose result selects the project, unless the user selects something else first. */
-  readonly adding: { readonly attempt: number; readonly server: ServerConnection.Key } | undefined
   readonly worktrees: HomeWorktreeSync
 }
 
@@ -73,19 +71,12 @@ export type HomeSelectionEvent =
   | { readonly type: "env.synced"; readonly env: HomeEnvSnapshot }
   | { readonly type: "server.focused"; readonly server: ServerConnection.Key }
   | { readonly type: "project.toggled"; readonly server: ServerConnection.Key; readonly directory: string }
-  | { readonly type: "project.add"; readonly server: ServerConnection.Key; readonly directories: readonly string[] }
-  | { readonly type: "project.added"; readonly attempt: number; readonly project: HomeProjectItem | undefined }
+  | { readonly type: "project.registered"; readonly server: ServerConnection.Key; readonly directory: string }
   | { readonly type: "worktrees.listed"; readonly attempt: number }
   | { readonly type: "disposed" }
 
 export type HomeSelectionEffect =
   | { readonly type: "selection.persist"; readonly selection: HomeProjectSelection }
-  | {
-      readonly type: "project.add"
-      readonly attempt: number
-      readonly server: ServerConnection.Key
-      readonly directories: readonly string[]
-    }
   | {
       readonly type: "worktrees.list"
       readonly attempt: number
@@ -112,7 +103,6 @@ export const INITIAL_HOME_SELECTION_STATE: HomeSelectionState = Object.freeze({
   issued: 0,
   stored: Object.freeze({}),
   servers: Object.freeze([]),
-  adding: undefined,
   worktrees: IDLE,
   override: undefined,
 })
@@ -135,23 +125,7 @@ export function transitionHomeSelection(state: HomeSelectionState, event: HomeSe
     return choose(state, toggleHomeProjectSelection(selectHomeSelection(state), entry.key, project.worktree))
   }
 
-  if (event.type === "project.add") {
-    if (event.directories.length === 0) return { state, effects: NONE }
-    const attempt = state.issued + 1
-
-    return {
-      state: { ...state, issued: attempt, adding: { attempt, server: event.server } },
-      effects: [{ type: "project.add", attempt, server: event.server, directories: event.directories }],
-    }
-  }
-
-  if (event.type === "project.added") {
-    if (state.adding?.attempt !== event.attempt) return { state, effects: NONE }
-
-    if (!event.project) return { state: { ...state, adding: undefined }, effects: NONE }
-
-    return choose(state, { server: state.adding.server, directory: event.project.worktree })
-  }
+  if (event.type === "project.registered") return choose(state, { server: event.server, directory: event.directory })
 
   const sync = state.worktrees
 
@@ -205,18 +179,16 @@ function synced(state: LiveState, env: HomeEnvSnapshot): HomeSelectionTransition
     ...state,
     servers,
     stored: external ? selection(env.stored.server, env.stored.directory) : state.stored,
-    adding: external ? undefined : state.adding,
   }
 
   return place(state, next, external ? next.stored : selectHomeSelection(state))
 }
 
-// A selection the user made: it wins over a project add still running.
 function choose(state: LiveState, target: HomeProjectSelection): HomeSelectionTransition {
   if (state.status === "hydrating")
-    return finish(state, { ...state, adding: undefined, override: selection(target.server, target.directory) }, NONE)
+    return finish(state, { ...state, override: selection(target.server, target.directory) }, NONE)
 
-  return place(state, { ...state, adding: undefined }, target)
+  return place(state, state, target)
 }
 
 // Checks `target` against the listed servers and writes what storage does not hold yet.
@@ -225,7 +197,6 @@ function place(prev: LiveState, base: HomeSelectionBase, target: HomeProjectSele
     issued: base.issued,
     stored: base.stored,
     servers: base.servers,
-    adding: base.adding,
     worktrees: base.worktrees,
   }
 
@@ -292,7 +263,6 @@ function sameState(a: LiveState, b: LiveState) {
     a.status !== b.status ||
     a.issued !== b.issued ||
     a.servers !== b.servers ||
-    a.adding !== b.adding ||
     a.worktrees !== b.worktrees ||
     !sameHomeSelection(a.stored, b.stored)
   )

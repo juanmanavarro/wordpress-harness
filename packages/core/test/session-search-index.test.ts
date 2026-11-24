@@ -11,7 +11,6 @@ import { Model } from "@opencode/core/model"
 import { Project } from "@opencode/core/project"
 import { ProjectTable } from "@opencode/core/project/sql"
 import { Provider } from "@opencode/core/provider"
-import { AbsolutePath } from "@opencode/core/schema"
 import { SessionMessage } from "@opencode/core/session/message"
 import { SessionSearchIndex } from "@opencode/core/session/search-index"
 import { SessionMessageTable, SessionPartTable, SessionTable } from "@opencode/core/session/sql"
@@ -67,12 +66,15 @@ const database = (migrate: (db: Db) => Effect.Effect<unknown, unknown, Global.Se
     const db = yield* EffectDrizzleSqlite.makeWithDefaults()
     yield* db.run("PRAGMA foreign_keys = ON")
     yield* migrate(db)
-    yield* db
-      .insert(ProjectTable)
-      .values({ id: Project.ID.global, worktree: AbsolutePath.make("/project"), sandboxes: [] })
-      .run()
+    yield* addProject(db)
     return db
   })
+
+const addProject = (db: Db, projectID = Project.ID.global) =>
+  db.run(sql`
+    INSERT INTO project (id, worktree, sandboxes, time_created, time_updated)
+    VALUES (${projectID}, '/project', '[]', 0, 0)
+  `)
 
 const addSession = (db: Db, sessionID: SessionID, title: string | null) =>
   db
@@ -473,21 +475,26 @@ describe("SessionSearchIndex", () => {
       // the search objects and clears kv['session.search'].
       const first = migrations.findIndex((migration) => migration.id.endsWith("_session_part")) + 1
       const db = yield* database((db) => DatabaseMigration.applyOnly(db, migrations.slice(0, first)))
+      const legacyProject = Project.ID.make("legacy-project")
+      yield* addProject(db, legacyProject)
       yield* db.run("PRAGMA legacy_alter_table = OFF")
       yield* db.run(sql`
         INSERT INTO session_v2 (id, project_id, slug, directory, title, version, time_created, time_updated)
-        VALUES (${sessionA}, ${Project.ID.global}, 's', '/project', 'migrated title', 'test', 1, 1)
+        VALUES (${sessionA}, ${legacyProject}, 's', '/project', 'migrated title', 'test', 1, 1)
       `)
       yield* db.run(sql`
         INSERT INTO session_message (id, session_id, type, seq, time_created, time_updated, data)
         VALUES (${id("1")}, ${sessionA}, 'user', 1, 1, 1, ${JSON.stringify({ text: "migrated prompt", time: { created: 1 } })})
       `)
       yield* index(db)
+      expect(yield* find(db, "migrated")).toEqual([id("1"), sessionA])
       yield* DatabaseMigration.applyOnly(db, migrations)
       expect(yield* triggers(db)).toBeGreaterThan(0)
       expect(yield* SessionSearchIndex.state(db)).toMatchObject({ status: "done" })
-      yield* addMessages(db, sessionA, [user("2", "live prompt")], 2)
-      expect(yield* find(db, "migrated live")).toEqual([id("1"), id("2"), sessionA])
+      expect(yield* documents(db)).toEqual([])
+      yield* addSession(db, sessionB, "new title")
+      yield* addMessages(db, sessionB, [user("2", "live prompt")])
+      expect(yield* find(db, "migrated live")).toEqual([id("2")])
     }),
   )
 

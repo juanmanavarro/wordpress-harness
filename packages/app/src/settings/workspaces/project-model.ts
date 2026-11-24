@@ -27,6 +27,7 @@ export function createEditProjectModel(props: { project: LocalProject; server: S
     color: props.project.icon?.color,
     iconOverride: props.project.icon?.override,
     startup: props.project.commands?.start,
+    productionUrl: props.project.experimental?.wordpress?.url,
   })
 
   const [settings, setSettings] = createSignal(createProjectSettingsState(untrack(snapshot)))
@@ -162,6 +163,8 @@ export function createEditProjectModel(props: { project: LocalProject; server: S
     defaultName: () => props.project.name || view().folderName,
     editName: (value: string) => dispatch({ type: "name.edited", value }),
     saveName: () => dispatch({ type: "name.committed" }),
+    editProductionUrl: (value: string) => dispatch({ type: "productionUrl.edited", value }),
+    saveProductionUrl: () => dispatch({ type: "productionUrl.committed" }),
     editStartup: (value: string) => dispatch({ type: "startup.edited", value }),
     saveStartup: () => dispatch({ type: "startup.committed" }),
     retry: (field: ProjectField) => dispatch({ type: "field.retried", field }),

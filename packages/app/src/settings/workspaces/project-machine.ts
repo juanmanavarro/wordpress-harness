@@ -1,15 +1,16 @@
 import type { ProjectUpdateInput } from "@opencode/client/promise"
 import { getFilename } from "@opencode/util/path"
+import { isProductionUrl } from "@/workspaces/selection/project-form-machine"
 
 /** How long one save may take before its request is aborted and the queue moves on. */
 export const PROJECT_SAVE_TIMEOUT_MS = 15_000
 
-export type ProjectPatch = Pick<ProjectUpdateInput, "name" | "icon" | "commands">
+export type ProjectPatch = Pick<ProjectUpdateInput, "name" | "icon" | "commands" | "experimental">
 
 /** A patch being built one field at a time. */
 type PatchDraft = { -readonly [K in keyof ProjectPatch]: ProjectPatch[K] }
 
-export type ProjectField = "name" | "icon" | "startup"
+export type ProjectField = "name" | "icon" | "startup" | "productionUrl"
 
 export type ProjectTarget = { readonly id: string | undefined; readonly worktree: string }
 
@@ -19,6 +20,7 @@ export type ProjectSnapshot = ProjectTarget & {
   readonly color: string | undefined
   readonly iconOverride: string | undefined
   readonly startup: string | undefined
+  readonly productionUrl?: string
 }
 
 type IconValue = { readonly color: string; readonly override: string }
@@ -28,15 +30,22 @@ export type ProjectWrite = {
   readonly name?: string
   readonly icon?: IconValue
   readonly startup?: string
+  readonly productionUrl?: string
 }
 
-type ProjectSaved = { readonly name: string; readonly icon: IconValue; readonly startup: string }
+type ProjectSaved = {
+  readonly name: string
+  readonly icon: IconValue
+  readonly startup: string
+  readonly productionUrl: string
+}
 
 type ProjectDraft = {
   readonly name: string
   readonly color: string
   readonly iconOverride: string
   readonly startup: string
+  readonly productionUrl: string
 }
 
 type ProjectSettingsBase = {
@@ -68,6 +77,8 @@ export type ProjectSettingsEvent =
   | { readonly type: "project.synced"; readonly project: ProjectSnapshot }
   | { readonly type: "name.edited"; readonly value: string }
   | { readonly type: "name.committed" }
+  | { readonly type: "productionUrl.edited"; readonly value: string }
+  | { readonly type: "productionUrl.committed" }
   | { readonly type: "startup.edited"; readonly value: string }
   | { readonly type: "startup.committed" }
   | { readonly type: "color.selected"; readonly color: string | undefined }
@@ -103,7 +114,7 @@ export type ProjectSettingsTransition = {
 
 type Live = Exclude<ProjectSettingsState, { status: "disposed" }>
 
-const FIELDS: readonly ProjectField[] = ["name", "icon", "startup"]
+const FIELDS: readonly ProjectField[] = ["name", "icon", "startup", "productionUrl"]
 
 const NONE: readonly ProjectSettingsEffect[] = []
 
@@ -119,12 +130,14 @@ export function createProjectSettingsState(project: ProjectSnapshot, attempt = 0
       name: project.name ?? "",
       icon: { color: project.color ?? "", override: project.iconOverride ?? "" },
       startup: startup.trim(),
+      productionUrl: project.productionUrl ?? "",
     },
     draft: {
       name: project.name || folderName,
       color: project.color ?? "",
       iconOverride: project.iconOverride ?? "",
       startup,
+      productionUrl: project.productionUrl ?? "",
     },
     failed: [],
     dragOver: false,
@@ -165,6 +178,12 @@ export function transitionProjectSettings(
       return edited(state, "startup", { ...state.draft, startup: event.value })
     case "name.committed":
       return enqueue(state, draftWrite(state, "name"))
+    case "productionUrl.edited":
+      if (event.value === state.draft.productionUrl) return { state, effects: NONE }
+
+      return edited(state, "productionUrl", { ...state.draft, productionUrl: event.value })
+    case "productionUrl.committed":
+      return enqueue(state, draftWrite(state, "productionUrl"))
     case "startup.committed":
       return enqueue(state, draftWrite(state, "startup"))
     case "color.selected": {
@@ -246,6 +265,8 @@ export type ProjectSettingsView = {
   readonly color: string | undefined
   readonly iconOverride: string | undefined
   readonly startup: string
+  readonly productionUrl: string
+  readonly invalidProductionUrl: boolean
   readonly dragOver: boolean
   readonly failed: Readonly<Record<ProjectField, boolean>>
 }
@@ -257,8 +278,10 @@ const DISPOSED_VIEW: ProjectSettingsView = {
   color: undefined,
   iconOverride: undefined,
   startup: "",
+  productionUrl: "",
+  invalidProductionUrl: false,
   dragOver: false,
-  failed: { name: false, icon: false, startup: false },
+  failed: { name: false, icon: false, startup: false, productionUrl: false },
 }
 
 export function selectProjectSettingsView(state: ProjectSettingsState): ProjectSettingsView {
@@ -271,11 +294,14 @@ export function selectProjectSettingsView(state: ProjectSettingsState): ProjectS
     color: state.draft.color || undefined,
     iconOverride: state.draft.iconOverride || undefined,
     startup: state.draft.startup,
+    productionUrl: state.draft.productionUrl,
+    invalidProductionUrl: !isProductionUrl(state.draft.productionUrl.trim()),
     dragOver: state.dragOver,
     failed: {
       name: state.failed.includes("name"),
       icon: state.failed.includes("icon"),
       startup: state.failed.includes("startup"),
+      productionUrl: state.failed.includes("productionUrl"),
     },
   }
 }
@@ -348,6 +374,12 @@ function draftWrite(state: Live, field: ProjectField): ProjectWrite {
 
   if (field === "startup") return { startup: state.draft.startup.trim() }
 
+  if (field === "productionUrl") {
+    const url = state.draft.productionUrl.trim()
+
+    return isProductionUrl(url) ? { productionUrl: url } : {}
+  }
+
   const name = state.draft.name.trim()
 
   return { name: name === state.folderName ? "" : name }
@@ -369,6 +401,8 @@ function patchOf(write: ProjectWrite): ProjectPatch {
   if (write.icon) patch.icon = write.icon
 
   if (write.startup !== undefined) patch.commands = { start: write.startup }
+
+  if (write.productionUrl !== undefined) patch.experimental = { wordpressUrl: write.productionUrl }
 
   return patch
 }

@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test"
 import type { JsonValue, SessionMessageAssistant, SessionMessageInfo } from "@opencode/client/promise"
 import { base64Encode } from "@opencode/util/encode"
 import { createTwoFilesPatch } from "diff"
-import { SERVER, pageMessagesFrom } from "./app"
+import { SERVER, pageMessagesFrom, project } from "./app"
 import { mockOpenCodeServer, type MockServerConfig } from "./mock-server"
 
 // A long stress transcript: source (12 turns, links a child), target (72 mixed turns), and child (4 turns).
@@ -336,14 +336,12 @@ const messages: Record<string, SessionMessageInfo[]> = {
 export const fixture = {
   directory,
   serverKey: SERVER,
-  project: {
+  project: project({
     id: projectID,
-    worktree: directory,
-    vcs: "git",
+    directory,
     name: "smoke-project",
     time: { created: 1700000000000, updated: 1700000000000, active: 1700000000000 },
-    sandboxes: [],
-  },
+  }),
   provider: {
     all: [
       {

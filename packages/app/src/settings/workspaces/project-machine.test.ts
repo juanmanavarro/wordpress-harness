@@ -64,7 +64,12 @@ describe("project settings autosave", () => {
         patch: { icon: { color: "pink", override: "" }, commands: { start: "bun dev" } },
       },
     ])
-    expect(selectProjectSettingsView(timedOut.state).failed).toEqual({ name: true, icon: false, startup: false })
+    expect(selectProjectSettingsView(timedOut.state).failed).toEqual({
+      name: true,
+      icon: false,
+      startup: false,
+      productionUrl: false,
+    })
     // The hung request answers after its timeout: too late to count.
     expect(transitionProjectSettings(timedOut.state, { type: "save.succeeded", saveAttempt: 1 }).state).toBe(
       timedOut.state,

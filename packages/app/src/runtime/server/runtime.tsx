@@ -1,4 +1,6 @@
 import { createSimpleContext } from "@opencode/ui/context"
+import { useQuery } from "@tanstack/solid-query"
+import { containsDirectory } from "@opencode/util/path"
 import {
   Accessor,
   batch,
@@ -36,6 +38,7 @@ import { useCurrentRoute } from "@/shell/state/layout"
 import { createSessionPreferences } from "@/shell/state/session-preferences"
 import { useTabs } from "@/shell/tabs/tabs"
 import { Persist, persisted } from "@/runtime/persistence/storage"
+import { usePlatform } from "@/runtime/platform/platform"
 import { createDesktopData } from "./data"
 import { ModelState } from "./persistence"
 import { useLanguage } from "@/runtime/i18n/language"
@@ -47,6 +50,7 @@ import type { SessionInfo } from "@opencode/client/promise"
 import { projectForSession } from "@/shell/layout/helpers"
 import { isProjectDirectory } from "@/workspaces/paths"
 import type { Project } from "@/runtime/server/types"
+import { normalizeProjectInfo } from "./global-sync/utils"
 
 export const { use: useGlobal, provider: GlobalProvider } = createSimpleContext({
   name: "Global",
@@ -258,6 +262,53 @@ function createServerController(
   })
 
   const sync = createServerSyncContext(sdk, data)
+  const cleanupLegacyProjectStorage = usePlatform().cleanupLegacyProjectStorage
+
+  useQuery(() => ({
+    queryKey: [scope, "legacy-project-storage-cleanup"],
+    enabled: !!cleanupLegacyProjectStorage && sdk.connection.status() === "connected" && sync.project.ready(),
+    staleTime: Infinity,
+    queryFn: async ({ signal }) => {
+      const receipt = await sdk.api.experimental.project.cleanup({ signal })
+
+      if (!cleanupLegacyProjectStorage || receipt.projects.length + receipt.sessions.length === 0) return true
+      await tabs.ready.promise
+      signal.throwIfAborted()
+
+      const roots = sync.data.project
+        .filter((project) => project.experimental?.wordpress)
+        .flatMap((project) => [project.worktree, ...project.sandboxes].filter(Boolean))
+
+      const draftIDs = await cleanupLegacyProjectStorage({
+        scope,
+        server: connKey,
+        projects: receipt.projects.map((project) => ({
+          ...project,
+          directories: project.directories.filter(
+            (directory) =>
+              !roots.some((root) => containsDirectory(root, directory) || containsDirectory(directory, root)),
+          ),
+        })),
+        sessions: receipt.sessions,
+      })
+
+      signal.throwIfAborted()
+
+      if (draftIDs.length > 0) tabs.removeDraftTabs(connKey, draftIDs)
+
+      const sessionIDs = receipt.sessions.map((session) => session.id)
+
+      if (sessionIDs.length > 0) {
+        batch(() => {
+          sessionIDs.forEach((id) => sessionPreferences.forget(connKey, id))
+          tabs.removeSessions({ server: connKey, sessionIDs })
+        })
+      }
+
+      return true
+    },
+  }))
+
   const autoApprove = createPermissionAutoApprover({ sdk, data })
   onCleanup(data.on("session.deleted", (event) => sessionPreferences.forget(connKey, event.data.sessionID)))
 
@@ -289,6 +340,7 @@ function createServerController(
     const seen = new Set<string>()
 
     return list().filter((project) => {
+      if (!project.experimental?.wordpress) return false
       const key = pathKey(project.worktree)
 
       if (seen.has(key)) return false
@@ -349,6 +401,14 @@ function createServerController(
       })
   }
 
+  async function create(input: { name: string; url: string; directory: string }, signal: AbortSignal) {
+    const project = await sdk.api.experimental.project.create(input, { signal })
+    sync.project.update(project)
+    projects.touch(project.id)
+
+    return normalizeProjectInfo(project)
+  }
+
   return {
     data,
     sdk,
@@ -361,9 +421,10 @@ function createServerController(
       unique,
       used,
       add,
+      create,
       forDirectory,
       forSession: (session: SessionInfo): Project | undefined => projectForSession(session, list()),
-      last: () => list().find((project) => project.id === projects.last()),
+      last: () => unique().find((project) => project.id === projects.last()),
       // Marks the project of a directory as used from this client, and as the last one.
       touch(directory: string) {
         const id = forDirectory(directory)?.id

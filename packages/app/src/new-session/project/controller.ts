@@ -1,5 +1,5 @@
 import { createMemo } from "solid-js"
-import { useDirectoryPicker } from "@/workspaces/selection/picker"
+import { useAddProjectDialog } from "@/workspaces/selection/project-form"
 import { type ServerCtx, useGlobal } from "@/runtime/server/runtime"
 import { useServer } from "@/runtime/server/current"
 import { useServerSDK } from "@/runtime/server/client"
@@ -16,7 +16,7 @@ export function createComposerProjectControls(props: { draftId: string; worktree
   const location = useWorkspaceLocation()
   const tabs = useTabs()
   const global = useGlobal()
-  const pickDirectory = useDirectoryPicker()
+  const showAddProject = useAddProjectDialog()
   const projectServer = () => serverSDK.server
   const projectServerCtx = useServer().ctx
 
@@ -79,23 +79,16 @@ export function createComposerProjectControls(props: { draftId: string; worktree
     })
   }
 
-  const addProject = (title: string, serverKey?: string) => {
+  const addProject = (_title: string, serverKey?: string) => {
     const connection = serverKey
       ? servers.list.find((connection) => ServerConnection.key(connection) === serverKey)
       : projectServer()
 
     if (!connection) return
-    pickDirectory({
+    void showAddProject({
       server: connection,
       location: ServerConnection.key(connection) === ServerConnection.key(projectServer()) ? location().ref : undefined,
-      title,
-      onSelect: (result) => {
-        const directory = Array.isArray(result) ? result[0] : result
-
-        if (!directory) return
-        void global.serverCtx(ServerConnection.key(connection))?.projects.add(directory)
-        selectProject(directory, serverKey)
-      },
+      onSaved: (project) => selectProject(project.worktree, ServerConnection.key(connection)),
     })
   }
 

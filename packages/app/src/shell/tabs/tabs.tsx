@@ -732,7 +732,26 @@ export const { use: useTabs, provider: TabsProvider } = createSimpleContext({
 
         for (const draftID of drafts) removeDraftPersisted(draftID)
       },
-      removeSessions: (input: SessionTabsRemovedDetail) => {
+      removeDraftTabs(server: ServerConnection.Key, draftIDs: readonly string[]) {
+        const ids = new Set(draftIDs)
+        const removed = store.filter((tab) => tab.type === "draft" && tab.server === server && ids.has(tab.draftID))
+
+        if (removed.length === 0) return
+
+        const route = currentRoute()
+        setStore((tabs) => tabs.filter((tab) => !removed.includes(tab)))
+
+        if (removed.some((tab) => tabKey(tab) === recentKey())) setRecentKey(undefined)
+        removed.forEach(disposeTab)
+
+        if (removed.some((tab) => tabMatchesRoute(tab, route))) {
+          const next = store[0]
+
+          if (next) navigateTab(next)
+          else navigate("/")
+        }
+      },
+      removeSessions: (input: Pick<SessionTabsRemovedDetail, "server" | "sessionIDs">) => {
         const targetServer = input.server
 
         const current = preview.current()

@@ -101,9 +101,23 @@ export function SettingsProjectRow(props: {
             onClick={() => props.onOpen(props.project)}
           >
             <ProjectIcon project={props.project} class="shrink-0" />
-            <bdi class="truncate text-[13px] font-[530] leading-5 tracking-[-0.04px] text-v2-text-text-base">
-              {displayName(props.project)}
-            </bdi>
+            <span class="flex min-w-0 flex-col">
+              <bdi class="truncate text-[13px] font-[530] leading-5 tracking-[-0.04px] text-v2-text-text-base">
+                {displayName(props.project)}
+              </bdi>
+              <Show when={props.project.experimental?.wordpress}>
+                {(site) => (
+                  <span class="flex min-w-0 gap-2 text-11-regular text-v2-text-text-muted">
+                    <bdi dir="ltr" class="truncate" title={site().url}>
+                      {site().url}
+                    </bdi>
+                    <code dir="ltr" class="truncate" title={props.project.worktree}>
+                      {props.project.worktree}
+                    </code>
+                  </span>
+                )}
+              </Show>
+            </span>
           </button>
           <ProjectOptions
             server={props.server}

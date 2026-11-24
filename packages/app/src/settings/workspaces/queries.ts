@@ -25,7 +25,7 @@ export function workspaceInventoryQuery(
     queryFn: async () =>
       Promise.all(
         (await client.fetchQuery(workspaceProjectsQuery(context.sdk)))
-          .filter((project) => projectID === undefined || project.id === projectID)
+          .filter((project) => project.experimental?.wordpress && (projectID === undefined || project.id === projectID))
           .map(async (project) => {
             const worktrees = (await context.sync.worktrees.list(project.id)) ?? [
               { directory: project.canonical },

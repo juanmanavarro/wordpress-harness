@@ -1,11 +1,15 @@
 import { createBrowserDraftStore } from "@/runtime/persistence/drafts"
+import { cleanupLegacyBrowserStorage } from "@/runtime/persistence/storage"
 import { basePath } from "./base-path"
 import type { Platform } from "./platform"
 
 export function createWebPlatform(version: string) {
+  const draftStore = createBrowserDraftStore()
+
   const platform: Platform = {
     platform: "web",
-    draftStore: createBrowserDraftStore(),
+    draftStore,
+    cleanupLegacyProjectStorage: (input) => cleanupLegacyBrowserStorage(input, draftStore.purgeDocuments),
     version,
     openExternal(value) {
       if (!URL.canParse(value)) return

@@ -17,6 +17,7 @@ type DirectoryPickerInput = {
   location?: LocationRef
   title?: string
   multiple?: boolean
+  stacked?: boolean
   onSelect: (result: string | string[] | null) => void
 }
 
@@ -31,7 +32,9 @@ export function useDirectoryPicker() {
       directoryPickerKind(platform.platform, input.server, servers.ownUrl()) === "native" &&
       platform.platform === "desktop"
     ) {
-      void platform.openDirectoryPickerDialog({ title: input.title, multiple: input.multiple }).then(input.onSelect)
+      void platform
+        .openDirectoryPickerDialog({ title: input.title, multiple: input.multiple })
+        .then(input.onSelect, () => input.onSelect(null))
 
       return
     }
@@ -55,7 +58,9 @@ export function useDirectoryPicker() {
     }
 
     // Dialogs render under the caller's owner, so loading the lazy chunk would otherwise suspend the caller's boundary.
-    dialog.show(
+    const open = input.stacked ? dialog.push : dialog.show
+
+    void open(
       () => {
         // A server that loses its controller while the picker is open closes it, which cancels the pick.
         createEffect(() => {

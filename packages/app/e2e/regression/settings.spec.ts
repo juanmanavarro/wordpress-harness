@@ -575,17 +575,11 @@ test("project list menus rename, edit, add, and stay inside the scrollport", asy
     project({ id: `project-${index}`, directory: `/projects/${name}`, name }),
   )
 
-  const added = project({ id: "project-added", directory: "/projects/added", name: "added" })
-
   const { settings } = await open(page, {
     name: "rebase",
     directory: "/projects/rebase",
     project: { id: "project-0" },
     projects,
-    // The server registers a project when it first resolves its directory.
-    onLocationGet: (directory) => {
-      if (directory === added.worktree && !projects.includes(added)) projects.push(added)
-    },
     sessions: [],
     fileList: () => [],
   })
@@ -620,8 +614,8 @@ test("project list menus rename, edit, add, and stay inside the scrollport", asy
   await addTrigger.focus()
   await addTrigger.press("Enter")
   const menu = page.getByRole("menu")
-  await expect(menu.getByRole("menuitem")).toHaveText(["Add project", "Edit", "Rename"])
-  const addProject = menu.getByRole("menuitem", { name: "Add project", exact: true })
+  await expect(menu.getByRole("menuitem")).toHaveText(["Show on Home", "Edit", "Rename"])
+  const addProject = menu.getByRole("menuitem", { name: "Show on Home", exact: true })
   await expect(addProject).toBeFocused()
   await addProject.press("Enter")
   await expect(menu).toBeHidden()
@@ -673,14 +667,32 @@ test("project list menus rename, edit, add, and stay inside the scrollport", asy
   await expect(panel.getByRole("button", { name: "Renamed project", exact: true })).toBeVisible()
 
   await panel.getByRole("button", { name: "Add project", exact: true }).click()
-  const picker = page.getByRole("dialog", { name: "Open project", exact: true })
+  const form = page.getByRole("dialog", { name: "Add project", exact: true })
+  await form.getByRole("textbox", { name: "Name", exact: true }).fill("Added site")
+  await form.getByRole("textbox", { name: "Production URL", exact: true }).fill("https://old.example.com")
+  await form.getByRole("button", { name: "Choose folder", exact: true }).click()
+  const picker = page.getByRole("dialog", { name: "Working folder", exact: true })
   await picker.getByRole("combobox").fill("/projects/added")
   await picker.getByRole("combobox").press("Enter")
   const select = picker.getByRole("button", { name: "Select folder", exact: true })
   await expect(select).toBeEnabled()
   await select.click()
-  await expect(picker).toBeHidden()
-  await expect(panel.getByRole("heading", { name: "added", exact: true })).toBeVisible()
+  await form.getByRole("button", { name: "Save", exact: true }).click()
+  await expect(form).toBeHidden()
+  await expect(panel.getByRole("heading", { name: "Added site", exact: true })).toBeVisible()
+  await expect(panel.getByText("/projects/added", { exact: true })).toBeVisible()
+  const productionUrl = panel.getByRole("textbox", { name: "Production URL", exact: true })
+  await expect(productionUrl).toHaveValue("https://old.example.com")
+  await productionUrl.fill("https://new.example.com")
+  const updated = page.waitForRequest(
+    (request) =>
+      request.method() === "PATCH" && /^\/api\/project\/project-wordpress-/.test(new URL(request.url()).pathname),
+  )
+  await productionUrl.press("Enter")
+  expect((await updated).postDataJSON()).toEqual({ experimental: { wordpressUrl: "https://new.example.com" } })
+  await settings.getByRole("button", { name: "Back to projects", exact: true }).click()
+  const added = panel.getByRole("listitem").filter({ hasText: "Added site" })
+  await expect(added.getByText("https://new.example.com", { exact: true })).toBeVisible()
   await page.getByRole("button", { name: "Home", exact: true }).click()
   await expect(page.locator('[data-component="home-project-row"]').filter({ hasText: "dinocms" })).toBeVisible()
 })
@@ -707,6 +719,42 @@ test("a project rename that hangs keeps its field focused, and Escape cancels it
   await expect(card.getByRole("button", { name: "Settings demo", exact: true })).toBeFocused()
   await expect(settings).toBeVisible()
   hold.release()
+})
+
+test("connects WordPress from project settings, persists the connection and disconnects", async ({ page }) => {
+  const url = "https://wordpress.example.com"
+  const id = "proj_settings_demo"
+  const { settings } = await open(page, {
+    project: { id, experimental: { wordpress: { directory, url } } },
+    onConnectWordPress: (projectID, input) => {
+      expect(projectID).toBe(id)
+      expect(input.url).toBe(url)
+      return input.applicationPassword === "valid password" ? undefined : "WordPress rejected the application password."
+    },
+  })
+  await openProject(page)
+  const connect = settings.getByRole("button", { name: "Connect WordPress", exact: true })
+  await connect.click()
+
+  const dialog = page.getByRole("dialog", { name: "Connect WordPress" })
+  await expect(dialog.getByText(url, { exact: true })).toBeVisible()
+  await dialog.getByLabel("WordPress username").fill("editor")
+  const password = dialog.getByLabel("Application password", { exact: true })
+  const save = dialog.getByRole("button", { name: "Test and save" })
+  await expect(password).toHaveAttribute("type", "password")
+  await password.fill("incorrect")
+  await save.click()
+  await expect(dialog.getByRole("alert")).toHaveText("WordPress rejected the application password.")
+
+  await password.fill("valid password")
+  await save.click()
+  await expect(dialog).toBeHidden()
+  const connected = settings.getByText("Connected as editor", { exact: true })
+  await expect(connected).toBeVisible()
+  await page.reload()
+  await expect(connected).toBeVisible()
+  await settings.getByRole("button", { name: "Disconnect", exact: true }).click()
+  await expect(connect).toBeVisible()
 })
 
 test("project settings open as a nested view that keeps its route", async ({ page }) => {

@@ -264,7 +264,7 @@ export function createSettingsSearchCatalog() {
       return {
         ...server,
         connected: !!context,
-        projects: context ? context.projects.list() : [],
+        projects: context ? context.projects.unique() : [],
       }
     }),
   )

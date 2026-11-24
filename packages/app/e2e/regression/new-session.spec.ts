@@ -29,6 +29,8 @@ const followUp = "Then explain the setup scripts.\nInclude the install command."
 
 const headers = { "access-control-allow-origin": "*" }
 
+const wordpressUrl = "https://wordpress.example.com"
+
 const editor = (page: Page) => page.locator('[data-component="composer-editor"]')
 
 const submit = (page: Page) => page.locator('[data-action="composer-submit"]')
@@ -106,7 +108,7 @@ test("the location shortcuts choose worktrees from every state and keep cycling"
 
   const search = page.getByRole("combobox", { name: "Search worktrees", exact: true })
 
-  await expect(path).toHaveText(view.directory)
+  await expect(path).toHaveText(wordpressUrl)
   await expect(worktree).toHaveText("dev")
   await view.editor.press(cycle)
   await expect(base).toHaveText("from dev")
@@ -116,13 +118,13 @@ test("the location shortcuts choose worktrees from every state and keep cycling"
   await view.editor.press(cycle)
   await expect(worktree).toHaveText("dev")
   await expect(base).toHaveCount(0)
-  await expect(path).toHaveText(view.directory)
+  await expect(path).toHaveText(wordpressUrl)
 
   await view.editor.press(`${modifier}+Alt+KeyO`)
   await expect(search).toBeFocused()
   await page.getByRole("option", { name: /^quiet-river / }).click()
   await expect(view.editor).toBeFocused()
-  await expect(path).toHaveText(existing)
+  await expect(path).toHaveText(wordpressUrl)
   await expect(worktree).toHaveText("No branch")
   await view.editor.press(`${modifier}+Alt+KeyO`)
   await expect(search).toBeFocused()
@@ -133,7 +135,7 @@ test("the location shortcuts choose worktrees from every state and keep cycling"
   await view.editor.press(`${modifier}+Alt+KeyO`)
   await expect(search).toBeFocused()
   await page.getByRole("option", { name: /^quiet-river / }).click()
-  await expect(path).toHaveText(existing)
+  await expect(path).toHaveText(wordpressUrl)
   await expect(view.editor).toBeFocused()
 })
 
@@ -164,6 +166,50 @@ test("the main checkout shows its branch and is targeted when the draft opened i
   await view.editor.fill("Run in the main checkout")
   await submit(page).click()
   await expect.poll(() => created).toEqual([{ directory: root }])
+})
+
+test("a WordPress session starts in the registered folder inside its Git checkout", async ({ page }) => {
+  const root = "/projects/monorepo"
+  const directory = "/projects/monorepo/shop"
+  const url = "https://shop.example.com"
+  const site = project({
+    id: "proj_wordpress_shop",
+    directory,
+    canonical: root,
+    name: "Shop",
+    experimental: { wordpress: { directory, url } },
+  })
+  const created: unknown[] = []
+  const view = await openDraft(page, {
+    name: "Shop",
+    directory,
+    project: site,
+    projects: [site],
+    onSessionCreate: (body) => void created.push(body.location),
+  })
+
+  await expect(newSessionLocation(page)).toContainText("Shop")
+  const link = page.getByRole("link", { name: url, exact: true })
+  await expect(link).toHaveAttribute("href", url)
+  await expect(link).toHaveAttribute("target", "_blank")
+  await newSessionLocation(page).click()
+  const search = page.getByRole("combobox", { name: "Search projects", exact: true })
+  const option = page.getByRole("option", { name: /\bShop https:\/\/shop\.example\.com\b/ })
+  await expect(option).toBeVisible()
+  await search.fill("shop.example.com")
+  await expect(option).toBeVisible()
+  await search.press("Escape")
+
+  await page.context().route(`${url}/`, (route) => route.fulfill({ body: "WordPress production site" }))
+  const popup = page.waitForEvent("popup")
+  await link.click()
+  const sitePage = await popup
+  await expect(sitePage).toHaveURL(`${url}/`)
+  await sitePage.close()
+
+  await view.editor.fill("Review the shop")
+  await submit(page).click()
+  await expect.poll(() => created).toEqual([{ directory }])
 })
 
 test("the main checkout trigger holds a placeholder while its branch loads, then reads No branch without one", async ({
@@ -311,43 +357,33 @@ test("picker scrollbars overlay full-width rows and support dragging", async ({ 
   await expect.poll(() => viewport.evaluate((el) => el.scrollTop)).toBe(0)
 })
 
-for (const row of [
-  {
-    name: "POSIX",
-    directory: "/Users/alice/.local/share/opencode/worktree/123456/my-project",
-    pattern: /^\/Users\/.*…\/123456\/my-project$/,
-  },
-  {
-    name: "Windows",
-    directory: "C:\\Users\\alice\\Documents\\opencode\\worktree\\123456\\my-project",
-    pattern: /^C:\\.*…\\123456\\my-project$/,
-  },
-]) {
-  test(`the location path keeps its start and final two segments on ${row.name}`, async ({ page }) => {
-    await page.setViewportSize({ width: 600, height: 700 })
-    await openDraft(page, { name: "A project with a long name", directory: row.directory })
-    const path = page.locator('[data-slot="new-session-location-path"]')
-    await expect(path).toHaveText(row.pattern)
-    await expect.poll(() => path.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
-    await path.hover()
-    await expect(page.getByRole("tooltip")).toHaveText(row.directory)
-
-    if (row.name !== "POSIX") return
-    await expect(path).toHaveCSS("user-select", "text")
-    await path.click()
-    await path.evaluate((element) => {
-      const range = document.createRange()
-
-      range.selectNodeContents(element)
-      window.getSelection()?.removeAllRanges()
-      window.getSelection()?.addRange(range)
-    })
-    const modifier = await page.evaluate(() => (/Mac/i.test(navigator.platform) ? "Meta" : "Control"))
-
-    await page.keyboard.press(`${modifier}+c`)
-    await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe(row.directory)
+test("a long production URL keeps its origin and final segments and copies the full URL", async ({ page }) => {
+  const directory = "/projects/site"
+  const url = "https://wp.example.com/clients/production/a-very-long-section-name/my-company/123456/my-project"
+  await page.setViewportSize({ width: 680, height: 700 })
+  await openDraft(page, {
+    name: "A project with a long name",
+    directory,
+    project: { experimental: { wordpress: { directory, url } } },
   })
-}
+  const location = page.locator('[data-slot="new-session-location-path"]')
+  await expect(location).toHaveText(/^https:\/\/wp\.example\.com\/.*…\/123456\/my-project$/)
+  await expect.poll(() => location.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await location.hover()
+  await expect(page.getByRole("tooltip")).toHaveText(url)
+
+  await expect(location).toHaveCSS("user-select", "text")
+  await location.focus()
+  await location.evaluate((element) => {
+    const range = document.createRange()
+    range.selectNodeContents(element)
+    window.getSelection()?.removeAllRanges()
+    window.getSelection()?.addRange(range)
+  })
+  const modifier = await page.evaluate(() => (/Mac/i.test(navigator.platform) ? "Meta" : "Control"))
+  await page.keyboard.press(`${modifier}+c`)
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe(url)
+})
 
 test("a new worktree uses the base branch chosen in the draft", async ({ page }) => {
   const listed = Promise.withResolvers<string[]>()
@@ -475,14 +511,14 @@ test("the checkout branch opens the current project's worktree step", async ({ p
   await expect(dialog).toHaveCount(0)
   await expect(local).toHaveText("quiet-river-branch")
   await expect(screen.getByText("quiet-river", { exact: true })).toHaveCount(0)
-  await expect(screen.locator('[data-slot="new-session-location-path"]')).toHaveText(existing)
+  await expect(screen.locator('[data-slot="new-session-location-path"]')).toHaveText(wordpressUrl)
   await local.click()
   await expect(selected).toHaveAccessibleName(/^quiet-river /)
   await search.fill("Custom project")
   await expect(options).toHaveCount(1)
   await dialog.getByRole("option", { name: main }).click()
   await expect(local).toHaveText("dev")
-  await expect(screen.locator('[data-slot="new-session-location-path"]')).toHaveText(view.directory)
+  await expect(screen.locator('[data-slot="new-session-location-path"]')).toHaveText(wordpressUrl)
   await expect(view.editor).toBeFocused()
   await expect(view.editor).toHaveText("Keep this draft on the main checkout")
 })
@@ -1021,7 +1057,7 @@ test("retains the draft and reuses the created workspace after session creation 
   await expect(page.getByText("Failed to create session", { exact: true })).toBeVisible()
   await expect(editor(page)).toHaveText(text)
   await expect(submit(page)).toBeEnabled()
-  await expect(page.locator('[data-slot="new-session-location-path"]')).toHaveText(workspace)
+  await expect(page.locator('[data-slot="new-session-location-path"]')).toHaveText(wordpressUrl)
   await expect(pending.shimmer).toHaveCount(0)
   await expect(pending.message).toHaveCount(0)
   expect(mock.creates).toEqual([expect.objectContaining({ id: pending.sessionID, location: { directory: workspace } })])
@@ -1438,6 +1474,10 @@ test("the location dialog separates added projects from server projects and tags
   await options.filter({ hasText: "Add project" }).click()
   await expect(options).toHaveText(["hailmaryThis computer", "apollo"])
   await options.filter({ hasText: "apollo" }).click()
+  await page
+    .getByRole("dialog", { name: "Add project", exact: true })
+    .getByRole("button", { name: "Choose folder", exact: true })
+    .click()
   await expect(page.getByRole("button", { name: "Select folder", exact: true })).toBeEnabled()
   await expect.poll(() => files.length).toBeGreaterThan(0)
 })
@@ -1466,7 +1506,8 @@ for (const binding of ["mod+alt+p", "none"]) {
     if (binding === "none") return
 
     await search.press(`${modifier}+Alt+p`)
-    await expect(page.getByRole("button", { name: "Select folder", exact: true })).toBeEnabled()
+    const form = page.getByRole("dialog", { name: "Add project", exact: true })
+    await expect(form.getByRole("textbox", { name: "Name", exact: true })).toBeFocused()
   })
 }
 

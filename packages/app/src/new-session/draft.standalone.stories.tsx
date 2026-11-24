@@ -118,7 +118,11 @@ function DraftLanding(props: DraftArgs & { directory: string; setDirectory: (dir
 
   const workspace = {
     ...checkout,
-    project: { ...checkout.project, root: () => project.selected()?.worktree ?? props.directory },
+    project: {
+      ...checkout.project,
+      root: () => project.selected()?.worktree ?? props.directory,
+      directory: () => project.selected()?.worktree ?? props.directory,
+    },
     bar: {
       ...checkout.bar,
       branch: () =>

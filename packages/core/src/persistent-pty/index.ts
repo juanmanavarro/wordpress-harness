@@ -2,7 +2,7 @@ export * as PersistentPty from "./index.js"
 
 import { stat } from "node:fs/promises"
 import path from "node:path"
-import { Context, Effect, Layer, Schema, Stream } from "effect"
+import { Context, Effect, Layer, Option, Schema, Stream } from "effect"
 import { makeGlobalNode } from "@opencode/util/effect/app-node"
 import {
   Added,
@@ -15,9 +15,12 @@ import {
 } from "@opencode/schema/persistent-pty"
 import { Session } from "@opencode/schema/session"
 import { SessionEvent } from "@opencode/schema/session-event"
+import { LegacyCleanup } from "@opencode/schema/project"
 import { Bus } from "../bus.js"
 import { Pty } from "@opencode/schema/pty"
 import { Global } from "@opencode/util/global"
+import { KV } from "../kv.js"
+import { LegacyProjectsReceipt } from "../project/purge-legacy.js"
 import { ShellSelect } from "../shell/select.js"
 import {
   makeDaemonTransport,
@@ -194,6 +197,8 @@ export interface Interface {
 }
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/PersistentPty") {}
+
+const decodeLegacyCleanup = Schema.decodeUnknownOption(LegacyCleanup)
 
 const makeLayer = (options: Options = {}) =>
   Layer.effect(
@@ -398,26 +403,22 @@ const makeLayer = (options: Options = {}) =>
         )
       }
 
+      const removeDeletedTerminal = (terminal: Info) =>
+        remove(terminal.id).pipe(
+          Effect.catchTags({
+            "PersistentPty.NotFoundError": () => Effect.void,
+            "PersistentPty.UnavailableError": (error) =>
+              Effect.logWarning("failed to remove deleted session's terminal", {
+                sessionID: terminal.sessionID,
+                id: terminal.id,
+                error: error.message,
+              }),
+          }),
+        )
+
       const removeSession = (sessionID: Session.ID) =>
         list(sessionID).pipe(
-          Effect.flatMap((terminals) =>
-            Effect.forEach(
-              terminals,
-              (terminal) =>
-                remove(terminal.id).pipe(
-                  Effect.catchTags({
-                    "PersistentPty.NotFoundError": () => Effect.void,
-                    "PersistentPty.UnavailableError": (error) =>
-                      Effect.logWarning("failed to remove deleted session's terminal", {
-                        sessionID,
-                        id: terminal.id,
-                        error: error.message,
-                      }),
-                  }),
-                ),
-              { discard: true },
-            ),
-          ),
+          Effect.flatMap((terminals) => Effect.forEach(terminals, removeDeletedTerminal, { discard: true })),
           Effect.catchTag("PersistentPty.UnavailableError", (error) =>
             Effect.logWarning("failed to list deleted session's terminals", { sessionID, error: error.message }),
           ),
@@ -429,6 +430,28 @@ const makeLayer = (options: Options = {}) =>
         Stream.runForEach((event) => removeSession(event.data.sessionID)),
         Effect.forkScoped({ startImmediately: true }),
       )
+
+      // SQL upgrades bypass session deletion events. Only a handed-off daemon can hold pre-upgrade terminals.
+      if (options.handoff) {
+        const kv = Option.getOrUndefined(yield* Effect.serviceOption(KV.Service))
+        const receipt = kv && Option.getOrUndefined(decodeLegacyCleanup(yield* kv.get(LegacyProjectsReceipt)))
+
+        if (receipt?.sessions.length) {
+          const deleted = new Set(receipt.sessions.map((session) => session.id))
+          yield* list().pipe(
+            Effect.flatMap((terminals) =>
+              Effect.forEach(
+                terminals.filter((terminal) => deleted.has(terminal.sessionID)),
+                removeDeletedTerminal,
+                { discard: true },
+              ),
+            ),
+            Effect.catchTag("PersistentPty.UnavailableError", (error) =>
+              Effect.logWarning("failed to list upgraded sessions' terminals", { error: error.message }),
+            ),
+          )
+        }
+      }
 
       const attach = Effect.fn("PersistentPty.attach")(function* (
         id: Pty.ID,
@@ -544,7 +567,7 @@ export const configured = (options?: Options) =>
   makeGlobalNode({
     service: Service,
     layer: options === undefined ? layer : makeLayer(options),
-    deps: [Bus.node, Global.node],
+    deps: [Bus.node, Global.node, KV.node],
   })
 export const node = configured()
 

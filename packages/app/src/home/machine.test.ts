@@ -5,7 +5,6 @@ import {
   selectHomeSelection,
   transitionHomeSelection,
   type HomeEnvSnapshot,
-  type HomeSelectionEvent,
   type HomeSelectionState,
   type HomeServerSnapshot,
 } from "./machine"
@@ -223,36 +222,23 @@ describe("home selection machine", () => {
     expect(off.effects).toEqual([{ type: "selection.persist", selection: { server: SIDECAR } }])
   })
 
-  test("an added project is selected unless the user chose something else first", () => {
+  test("a registered project is selected", () => {
     const stored = { server: SIDECAR }
-    const ready = settle(env({ stored, servers: [server(SIDECAR, { connected: false }), server(REMOTE)] }))
-    const add: HomeSelectionEvent = { type: "project.add", server: SIDECAR, directories: [API.worktree] }
 
-    expect(transitionHomeSelection(ready, { ...add, directories: [] }).state).toBe(ready)
-
-    const adding = transitionHomeSelection(ready, add)
-    expect(adding.effects).toEqual([{ type: "project.add", attempt: 1, server: SIDECAR, directories: [API.worktree] }])
-
-    // The server reports the project before the result arrives, as the driver syncs it first.
-    const listed = sync(
-      adding.state,
+    const ready = settle(
       env({ stored, servers: [server(SIDECAR, { connected: false, usedProjects: [API] }), server(REMOTE)] }),
     )
 
-    const added = transitionHomeSelection(listed.state, { type: "project.added", attempt: 1, project: API })
-    expect(added.state).toMatchObject({ status: "ready", server: SIDECAR, project: API, adding: undefined })
+    const added = transitionHomeSelection(ready, {
+      type: "project.registered",
+      server: SIDECAR,
+      directory: API.worktree,
+    })
+
+    expect(added.state).toMatchObject({ status: "ready", server: SIDECAR, project: API })
     expect(added.effects).toEqual([
       { type: "selection.persist", selection: { server: SIDECAR, directory: API.worktree } },
     ])
-
-    const moved = transitionHomeSelection(listed.state, { type: "server.focused", server: REMOTE })
-    const stale = transitionHomeSelection(moved.state, { type: "project.added", attempt: 1, project: API })
-    expect(stale.state).toBe(moved.state)
-    expect(stale.effects).toEqual([])
-
-    const failed = transitionHomeSelection(listed.state, { type: "project.added", attempt: 1, project: undefined })
-    expect(failed.state).toMatchObject({ status: "ready", project: undefined, adding: undefined })
-    expect(failed.effects).toEqual([])
   })
 
   test("adopts a selection written elsewhere, and does not echo its own writes", () => {
@@ -280,7 +266,9 @@ describe("home selection machine", () => {
       state: disposed,
       effects: [],
     })
-    expect(transitionHomeSelection(disposed, { type: "project.added", attempt: 1, project: API }).state).toBe(disposed)
+    expect(
+      transitionHomeSelection(disposed, { type: "project.registered", server: SIDECAR, directory: API.worktree }).state,
+    ).toBe(disposed)
     expect(sync(disposed, env()).state).toBe(disposed)
   })
 })

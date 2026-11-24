@@ -128,6 +128,21 @@ describe("normalizeProviderList", () => {
 })
 
 describe("normalizeProjectInfo", () => {
+  test("uses the registered WordPress folder inside a repository as the working directory", () => {
+    const site: Project = {
+      id: "prj",
+      canonical: "/repo",
+      time: { created: 1, updated: 1, active: 1 },
+      sandboxes: [],
+      experimental: { wordpress: { directory: "/repo/site", url: "https://site.example.com" } },
+    }
+
+    expect(normalizeProjectInfo(site)).toMatchObject({
+      worktree: "/repo/site",
+      worktrees: [{ directory: "/repo/site" }],
+    })
+  })
+
   test("keeps the project VCS backend", () => {
     const project: Project = {
       id: "prj",

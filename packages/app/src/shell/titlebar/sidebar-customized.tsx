@@ -193,11 +193,13 @@ export function SidebarCustomized(props: {
       const ctx = ctxOf(tab.server)
 
       if (tab.type === "draft") {
+        const project = ctx?.projects.forDirectory(tab.directory)
+
         return {
           key: tabKey(tab),
           server: tab.server,
-          projectID: ctx?.projects.forDirectory(tab.directory)?.id,
-          project: ctx?.projects.forDirectory(tab.directory),
+          projectID: project?.experimental?.wordpress ? project.id : undefined,
+          project,
           open: true,
           active: current === tab,
           parentKey: undefined,
@@ -224,7 +226,7 @@ export function SidebarCustomized(props: {
       return {
         key: sessionRowKey(tab.server, tab.sessionId),
         server: tab.server,
-        projectID: project?.id,
+        projectID: project?.experimental?.wordpress ? project.id : undefined,
         project,
         open: true,
         active: isActive(tab.server, tab.sessionId),
@@ -266,7 +268,7 @@ export function SidebarCustomized(props: {
           {
             key,
             server,
-            projectID: project?.id,
+            projectID: project?.experimental?.wordpress ? project.id : undefined,
             project,
             open: false,
             active: isActive(server, session.id),
@@ -298,7 +300,7 @@ export function SidebarCustomized(props: {
 
     global.servers.list().forEach((conn) => {
       ctxOf(ServerConnection.key(conn))
-        ?.projects.list()
+        ?.projects.unique()
         .forEach((project) => {
           if (!byID.has(project.id) || servers.current(conn)) byID.set(project.id, project)
         })
@@ -573,7 +575,7 @@ export function SidebarCustomized(props: {
 
       const copy = (conn: ServerConnection.Any) =>
         ctxOf(ServerConnection.key(conn))
-          ?.projects.list()
+          ?.projects.unique()
           .find((item) => item.id === value.id)
 
       const owners = connected().filter((conn) => copy(conn))

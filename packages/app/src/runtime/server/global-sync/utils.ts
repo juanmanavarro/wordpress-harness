@@ -146,7 +146,8 @@ export function normalizeProviderList(
 }
 
 export function normalizeProjectInfo(project: Project | CurrentProject): Project {
-  const worktree = "canonical" in project ? project.canonical : project.worktree
+  const worktree =
+    project.experimental?.wordpress?.directory ?? ("canonical" in project ? project.canonical : project.worktree)
 
   return {
     ...project,
@@ -157,9 +158,7 @@ export function normalizeProjectInfo(project: Project | CurrentProject): Project
 
 export function updateProjectInfo(project: Project, update: CurrentProject): Project {
   return {
-    ...project,
-    ...update,
-    worktree: update.canonical,
+    ...normalizeProjectInfo({ ...project, ...update }),
     worktrees: project.worktrees,
   }
 }

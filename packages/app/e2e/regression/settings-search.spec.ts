@@ -324,7 +324,7 @@ for (const count of [0, 7, 8]) {
     if (count === 0) {
       await expect(view.settings.getByText("No projects yet", { exact: true })).toBeVisible()
       await view.settings.getByRole("button", { name: "Add project", exact: true }).click()
-      const picker = page.getByRole("dialog", { name: "Open project", exact: true })
+      const picker = page.getByRole("dialog", { name: "Add project", exact: true })
       await expect(picker).toBeVisible()
       await picker.getByRole("button", { name: "Cancel", exact: true }).click()
       await expect(picker).toBeHidden()

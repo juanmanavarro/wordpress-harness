@@ -38,13 +38,14 @@ export default function NewSessionPage(props: { draftId: string }) {
   const mcp = createDraftMcpControls({
     draftID: props.draftId,
     worktree: workspace.selection.value,
+    mainDirectory: workspace.project.directory,
     preparing: () => start.view().preparingMcp,
   })
 
   const composer = createNewSessionComposerAdapter({
     draftID: props.draftId,
     worktree: workspace.selection.value,
-    root: workspace.project.root,
+    projectDirectory: workspace.project.directory,
     branch: workspace.bar.branch,
     submitted: workspace.selection.remember,
     mcp,

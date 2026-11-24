@@ -5,6 +5,7 @@ import { StorageChanged } from "../../shared/ipc-rpc/events"
 import { emitIpcEvent } from "../ipc-events"
 import { IpcPortHandoff } from "../ipc-transport"
 import { DesktopStorage } from "../storage"
+import { cleanupLegacyProjectStorage } from "../storage/project-cleanup"
 
 export const storageHandlers = StorageRpcs.toLayer(
   Effect.gen(function* () {
@@ -32,6 +33,29 @@ export const storageHandlers = StorageRpcs.toLayer(
       DraftsDelete: ({ key }) => Effect.sync(() => void storage.drafts.set(key, null)),
       DraftsPutBlob: ({ data }) => Effect.sync(() => storage.drafts.putBlob(data)),
       DraftsGetBlob: ({ id }) => Effect.sync(() => storage.drafts.getBlob(id)),
+      StorageCleanupLegacyProjects: (input) =>
+        Effect.sync(() => {
+          storage.flush()
+          const result = cleanupLegacyProjectStorage(storage.db, input)
+          const changed = new Map<string, { insert: Record<string, string>; remove: string[] }>()
+
+          for (const row of result.changes) {
+            const namespace = changed.get(row.name) ?? { insert: {}, remove: [] }
+
+            if (row.value === null) namespace.remove.push(row.key)
+            else namespace.insert[row.key] = row.value
+            changed.set(row.name, namespace)
+          }
+
+          for (const [name, changes] of changed) {
+            const revision = storage.state.update(name, {}, [])
+            const event = new StorageChanged({ name, ...changes, revision })
+
+            for (const win of BrowserWindow.getAllWindows()) emitIpcEvent(win.webContents, event)
+          }
+
+          return result.draftIDs
+        }),
     })
   }),
 )

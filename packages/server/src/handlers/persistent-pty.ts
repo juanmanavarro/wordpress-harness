@@ -23,6 +23,8 @@ import { makeAutomation } from "./automation"
 import { makeJob } from "./job"
 import { makeMachine, makeMachineLink } from "./machine"
 import { makeMediaGet } from "./media"
+import { makeWordPressProjects } from "./project"
+import { ProjectWordPress } from "@opencode/core/project/wordpress"
 import { type Outbound, runPtySocket } from "./pty-socket"
 
 export const PersistentPtyHandler = HttpApiBuilder.group(Api, "server.experimental", (handlers) =>
@@ -37,8 +39,21 @@ export const PersistentPtyHandler = HttpApiBuilder.group(Api, "server.experiment
     const automation = yield* makeAutomation
     const machine = yield* makeMachine
     const machineLink = yield* makeMachineLink
+    const projects = yield* makeWordPressProjects
+    const wordpress = yield* ProjectWordPress.make
+    const wordpressError = (error: { message: string; code: string }) =>
+      new InvalidRequestError({ message: error.message, kind: `wordpress-connection:${error.code}` })
 
     return handlers
+      .handle("project.create", (ctx) => projects.create(ctx.payload))
+      .handle("project.cleanup", () => projects.cleanup())
+      .handle("project.wordpressConnection", (ctx) =>
+        wordpress.status(ctx.params.projectID).pipe(Effect.mapError(wordpressError)),
+      )
+      .handle("project.connectWordPress", (ctx) =>
+        wordpress.connect(ctx.params.projectID, ctx.payload).pipe(Effect.mapError(wordpressError)),
+      )
+      .handle("project.disconnectWordPress", (ctx) => wordpress.disconnect(ctx.params.projectID))
       .handleRaw("media.get", (ctx) => mediaGet(ctx.params.hash, ctx.request))
       .handleRaw("blob.get", (ctx) => blobGet(ctx.params.id, ctx.request))
       .handle("job.list", (ctx) => job.list(ctx.query))

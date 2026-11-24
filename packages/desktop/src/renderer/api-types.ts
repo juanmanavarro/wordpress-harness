@@ -1,5 +1,6 @@
 import type { DesktopMenuAction, DesktopZoomLevel } from "@opencode/app/desktop-menu"
 import type { DesktopNativeBundle } from "@opencode/app/i18n/desktop-native"
+import type { LegacyProjectCleanup } from "@opencode/app/project-cleanup"
 import type { StorageSnapshot } from "../shared/ipc-transport"
 import type { WindowBootstrap } from "../shared/window-bootstrap"
 import type {
@@ -38,6 +39,7 @@ export type ElectronAPI = {
   draftDelete(key: string): Promise<void>
   draftBlobPut(data: ArrayBuffer): Promise<string>
   draftBlobGet(id: string): Promise<ArrayBuffer | null>
+  cleanupLegacyProjectStorage(input: LegacyProjectCleanup): Promise<readonly string[]>
   getWindowID(): string
   getWindowBootstrap(): WindowBootstrap
   themeReady(): Promise<void>

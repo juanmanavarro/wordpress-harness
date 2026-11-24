@@ -6,7 +6,6 @@ import { usePluginServers } from "@/runtime/plugin/servers"
 import { createProjectSessionActions } from "@/shell/tabs/project-sessions"
 import { batch, createEffect, createMemo, createSignal, onCleanup, untrack } from "solid-js"
 import { pathKey } from "@/workspaces/path-key"
-import { addProjects } from "./projects/add"
 import {
   INITIAL_HOME_SELECTION_STATE,
   sameHomeSelection,
@@ -71,26 +70,12 @@ export function createHomeController() {
 
     const ctx = global.serverCtx(effect.server)
 
-    if (effect.type === "worktrees.list") {
-      // The inventory read never rejects; a failed read still asks the server to discover worktrees.
-      if (!ctx) return dispatch({ type: "worktrees.listed", attempt: effect.attempt })
+    // The inventory read never rejects; a failed read still asks the server to discover worktrees.
+    if (!ctx) return dispatch({ type: "worktrees.listed", attempt: effect.attempt })
 
-      return void ctx.sync.worktrees
-        .list(effect.projectID)
-        .then(() => dispatch({ type: "worktrees.listed", attempt: effect.attempt }))
-    }
-
-    if (!ctx) return dispatch({ type: "project.added", attempt: effect.attempt, project: undefined })
-
-    void addProjects(ctx, [...effect.directories]).then(
-      (project) =>
-        send({
-          type: "project.added",
-          attempt: effect.attempt,
-          project: project && { id: project.id, worktree: project.worktree },
-        }),
-      () => dispatch({ type: "project.added", attempt: effect.attempt, project: undefined }),
-    )
+    void ctx.sync.worktrees
+      .list(effect.projectID)
+      .then(() => dispatch({ type: "worktrees.listed", attempt: effect.attempt }))
   }
 
   initial.effects.forEach(run)
@@ -144,8 +129,8 @@ export function createHomeController() {
       forServer: (conn: ServerConnection.Any) => global.serverCtx(ServerConnection.key(conn))?.projects.used() ?? [],
       select: (conn: ServerConnection.Any, directory: string) =>
         send({ type: "project.toggled", server: ServerConnection.key(conn), directory }),
-      add: (conn: ServerConnection.Any, directories: string[]) =>
-        send({ type: "project.add", server: ServerConnection.key(conn), directories }),
+      registered: (conn: ServerConnection.Any, directory: string) =>
+        send({ type: "project.registered", server: ServerConnection.key(conn), directory }),
       openNewSession: () => {
         const conn = focusedServer()
         const project = newSessionProject()

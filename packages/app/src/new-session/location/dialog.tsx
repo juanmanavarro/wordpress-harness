@@ -156,7 +156,14 @@ function NewSessionLocationDialog(props: {
         .projects()
         .filter((project) => (others ? !project.used : project.used || !!query))
         // Remote projects also match their server's name, which their tag shows.
-        .filter((project) => matches(displayName(project), project.worktree, tagged(project.server)?.name))
+        .filter((project) =>
+          matches(
+            displayName(project),
+            project.experimental?.wordpress?.url,
+            project.worktree,
+            tagged(project.server)?.name,
+          ),
+        )
         .map((project) => ({ id: projectEntryID(project), type: "project" as const, project })),
       ...(!others
         ? [
@@ -451,7 +458,7 @@ function NewSessionLocationDialog(props: {
                             {(item) => (
                               <ProjectRow
                                 project={item().project}
-                                path={item().project.worktree}
+                                description={item().project.experimental?.wordpress?.url ?? item().project.worktree}
                                 onDrill={drillable(item().project) ? () => drill(item().project) : undefined}
                                 drillLabel={language.t("session.new.location.worktrees")}
                               />
@@ -521,7 +528,7 @@ function NewSessionLocationDialog(props: {
                                 <ProjectRow
                                   project={item().project}
                                   branch={checkout(item().project)}
-                                  path={item().directory}
+                                  description={item().directory}
                                   drillLabel={language.t("session.new.location.worktrees")}
                                 />
                               </Show>
@@ -547,7 +554,7 @@ function NewSessionLocationDialog(props: {
 function ProjectRow(props: {
   project: PromptProject
   branch?: string
-  path: string
+  description: string
   onDrill?: () => void
   drillLabel: string
 }) {
@@ -575,7 +582,7 @@ function ProjectRow(props: {
             </Show>
           </span>
           <span class="command-palette-description" dir="ltr">
-            {props.path}
+            {props.description}
           </span>
         </div>
       </div>

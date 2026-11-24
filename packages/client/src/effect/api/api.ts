@@ -1919,6 +1919,7 @@ export type ProjectUpdateInput = {
   readonly name?: string | undefined
   readonly icon?: Project.Icon | undefined
   readonly commands?: Project.Commands | undefined
+  readonly experimental?: { readonly wordpressUrl?: Project.WordPressUrl | undefined } | undefined
 }
 export type ProjectUpdateOutput = Project.Info
 export type ProjectUpdateOperation<E = never> = (input: ProjectUpdateInput) => Effect.Effect<ProjectUpdateOutput, E>
@@ -2432,6 +2433,42 @@ export type ExperimentalPersistentPtyConnectTokenOperation<E = never> = (
   input: ExperimentalPersistentPtyConnectTokenInput,
 ) => Effect.Effect<ExperimentalPersistentPtyConnectTokenOutput, E>
 
+export type ExperimentalProjectCleanupOutput = Project.LegacyCleanup
+export type ExperimentalProjectCleanupOperation<E = never> = () => Effect.Effect<ExperimentalProjectCleanupOutput, E>
+
+export type ExperimentalProjectCreateInput = {
+  readonly name: string
+  readonly url: Project.WordPressUrl
+  readonly directory: AbsolutePath
+}
+export type ExperimentalProjectCreateOutput = Project.Info
+export type ExperimentalProjectCreateOperation<E = never> = (
+  input: ExperimentalProjectCreateInput,
+) => Effect.Effect<ExperimentalProjectCreateOutput, E>
+
+export type ExperimentalProjectWordpressConnectionInput = { readonly projectID: Project.ID }
+export type ExperimentalProjectWordpressConnectionOutput = Project.WordPressConnection | null
+export type ExperimentalProjectWordpressConnectionOperation<E = never> = (
+  input: ExperimentalProjectWordpressConnectionInput,
+) => Effect.Effect<ExperimentalProjectWordpressConnectionOutput, E>
+
+export type ExperimentalProjectConnectWordPressInput = {
+  readonly projectID: Project.ID
+  readonly url: Project.WordPressUrl
+  readonly username: string
+  readonly applicationPassword: string
+}
+export type ExperimentalProjectConnectWordPressOutput = Project.WordPressConnection | null
+export type ExperimentalProjectConnectWordPressOperation<E = never> = (
+  input: ExperimentalProjectConnectWordPressInput,
+) => Effect.Effect<ExperimentalProjectConnectWordPressOutput, E>
+
+export type ExperimentalProjectDisconnectWordPressInput = { readonly projectID: Project.ID }
+export type ExperimentalProjectDisconnectWordPressOutput = Project.WordPressConnection | null
+export type ExperimentalProjectDisconnectWordPressOperation<E = never> = (
+  input: ExperimentalProjectDisconnectWordPressInput,
+) => Effect.Effect<ExperimentalProjectDisconnectWordPressOutput, E>
+
 export type ExperimentalAutomationCreateInput = {
   readonly sessionID?: Session.ID | undefined
   readonly directory?: string | undefined
@@ -2610,6 +2647,13 @@ export interface ExperimentalApi<E = never> {
     readonly snapshot: ExperimentalPersistentPtySnapshotOperation<E>
     readonly remove: ExperimentalPersistentPtyRemoveOperation<E>
     readonly connectToken: ExperimentalPersistentPtyConnectTokenOperation<E>
+  }
+  readonly project: {
+    readonly cleanup: ExperimentalProjectCleanupOperation<E>
+    readonly create: ExperimentalProjectCreateOperation<E>
+    readonly wordpressConnection: ExperimentalProjectWordpressConnectionOperation<E>
+    readonly connectWordPress: ExperimentalProjectConnectWordPressOperation<E>
+    readonly disconnectWordPress: ExperimentalProjectDisconnectWordPressOperation<E>
   }
   readonly automation: {
     readonly create: ExperimentalAutomationCreateOperation<E>

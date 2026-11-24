@@ -16,6 +16,9 @@ export interface Info extends Schema.Schema.Type<typeof Info> {}
 export const UpdateInput = Project.UpdateInput
 export type UpdateInput = typeof UpdateInput.Type
 
+export const CreateWordPressInput = Project.CreateWordPressInput
+export type CreateWordPressInput = Project.CreateWordPressInput
+
 export const Event = Project.Event
 
 export const Vcs = Schema.Struct({

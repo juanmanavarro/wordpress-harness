@@ -1,6 +1,7 @@
 import { type Accessor, createMemo } from "solid-js"
 import { Icon } from "@opencode/ui/icon"
 import { useLanguage } from "@/runtime/i18n/language"
+import type { Project } from "@/runtime/server/types"
 import { pathKey } from "@/workspaces/path-key"
 
 /** A server listed in the location dialog; the current server gets no tag. */
@@ -23,6 +24,7 @@ export type PromptProject = {
   worktrees?: { directory: string; strategy?: string }[]
   icon?: { color?: string; url?: string; override?: string }
   time?: { active: number }
+  experimental?: Project["experimental"]
   /** This client has used the project on its server. */
   used?: boolean
   server?: PromptServer

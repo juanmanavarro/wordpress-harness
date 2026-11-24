@@ -12,16 +12,10 @@ test("creates a session in a new project and selects its model", async ({ page }
     route.abort(),
   )
   const created = project({ id: "proj_model_selection_flow", directory, name: "NewProject" })
-  // The server knows no project until the user adds this one.
-  const projects: unknown[] = []
   await mockOpenCodeServer(page, {
     directory,
     project: created,
-    projects: () => projects,
-    // The picker answers with the platform's separators; the server resolves them to its own.
-    onLocationGet: (requested) => {
-      if (requested.replaceAll("\\", "/") === directory && !projects.includes(created)) projects.push(created)
-    },
+    projects: [],
     provider: () => ({
       all: [
         {
@@ -75,7 +69,11 @@ test("creates a session in a new project and selects its model", async ({ page }
   const addProject = page.locator('[data-action="home-add-project-row"]')
   await expectAppVisible(addProject)
   await addProject.click()
-  const picker = page.getByRole("dialog", { name: "Open project", exact: true })
+  const form = page.getByRole("dialog", { name: "Add project", exact: true })
+  await form.getByRole("textbox", { name: "Name", exact: true }).fill("NewProject")
+  await form.getByRole("textbox", { name: "Production URL", exact: true }).fill("https://newproject.example.com")
+  await form.getByRole("button", { name: "Choose folder", exact: true }).click()
+  const picker = page.getByRole("dialog", { name: "Working folder", exact: true })
   await expect(picker.getByRole("combobox")).toHaveValue("")
 
   const listing = page.waitForRequest((request) => {
@@ -97,6 +95,8 @@ test("creates a session in a new project and selects its model", async ({ page }
   await expect(selectFolder).toBeEnabled()
   await selectFolder.click()
   await expect(picker).toBeHidden()
+  await form.getByRole("button", { name: "Save", exact: true }).click()
+  await expect(form).toBeHidden()
 
   await page.locator('[data-action="home-new-session"]').click()
   await expectAppVisible(page.locator('[data-component="composer"]'))

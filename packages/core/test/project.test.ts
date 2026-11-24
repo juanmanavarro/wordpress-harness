@@ -123,6 +123,74 @@ describe("Project.update", () => {
   )
 })
 
+describe("Project.createWordPress", () => {
+  it.live("registers the selected working folders and keeps their WordPress details on the projects", () =>
+    Effect.gen(function* () {
+      const first = yield* tmpdirScoped()
+      const second = yield* tmpdirScoped()
+      const project = yield* Project.Service
+      const firstInput = { name: "News", url: "https://news.example.test/wordpress", directory: abs(first.path) }
+
+      const news = yield* project.createWordPress(firstInput)
+      const shop = yield* project.createWordPress({
+        name: "Shop",
+        url: "https://shop.example.test",
+        directory: abs(second.path),
+      })
+      const repeated = yield* project.createWordPress(firstInput)
+      const updated = yield* project.update({
+        projectID: news.id,
+        experimental: { wordpressUrl: "https://www.news.example.test/wordpress" },
+      })
+
+      expect(news.id).not.toBe(shop.id)
+      expect(repeated.id).toBe(news.id)
+      expect(news).toMatchObject({
+        name: firstInput.name,
+        experimental: { wordpress: { url: firstInput.url, directory: firstInput.directory } },
+      })
+      expect(updated.experimental?.wordpress?.url).toBe("https://www.news.example.test/wordpress")
+      expect((yield* project.resolve(abs(first.path))).id).toBe(news.id)
+      expect((yield* project.list()).map((item) => item.id).sort()).toEqual([news.id, shop.id].sort())
+    }),
+  )
+
+  it.live("rejects a missing working folder before storing a project", () =>
+    Effect.gen(function* () {
+      const tmp = yield* tmpdirScoped()
+      const project = yield* Project.Service
+      const result = yield* project
+        .createWordPress({
+          name: "News",
+          url: "https://news.example.test",
+          directory: abs(path.join(tmp.path, "missing")),
+        })
+        .pipe(Effect.flip)
+
+      expect(result).toMatchObject({ field: "directory" })
+      expect(yield* project.list()).toEqual([])
+    }),
+  )
+
+  it.live("keeps sites with different working folders in the same repository separate", () =>
+    Effect.gen(function* () {
+      const repo = yield* tmpdirScoped()
+      const folders = ["news", "shop"].map((name) => abs(path.join(repo.path, name)))
+      yield* Effect.promise(() => initRepo(repo.path, { commit: true }))
+      yield* Effect.promise(() => Promise.all(folders.map((folder) => fs.mkdir(folder))))
+      const projects = yield* Project.Service
+      const sites = yield* Effect.forEach(folders, (directory, index) =>
+        projects.createWordPress({ name: `Site ${index}`, url: `https://site-${index}.example.test`, directory }),
+      )
+
+      expect(new Set(sites.map((site) => site.id)).size).toBe(2)
+      const resolved = yield* Effect.forEach(folders, (folder) => projects.resolve(folder))
+      expect(resolved.map((project) => project.id)).toEqual(sites.map((project) => project.id))
+      expect(sites.map((project) => project.experimental?.wordpress?.directory)).toEqual(folders)
+    }),
+  )
+})
+
 describe("Project.activate", () => {
   it.effect("records activity without editing metadata time and throttles repeats", () =>
     Effect.gen(function* () {

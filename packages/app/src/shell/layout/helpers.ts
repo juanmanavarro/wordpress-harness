@@ -22,12 +22,6 @@ export function toggleHomeProjectSelection(
   return { server, directory }
 }
 
-export function homeProjectDirectories(result: string | string[] | null) {
-  if (!result) return []
-
-  return Array.isArray(result) ? result : [result]
-}
-
 export function projectForSession<T extends { id?: string; worktree: string; sandboxes?: string[] }>(
   session: SessionInfo,
   projects: T[],

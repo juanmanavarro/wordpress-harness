@@ -3,6 +3,7 @@ import { HttpApi, HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "effect/ht
 import { PersistentPty } from "@opencode/schema/persistent-pty"
 import { Pty } from "@opencode/schema/pty"
 import { Worktree } from "@opencode/schema/worktree"
+import { Project } from "@opencode/schema/project"
 
 // Handlers answer plain fixture data: undefined properties are dropped, and other non-JSON values become null.
 const Json = Schema.Json.pipe(
@@ -219,10 +220,34 @@ const Group = HttpApiGroup.make("mock")
     }),
   )
   .add(HttpApiEndpoint.get("projectList", "/api/project", { success: Json }))
+  .add(HttpApiEndpoint.get("projectCleanup", "/api/experimental/project/cleanup", { success: Json }))
+  .add(
+    HttpApiEndpoint.get("wordpressConnection", "/api/experimental/project/:projectID/wordpress-connection", {
+      params: { projectID: Schema.String },
+      success: Json,
+    }),
+    HttpApiEndpoint.put("connectWordPress", "/api/experimental/project/:projectID/wordpress-connection", {
+      params: { projectID: Schema.String },
+      payload: Project.ConnectWordPressInput,
+      success: Json,
+      error: MockBadRequest.pipe(HttpApiSchema.status(400)),
+    }),
+    HttpApiEndpoint.delete("disconnectWordPress", "/api/experimental/project/:projectID/wordpress-connection", {
+      params: { projectID: Schema.String },
+      success: Json,
+    }),
+  )
+  .add(
+    HttpApiEndpoint.post("projectCreate", "/api/experimental/project", {
+      payload: Schema.Struct({ name: Schema.String, url: Schema.String, directory: Schema.String }),
+      success: Json,
+      error: MockBadRequest.pipe(HttpApiSchema.status(400)),
+    }),
+  )
   .add(
     HttpApiEndpoint.patch("projectUpdate", "/api/project/:projectID", {
       params: { projectID: Schema.String },
-      payload: JsonPayload,
+      payload: Schema.Record(Schema.String, Schema.Unknown),
       success: Json,
     }),
   )

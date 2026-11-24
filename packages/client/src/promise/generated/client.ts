@@ -249,6 +249,15 @@ import type {
   ExperimentalMediaGetOutput,
   ExperimentalBlobGetInput,
   ExperimentalBlobGetOutput,
+  ExperimentalProjectCleanupOutput,
+  ExperimentalProjectCreateInput,
+  ExperimentalProjectCreateOutput,
+  ExperimentalProjectWordpressConnectionInput,
+  ExperimentalProjectWordpressConnectionOutput,
+  ExperimentalProjectConnectWordPressInput,
+  ExperimentalProjectConnectWordPressOutput,
+  ExperimentalProjectDisconnectWordPressInput,
+  ExperimentalProjectDisconnectWordPressOutput,
   ExperimentalAutomationCreateInput,
   ExperimentalAutomationCreateOutput,
   ExperimentalAutomationListInput,
@@ -1567,6 +1576,69 @@ export function make(options: ClientOptions) {
             requestOptions,
           ),
       },
+      project: {
+        cleanup: (requestOptions?: RequestOptions) =>
+          request<{ readonly data: ExperimentalProjectCleanupOutput }>(
+            {
+              method: "GET",
+              path: `/api/experimental/project/cleanup`,
+              successStatus: 200,
+              declaredStatuses: [400, 401],
+              empty: false,
+            },
+            requestOptions,
+          ).then((value) => value.data),
+        create: (input: ExperimentalProjectCreateInput, requestOptions?: RequestOptions) =>
+          request<ExperimentalProjectCreateOutput>(
+            {
+              method: "POST",
+              path: `/api/experimental/project`,
+              body: { name: input["name"], url: input["url"], directory: input["directory"] },
+              successStatus: 200,
+              declaredStatuses: [400, 401],
+              empty: false,
+            },
+            requestOptions,
+          ),
+        wordpressConnection: (input: ExperimentalProjectWordpressConnectionInput, requestOptions?: RequestOptions) =>
+          request<ExperimentalProjectWordpressConnectionOutput>(
+            {
+              method: "GET",
+              path: `/api/experimental/project/${encodeURIComponent(input.projectID)}/wordpress-connection`,
+              successStatus: 200,
+              declaredStatuses: [400, 401],
+              empty: false,
+            },
+            requestOptions,
+          ),
+        connectWordPress: (input: ExperimentalProjectConnectWordPressInput, requestOptions?: RequestOptions) =>
+          request<ExperimentalProjectConnectWordPressOutput>(
+            {
+              method: "PUT",
+              path: `/api/experimental/project/${encodeURIComponent(input.projectID)}/wordpress-connection`,
+              body: {
+                url: input["url"],
+                username: input["username"],
+                applicationPassword: input["applicationPassword"],
+              },
+              successStatus: 200,
+              declaredStatuses: [400, 401],
+              empty: false,
+            },
+            requestOptions,
+          ),
+        disconnectWordPress: (input: ExperimentalProjectDisconnectWordPressInput, requestOptions?: RequestOptions) =>
+          request<ExperimentalProjectDisconnectWordPressOutput>(
+            {
+              method: "DELETE",
+              path: `/api/experimental/project/${encodeURIComponent(input.projectID)}/wordpress-connection`,
+              successStatus: 200,
+              declaredStatuses: [400, 401],
+              empty: false,
+            },
+            requestOptions,
+          ),
+      },
       automation: {
         create: (input: ExperimentalAutomationCreateInput, requestOptions?: RequestOptions) =>
           request<{ readonly data: ExperimentalAutomationCreateOutput }>(
@@ -2175,6 +2247,7 @@ export function make(options: ClientOptions) {
               name: input["name"],
               icon: input["icon"],
               commands: input["commands"],
+              experimental: input["experimental"],
             },
             successStatus: 200,
             declaredStatuses: [400, 401, 404],

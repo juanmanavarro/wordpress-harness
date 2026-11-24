@@ -144,6 +144,7 @@ export function project(input: { id: string; directory: string; name?: string } 
     vcs: "git",
     time: { created: T0, updated: T0, active: T0 },
     sandboxes: [] as string[],
+    experimental: { wordpress: { url: "https://wordpress.example.com", directory } },
     ...rest,
   }
 }

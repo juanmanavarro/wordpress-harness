@@ -112,14 +112,7 @@ function HomeStory(props: HomeArgs) {
       selected,
       newSession: () => selected() ?? visible()[0],
       select: (_, next) => setDirectory(directory() === next ? undefined : next),
-      add: (_, directories) => {
-        const added = projects.filter((item) => directories.includes(item.worktree))
-        setState("visible", (items) => [
-          ...items,
-          ...added.filter((project) => !items.some((item) => item.id === project.id)),
-        ])
-        setDirectory(added[0]?.worktree)
-      },
+      registered: (_, next) => setDirectory(next),
       openNewSession: () => setActivity(`New session in ${selected()?.name ?? visible()[0]?.name}`),
       openProjectNewSession: (_, path) => setActivity(`New session in ${path}`),
       openProjectSession: (_, _path, session) => setActivity(`Opened ${session.title}`),

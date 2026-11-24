@@ -56,7 +56,7 @@ export const ProjectOptions: Component<{
       <Menu.Portal>
         <Menu.Content>
           <Show when={!added()}>
-            <Menu.Item onSelect={addProject}>{language.t("home.project.add")}</Menu.Item>
+            <Menu.Item onSelect={addProject}>{language.t("project.showOnHome")}</Menu.Item>
           </Show>
           <Show when={props.onEdit} keyed>
             {(edit) => <Menu.Item onSelect={edit}>{language.t("common.edit")}</Menu.Item>}

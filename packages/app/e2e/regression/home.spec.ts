@@ -14,7 +14,7 @@ import {
 } from "../utils/app"
 import { mockOpenCodeServer, mockServers } from "../utils/mock-server"
 import { fixture, mockStressTimeline } from "../utils/session-fixture"
-import { mockRemoteServer, mockWorkspace, newSessionLocation } from "../utils/workspace"
+import { fileNode, mockRemoteServer, mockWorkspace, newSessionLocation } from "../utils/workspace"
 import { APP_READY_TIMEOUT, expectAppVisible } from "../utils/waits"
 
 test.use({ serviceWorkers: "block" })
@@ -27,6 +27,69 @@ async function openHome(page: Page, input: Parameters<typeof mockStressTimeline>
   await seed(page, { usedProjects: { local: [fixture.project.id] } })
   await page.goto("/")
 }
+
+test("Home registers a WordPress site after choosing its working folder", async ({ page }) => {
+  const root = "/projects"
+  const directory = "/projects/shop"
+  let fail = true
+  await mockWorkspace(page, {
+    name: "Technical project",
+    directory: root,
+    project: { experimental: undefined },
+    fileList: (path) => (path === root ? [fileNode(root, "shop", "directory")] : []),
+    projectCreateError: () => (fail ? "The working folder is in use" : undefined),
+  })
+  await page.goto("/")
+
+  const catalog = page.getByRole("complementary", { name: "Projects" })
+  await catalog.locator('[data-action="home-add-project-row"]').click()
+  const form = page.getByRole("dialog", { name: "Add project", exact: true })
+  const name = form.getByRole("textbox", { name: "Name", exact: true })
+  const url = form.getByRole("textbox", { name: "Production URL", exact: true })
+  const save = form.getByRole("button", { name: "Save", exact: true })
+  await expect(save).toBeDisabled()
+  await name.fill("Shop")
+  await url.fill("http://shop.example.com")
+  const browse = form.getByRole("button", { name: "Choose folder", exact: true })
+  await browse.click()
+  const picker = page.getByRole("dialog", { name: "Working folder", exact: true })
+  await picker.getByRole("button", { name: "Cancel", exact: true }).click()
+  await expect(name).toHaveValue("Shop")
+  await expect(url).toHaveValue("http://shop.example.com")
+
+  await browse.click()
+  await picker.getByRole("treeitem", { name: "shop", exact: true }).click()
+  await picker.getByRole("button", { name: "Select folder", exact: true }).click()
+  const workingFolder = form.getByText(directory, { exact: true })
+  await expect(workingFolder).toBeVisible()
+  await expect
+    .poll(async () => {
+      const button = await browse.boundingBox()
+      const path = await workingFolder.boundingBox()
+
+      return !!button && !!path && path.y >= button.y + button.height
+    })
+    .toBe(true)
+  await expect(save).toBeDisabled()
+
+  await url.fill("https://shop.example.com")
+  await save.click()
+  await expect(form.getByRole("alert")).toContainText("The working folder is in use")
+  await expect(name).toHaveValue("Shop")
+  await expect(url).toHaveValue("https://shop.example.com")
+  await expect(form.getByText(directory, { exact: true })).toBeVisible()
+
+  fail = false
+  const created = page.waitForRequest(
+    (request) => new URL(request.url()).pathname === "/api/experimental/project" && request.method() === "POST",
+  )
+  await save.click()
+  expect((await created).postDataJSON()).toEqual({ name: "Shop", url: "https://shop.example.com", directory })
+  await expect(form).toBeHidden()
+  await expect(catalog.getByRole("button", { name: /Shop/ })).toBeVisible()
+  await expect(catalog.getByRole("button", { name: /Shop/ })).toHaveAttribute("aria-current", "page")
+  await expect(catalog.getByRole("button", { name: /Technical project/ })).toHaveCount(0)
+})
 
 test("Home projects, utility rows, search and recent sessions show keyboard focus", async ({ page }) => {
   const workspace = await mockWorkspace(page, { name: "HomeFocus" })
@@ -619,11 +682,14 @@ test("Home and the directory picker load without newer browser APIs", async ({ p
   const target = row(page, fixture.expected.targetTitle)
   await expect(target).toBeVisible()
 
-  await page.getByRole("button", { name: "Add project", exact: true }).click()
-  const dialog = page.getByRole("dialog")
+  await page.locator('[data-action="home-add-project"]').click()
+  const form = page.getByRole("dialog", { name: "Add project", exact: true })
+  await form.getByRole("button", { name: "Choose folder", exact: true }).click()
+  const dialog = page.getByRole("dialog", { name: "Working folder", exact: true })
   await expect(dialog.getByRole("button", { name: "Select folder", exact: true })).toBeEnabled()
   await dialog.getByRole("button", { name: "Cancel", exact: true }).click()
   await expect(dialog).toBeHidden()
+  await form.getByRole("button", { name: "Cancel", exact: true }).click()
   await expect(target).toBeVisible()
 })
 
@@ -652,6 +718,10 @@ test("adding a project to a signed-out server re-pairs it, then continues at the
   await editor.getByRole("button", { name: "Save", exact: true }).click()
 
   // The folder picker reads the paired address; the removed one would reject the request.
+  await page
+    .getByRole("dialog", { name: "Add project", exact: true })
+    .getByRole("button", { name: "Choose folder", exact: true })
+    .click()
   const picker = page.getByRole("dialog").filter({ has: page.getByRole("button", { name: "Select folder" }) })
   await expect(picker.getByRole("button", { name: "Select folder", exact: true })).toBeEnabled()
   await expect(picker.getByText("Unable to read this folder")).toHaveCount(0)
@@ -679,13 +749,16 @@ test("a server whose saved password changes works with the new password", async 
   })
   await openHome(page, { fileList: () => [] })
   const remote = page.locator("[data-home-row]").filter({ hasText: "Remote" })
+  const form = page.getByRole("dialog", { name: "Add project", exact: true })
   const picker = page.getByRole("dialog").filter({ has: page.getByRole("button", { name: "Select folder" }) })
 
   // Use the server once, so its controller exists with the old password.
   await remote.getByRole("button", { name: "Add project", exact: true }).click()
+  await form.getByRole("button", { name: "Choose folder", exact: true }).click()
   await expect(picker.getByRole("button", { name: "Select folder", exact: true })).toBeEnabled()
   await picker.getByRole("button", { name: "Cancel", exact: true }).click()
   await expect(picker).toHaveCount(0)
+  await form.getByRole("button", { name: "Cancel", exact: true }).click()
 
   await remote.getByRole("button", { name: "More options", exact: true }).click()
   await page.getByRole("menuitem", { name: "Edit", exact: true }).click()
@@ -698,6 +771,7 @@ test("a server whose saved password changes works with the new password", async 
 
   // The picker reads the folder through the server's controller, which must use the saved password now.
   await remote.getByRole("button", { name: "Add project", exact: true }).click()
+  await form.getByRole("button", { name: "Choose folder", exact: true }).click()
   await expect(picker.getByRole("button", { name: "Select folder", exact: true })).toBeEnabled()
   await expect(picker.getByText("Unable to read this folder")).toHaveCount(0)
 })

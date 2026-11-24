@@ -145,20 +145,8 @@ export function DirectoryPickerDialog(props: DirectoryPickerDialogProps) {
 
   const recentProjects = createMemo(() => {
     if ((props.mode ?? "directory") !== "directory") return []
-    const seen = new Set<string>()
-    const items = [...serverCtx.projects.list(), ...sync.data.project]
 
-    return items
-      .filter((project) => {
-        if (!project.worktree || project.id === "global") return false
-        const key = pathKey(project.worktree)
-
-        if (seen.has(key)) return false
-        seen.add(key)
-
-        return true
-      })
-      .slice(0, 10)
+    return serverCtx.projects.unique().slice(0, 10)
   })
 
   const search = createDirectorySearch({ sdk, home, location, base: () => treeView().root || start() })

@@ -7,10 +7,8 @@ import { useLanguage } from "@/runtime/i18n/language"
 import { useServer } from "@/runtime/server/current"
 import { ServerConnection } from "@/runtime/server/registry"
 import { displayName } from "@opencode/ui/project-avatar"
-import { homeProjectDirectories } from "@/shell/layout/helpers"
 import type { LocalProject } from "@/shell/state/layout"
-import { useDirectoryPicker } from "@/workspaces/selection/picker"
-import { addProjects } from "@/home/projects/add"
+import { useAddProjectDialog } from "@/workspaces/selection/project-form"
 import { SettingsSearchEmpty } from "../search-empty"
 import { SettingsSearchField } from "../search-field"
 import { SettingsProjectRow } from "./project-row"
@@ -27,7 +25,7 @@ export const SettingsProjects: Component<{
   const language = useLanguage()
   // The server provider mounts this page again for a new controller.
   const context = useServer().ctx
-  const pickDirectory = useDirectoryPicker()
+  const showAddProject = useAddProjectDialog()
   const [store, setStore] = createStore({ filter: "", others: false })
 
   let focus: string | undefined
@@ -42,7 +40,10 @@ export const SettingsProjects: Component<{
   const filtered = createMemo(() =>
     projects().filter(
       (project) =>
-        !query() || [displayName(project), project.worktree].some((value) => value.toLowerCase().includes(query())),
+        !query() ||
+        [displayName(project), project.worktree, project.experimental?.wordpress?.url ?? ""].some((value) =>
+          value.toLowerCase().includes(query()),
+        ),
     ),
   )
 
@@ -54,17 +55,9 @@ export const SettingsProjects: Component<{
   })
 
   const addProject = () =>
-    pickDirectory({
+    void showAddProject({
       server: props.server,
-      title: language.t("command.project.open"),
-      multiple: true,
-      onSelect: (result) => {
-        const directories = homeProjectDirectories(result)
-
-        void addProjects(context, directories).then((project) => {
-          if (project && directories.length === 1) props.onOpenProject(project)
-        })
-      },
+      onSaved: props.onOpenProject,
     })
 
   return (

@@ -40,6 +40,7 @@ export const api: ElectronAPI = {
   draftDelete: (key) => invoke("DraftsDelete", { key }),
   draftBlobPut: (data) => invoke("DraftsPutBlob", { data: new Uint8Array(data) }),
   draftBlobGet: (id) => invoke("DraftsGetBlob", { id }).then((data) => (data ? toArrayBuffer(data) : null)),
+  cleanupLegacyProjectStorage: (input) => invoke("StorageCleanupLegacyProjects", input),
 
   getWindowID: () => window.electron.windowID,
   getWindowBootstrap: () => window.electron.bootstrap,

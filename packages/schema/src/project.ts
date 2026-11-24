@@ -37,6 +37,36 @@ export const Time = Schema.Struct({
 }).annotate({ identifier: "Project.Time" })
 export interface Time extends Schema.Schema.Type<typeof Time> {}
 
+export const WordPressUrl = Schema.Trim.check(Schema.isPattern(/^https:\/\/[^\s/\\?#@]+(?:[/#?][^\s\\]*)?$/i)).annotate(
+  { identifier: "Project.WordPressUrl" },
+)
+export type WordPressUrl = typeof WordPressUrl.Type
+
+export const CreateWordPressInput = Schema.Struct({
+  name: Schema.Trim.check(Schema.isNonEmpty()),
+  url: WordPressUrl,
+  directory: AbsolutePath,
+}).annotate({ identifier: "Project.CreateWordPressInput" })
+export interface CreateWordPressInput extends Schema.Schema.Type<typeof CreateWordPressInput> {}
+
+export const ConnectWordPressInput = Schema.Struct({
+  url: WordPressUrl,
+  username: Schema.Trim.check(Schema.isNonEmpty(), Schema.isMaxLength(254)),
+  applicationPassword: Schema.Trim.check(Schema.isNonEmpty(), Schema.isMaxLength(128)),
+}).annotate({ identifier: "Project.ConnectWordPressInput" })
+export interface ConnectWordPressInput extends Schema.Schema.Type<typeof ConnectWordPressInput> {}
+
+export const WordPressConnection = Schema.Struct({
+  username: Schema.String,
+}).annotate({ identifier: "Project.WordPressConnection" })
+export interface WordPressConnection extends Schema.Schema.Type<typeof WordPressConnection> {}
+
+export const LegacyCleanup = Schema.Struct({
+  projects: Schema.Array(Schema.Struct({ id: Schema.String, directories: Schema.Array(Schema.String) })),
+  sessions: Schema.Array(Schema.Struct({ id: Schema.String, directory: Schema.String })),
+}).annotate({ identifier: "Project.LegacyCleanup" })
+export interface LegacyCleanup extends Schema.Schema.Type<typeof LegacyCleanup> {}
+
 export const Info = Schema.Struct({
   id: ID,
   canonical: AbsolutePath,
@@ -46,6 +76,9 @@ export const Info = Schema.Struct({
   commands: optional(Commands),
   time: Time,
   sandboxes: Schema.Array(Schema.String),
+  experimental: optional(
+    Schema.Struct({ wordpress: optional(Schema.Struct({ url: WordPressUrl, directory: AbsolutePath })) }),
+  ),
 }).annotate({ identifier: "Project" })
 export interface Info extends Schema.Schema.Type<typeof Info> {}
 
@@ -55,6 +88,7 @@ export const UpdateInput = Schema.Struct({
   name: optional(Schema.String),
   icon: optional(Icon),
   commands: optional(Commands),
+  experimental: optional(Schema.Struct({ wordpressUrl: optional(WordPressUrl) })),
 }).annotate({ identifier: "Project.UpdateInput" })
 export interface UpdateInput extends Schema.Schema.Type<typeof UpdateInput> {}
 
