@@ -54,6 +54,7 @@ export const Info = Schema.Struct({
           hidden: false,
           permissions: [
             { action: "*", resource: "*", effect: "allow" },
+            { action: "wordpress_read_editable_content", resource: "*", effect: "ask" },
             { action: "read", resource: "*.env", effect: "ask" },
             { action: "read", resource: "*.env.*", effect: "ask" },
             { action: "read", resource: "*.env.example", effect: "allow" },

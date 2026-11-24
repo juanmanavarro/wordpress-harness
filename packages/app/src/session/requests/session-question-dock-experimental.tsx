@@ -308,10 +308,11 @@ export const SessionQuestionDockExperimental: Component<{ request: FormInfo; onS
 
   const question = createMemo(() => questions()[form.tab()])
   const options = createMemo(() => question()?.options ?? [])
+  const allowsCustom = createMemo(() => question()?.field.custom !== false)
   const input = () => form.draft(form.tab()).customText
   const on = () => form.draft(form.tab()).customSelected
   const multi = createMemo(() => question()?.multiple === true)
-  const count = createMemo(() => options().length + 1)
+  const count = createMemo(() => options().length + Number(allowsCustom()))
 
   const current = createMemo(() => Math.min(form.tab() + 1, total()))
 
@@ -573,6 +574,7 @@ export const SessionQuestionDockExperimental: Component<{ request: FormInfo; onS
   const picked = (answer: string) => form.draft(form.tab()).selected.includes(answer)
 
   const startCustom = () => {
+    if (!allowsCustom()) return
     setStore("focus", options().length)
     form.selectCustom()
     setStore("editing", true)
@@ -671,6 +673,7 @@ export const SessionQuestionDockExperimental: Component<{ request: FormInfo; onS
     event.preventDefault()
 
     if (intent.type === "type") {
+      if (!allowsCustom()) return
       form.input(input() + event.key)
 
       return startCustom()
@@ -1288,68 +1291,70 @@ export const SessionQuestionDockExperimental: Component<{ request: FormInfo; onS
                 )}
               </For>
 
-              <div
-                ref={(el) => (customRow = el)}
-                data-slot="question-option"
-                data-custom="true"
-                data-picked={on()}
-                data-editing={store.editing}
-                data-disabled={sending()}
-                onClick={(event) => {
-                  if (event.target !== event.currentTarget || sending()) return
-                  startCustom()
-                }}
-              >
-                <button
-                  type="button"
-                  ref={customRef}
-                  data-slot="question-custom-toggle"
-                  role={multi() ? "checkbox" : "radio"}
-                  aria-checked={on()}
-                  aria-label={customLabel()}
-                  aria-keyshortcuts={count() <= 9 ? String(count()) : undefined}
-                  tabindex={store.focus === options().length ? 0 : -1}
-                  disabled={sending()}
-                  onFocus={() => setStore("focus", options().length)}
-                  onClick={customToggle}
+              <Show when={allowsCustom()}>
+                <div
+                  ref={(el) => (customRow = el)}
+                  data-slot="question-option"
+                  data-custom="true"
+                  data-picked={on()}
+                  data-editing={store.editing}
+                  data-disabled={sending()}
+                  onClick={(event) => {
+                    if (event.target !== event.currentTarget || sending()) return
+                    startCustom()
+                  }}
                 >
-                  <Mark multi={multi()} picked={on()} shortcut={count() <= 9 ? String(count()) : undefined} />
-                </button>
-                <TextInput
-                  ref={(el) => (customInput = el)}
-                  class="question-custom-field"
-                  dir="auto"
-                  aria-label={customLabel()}
-                  placeholder={customLabel()}
-                  value={input()}
-                  disabled={sending()}
-                  onFocus={() => {
-                    setStore("focus", options().length)
-                    setStore("editing", true)
-                  }}
-                  onClick={() => form.selectCustom()}
-                  onBlur={() => setStore("editing", false)}
-                  onKeyDown={(e) => {
-                    if (e.isComposing || e.keyCode === 229) return
+                  <button
+                    type="button"
+                    ref={customRef}
+                    data-slot="question-custom-toggle"
+                    role={multi() ? "checkbox" : "radio"}
+                    aria-checked={on()}
+                    aria-label={customLabel()}
+                    aria-keyshortcuts={count() <= 9 ? String(count()) : undefined}
+                    tabindex={store.focus === options().length ? 0 : -1}
+                    disabled={sending()}
+                    onFocus={() => setStore("focus", options().length)}
+                    onClick={customToggle}
+                  >
+                    <Mark multi={multi()} picked={on()} shortcut={count() <= 9 ? String(count()) : undefined} />
+                  </button>
+                  <TextInput
+                    ref={(el) => (customInput = el)}
+                    class="question-custom-field"
+                    dir="auto"
+                    aria-label={customLabel()}
+                    placeholder={customLabel()}
+                    value={input()}
+                    disabled={sending()}
+                    onFocus={() => {
+                      setStore("focus", options().length)
+                      setStore("editing", true)
+                    }}
+                    onClick={() => form.selectCustom()}
+                    onBlur={() => setStore("editing", false)}
+                    onKeyDown={(e) => {
+                      if (e.isComposing || e.keyCode === 229) return
 
-                    if (e.key === "Escape") {
+                      if (e.key === "Escape") {
+                        e.preventDefault()
+                        setStore("editing", false)
+                        focus(options().length)
+
+                        return
+                      }
+
+                      if ((e.metaKey || e.ctrlKey) && !e.altKey) return
+
+                      if (e.key !== "Enter") return
                       e.preventDefault()
-                      setStore("editing", false)
-                      focus(options().length)
 
-                      return
-                    }
-
-                    if ((e.metaKey || e.ctrlKey) && !e.altKey) return
-
-                    if (e.key !== "Enter") return
-                    e.preventDefault()
-
-                    if (!e.repeat) next()
-                  }}
-                  onInput={(e) => form.input(e.currentTarget.value)}
-                />
-              </div>
+                      if (!e.repeat) next()
+                    }}
+                    onInput={(e) => form.input(e.currentTarget.value)}
+                  />
+                </div>
+              </Show>
             </div>
           </div>
         </div>

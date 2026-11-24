@@ -4,6 +4,7 @@ import { Form } from "@opencode/schema/form"
 import { Cache, Context, Deferred, Duration, Effect, Exit, Layer, Option, Schema } from "effect"
 import { makeLocationNode } from "@opencode/util/effect/app-node"
 import { Bus } from "./bus.js"
+import { CodeModeApi } from "./codemode/api.js"
 
 const RETENTION = Duration.minutes(10)
 
@@ -182,6 +183,8 @@ export const layer = Layer.effect(
         Effect.gen(function* () {
           const entry = yield* requireEntry(input.id)
           if (entry.state.status !== "pending") return yield* new AlreadySettledError({ id: input.id })
+          if (entry.form.metadata?.requiresClientReply === true && (yield* CodeModeApi.InProcessRequest))
+            return yield* new InvalidAnswerError({ id: input.id, message: "Answer this form from the client." })
           const invalid = validateAnswer(entry.form.fields, input.answer)
           if (invalid) return yield* new InvalidAnswerError({ id: input.id, message: invalid })
           const next: TerminalState = { status: "answered", answer: input.answer }

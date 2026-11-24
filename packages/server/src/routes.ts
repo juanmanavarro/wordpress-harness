@@ -142,7 +142,8 @@ function makeRoutes(
   // Code Mode `opencode://` fetches go straight to this router, set once the router below is built. They carry the
   // server's own credential, added here after the script handed the request over, so the script never sees it.
   const credential = Option.map(password, (value) => `Basic ${Base64.encode(`opencode:${value}`)}`)
-  let internal: ((request: Request) => Promise<Response>) | undefined
+  const codeModeRequest = Context.make(CodeModeApi.InProcessRequest, true)
+  let internal: ((request: Request, context: Context.Context<never>) => Promise<Response>) | undefined
   const standard: LayerNode.Replacements = [
     CodeModeApi.node.replace(
       Layer.succeed(
@@ -154,7 +155,7 @@ function makeRoutes(
               if (!handle) return Effect.fail(new Error("The OpenCode API is not ready yet."))
               if (Option.isSome(credential)) request.headers.set("authorization", credential.value)
               return Effect.tryPromise({
-                try: () => handle(request),
+                try: () => handle(request, codeModeRequest),
                 catch: (error) => (error instanceof Error ? error : new Error(String(error))),
               })
             }),

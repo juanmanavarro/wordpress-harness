@@ -49,6 +49,23 @@ it.live("sends Code Mode opencode:// requests to the server's own router with th
       ).then((response) => response.json()),
     )
     const parent = Schema.decodeUnknownSync(Schema.Struct({ data: Session.Info }))(created).data
+    const formURL = `http://opencode.local/api/session/${parent.id}/form`
+    const headers = { "content-type": "application/json", authorization: `Basic ${btoa("opencode:secret")}` }
+    const response = yield* Effect.promise(() =>
+      handler(
+        new Request(formURL, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            id: "frm_wordpress_confirmation",
+            title: "Confirm WordPress edit",
+            metadata: { kind: "question", requiresClientReply: true },
+            fields: [{ key: "decision", type: "string", options: [{ value: "save", label: "Save" }] }],
+          }),
+        }),
+      ),
+    )
+    expect(response.status).toBe(200)
     const locations = Context.get(app, LocationServiceMap.Service)
     const result = yield* Effect.gen(function* () {
       const permission = yield* Permission.Service
@@ -70,7 +87,12 @@ it.live("sends Code Mode opencode:// requests to the server's own router with th
               headers: { "content-type": "application/json" },
               body: JSON.stringify({ title: "child", parentID: (await (await fetch("opencode:///api/session/current")).json()).data.id }),
             })).json()
-            return [info.version, location.directory, child.data.title, child.data.parentID]`,
+            const confirmation = await fetch("opencode:///api/session/current/form/frm_wordpress_confirmation/reply", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ answer: { decision: "save" } }),
+            })
+            return [info.version, location.directory, child.data.title, child.data.parentID, confirmation.status]`,
         },
         {
           sessionID: parent.id,
@@ -83,6 +105,16 @@ it.live("sends Code Mode opencode:// requests to the server's own router with th
     }).pipe(Effect.provide(locations.get(Location.Ref.make({ directory: AbsolutePath.make(directory) }))))
 
     expect(result.output.error, result.output.output).toBeUndefined()
-    expect(JSON.parse(result.output.output)).toEqual(["test-version", directory, "child", parent.id])
+    expect(JSON.parse(result.output.output)).toEqual(["test-version", directory, "child", parent.id, 400])
+    const approved = yield* Effect.promise(() =>
+      handler(
+        new Request(`${formURL}/frm_wordpress_confirmation/reply`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ answer: { decision: "save" } }),
+        }),
+      ),
+    )
+    expect(approved.status).toBe(204)
   }),
 )

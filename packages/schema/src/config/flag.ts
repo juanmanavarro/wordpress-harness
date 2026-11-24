@@ -22,6 +22,8 @@ export const registry = {
     "Give sessions in the home folder a persistent memory/, docs/ and scripts/ workspace the agent can use freely, tidied by a daily maintenance session that reads the day's home-folder conversations.",
   project_overlay:
     "Load a personal config dir for each project from ~/.config/opencode/project/<project-id>/, read like an extra .opencode dir that ranks above the repo's own, and let home memory keep the skills it builds for the user there.",
+  wordpress_content_api:
+    "Allow the agent to read and edit pages and posts in the connected WordPress project, with confirmation before each save.",
   opencode_api:
     'Let Code Mode scripts call the OpenCode HTTP API with fetch("opencode:///api/..."), in-process and already signed in, with no permission checks. Only in local and dev builds, and off there until you opt in with OPENCODE_FLAGS=opencode_api or experimental.opencode_api: true.',
   sqlite_fts:

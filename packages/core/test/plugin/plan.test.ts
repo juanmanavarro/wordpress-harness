@@ -115,6 +115,7 @@ describe("plan plugin mutations", () => {
       )
       expect(Permission.evaluate("edit", "/workspace/source.ts", planAgent.permissions).effect).toBe("deny")
       expect(Permission.evaluate("edit", "source.ts", planAgent.permissions).effect).toBe("deny")
+      expect(Permission.isActionDenied("wordpress_update_content", planAgent.permissions)).toBe(true)
     }),
   )
 

@@ -10,6 +10,10 @@ export interface Interface {
 /** Sends a Code Mode `opencode://` request to this process's OpenCode API. The server provides the real one. */
 export class Service extends Context.Service<Service, Interface>()("@opencode/CodeModeApi") {}
 
+export const InProcessRequest = Context.Reference<boolean>("@opencode/CodeModeApi/InProcessRequest", {
+  defaultValue: () => false,
+})
+
 const failing = (message: string): Interface => ({ fetch: () => Effect.fail(new Error(message)) })
 
 export const unavailable = failing("opencode:// URLs are unavailable in this environment.")

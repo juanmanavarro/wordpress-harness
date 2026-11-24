@@ -1,6 +1,6 @@
 import type { OpenCodeEvent } from "@opencode/client/promise"
 import { expect, test, type Page } from "@playwright/test"
-import { SERVER, sessionHref } from "../utils/app"
+import { seed, SERVER, sessionHref } from "../utils/app"
 import { installSseTransport } from "../utils/sse-transport"
 import { expectSessionTitle } from "../utils/waits"
 import { mockWorkspace, type WorkspaceInput } from "../utils/workspace"
@@ -10,6 +10,51 @@ const directory = "C:/OpenCode/RequestDocks"
 const sessionID = "ses_request_docks"
 
 const title = "Request dock regression"
+
+for (const newQuestionUI of [false, true]) {
+  test(`requires a predefined answer for a WordPress save with newQuestionUI=${newQuestionUI}`, async ({ page }) => {
+    await seed(page, { settings: { general: { newQuestionUI } } })
+    await mockServer(page, {
+      forms: [
+        {
+          id: "frm_wordpress_save",
+          sessionID,
+          title: "Confirm WordPress edit",
+          metadata: { kind: "question" },
+          fields: [
+            {
+              key: "decision",
+              type: "string",
+              title: "WordPress edit",
+              description: "Save changes to title on page #42 at https://editorial.example.test?",
+              options: [
+                { value: "cancel", label: "Cancel edit" },
+                { value: "save", label: "Save changes" },
+              ],
+              required: true,
+              custom: false,
+            },
+          ],
+        },
+      ],
+    })
+
+    await page.goto(sessionHref(sessionID))
+    await expectSessionTitle(page, title)
+    const question = page.locator('[data-component="dock-prompt"][data-kind="question"]')
+    await expect(question.getByRole("link", { name: "https://editorial.example.test" })).toBeVisible()
+    await expect(question.getByRole("textbox")).toHaveCount(0)
+    await expect(question.getByRole("radio")).toHaveCount(2)
+    await question.getByRole("radio", { name: "Save changes" }).click()
+    const reply = page.waitForRequest(
+      (request) =>
+        request.method() === "POST" &&
+        new URL(request.url()).pathname === `/api/session/${sessionID}/form/frm_wordpress_save/reply`,
+    )
+    await question.getByRole("button", { name: "Submit" }).click()
+    expect((await reply).postDataJSON()).toEqual({ answer: { decision: "save" } })
+  })
+}
 
 test("shows a pending question dock", async ({ page }) => {
   await mockServer(page, {

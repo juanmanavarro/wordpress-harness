@@ -16,13 +16,13 @@ export const skills: readonly Skill.Info[] = [
   {
     id: "harpress-wordpress-content",
     name: "WordPress Content",
-    description: "Use when finding or reading an existing page on the connected WordPress site.",
+    description: "Use when finding, reading, or editing existing content on the connected WordPress site.",
     content,
   },
   {
     id: "harpress-wordpress-verify",
     name: "WordPress Verify",
-    description: "Use when checking the current content of a page on the connected WordPress site.",
+    description: "Use when checking the current content of a page or post on the connected WordPress site.",
     content: verify,
   },
 ].map((skill) =>

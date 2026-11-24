@@ -32,6 +32,7 @@ export const Plugin = define({
         item.instructions = { selected: selected(directory), unselected }
         item.permissions.push({ action: "question", resource: "*", effect: "allow" })
         item.permissions.push({ action: "edit", resource: "*", effect: "deny" })
+        item.permissions.push({ action: "wordpress_update_content", resource: "*", effect: "deny" })
         item.permissions.push({ action: "edit", resource: path.join(directory, "*"), effect: "allow" })
       })
     })
