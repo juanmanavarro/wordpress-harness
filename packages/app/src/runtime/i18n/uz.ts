@@ -1,5 +1,5 @@
 export const dict = {
-  "desktop.menu.app": "OpenCode",
+  "desktop.menu.app": "Harpress",
   "desktop.menu.file": "Fayl",
   "desktop.menu.edit": "Tahrirlash",
   "desktop.menu.view": "Ko'rish",
@@ -38,18 +38,18 @@ export const dict = {
   "desktop.menu.nextProject": "Keyingi loyiha",
   "desktop.menu.minimize": "Minimallashtirish",
   "desktop.menu.maximize": "Maksimallashtirish",
-  "desktop.menu.documentation": "OpenCode hujjatlari",
+  "desktop.menu.documentation": "Harpress hujjatlari",
   "desktop.menu.supportForum": "Qo'llab-quvvatlash forumi",
   "desktop.menu.shareFeedback": "Fikr-mulohaza ulashing",
   "desktop.menu.reportBug": "Xato haqida xabar berish",
-  "desktop.menu.ariaLabel": "OpenCode menyusi",
+  "desktop.menu.ariaLabel": "Harpress menyusi",
   "desktop.recovery.action.relaunch": "Qayta ishga tushirish",
   "desktop.recovery.action.exportLogs": "Jurnallarni eksport qilish",
   "desktop.recovery.action.keepWaiting": "Kutishda davom eting",
   "desktop.recovery.action.quit": "Chiqish",
-  "desktop.recovery.loadFailed": "OpenCode yuklanmadi",
-  "desktop.recovery.terminated": "OpenCode oynasi kutilmaganda tugatildi",
-  "desktop.recovery.unresponsive": "OpenCode javob bermayapti",
+  "desktop.recovery.loadFailed": "Harpress yuklanmadi",
+  "desktop.recovery.terminated": "Harpress oynasi kutilmaganda tugatildi",
+  "desktop.recovery.unresponsive": "Harpress javob bermayapti",
   "desktop.recovery.unresponsive.detail":
     "Siz ilovani qayta ishga tushirishingiz, jurnallarni ochishingiz yoki kutishda davom etishingiz mumkin.",
   "desktop.recovery.loadFailed.detail": "Oyna: {{window}}\nURL: {{url}}\nXato: {{code}} {{description}}",
@@ -152,7 +152,7 @@ export const dict = {
   "provider.connect.status.waiting": "Avtorizatsiya kutilmoqda",
   "provider.connect.status.failed": "Avtorizatsiya amalga oshmadi: {{error}}",
   "provider.connect.apiKey.description":
-    "Hisobingizni ulash va OpenCode’da {{provider}} modellaridan foydalanish uchun {{provider}} API kalitini kiriting.",
+    "Hisobingizni ulash va Harpress’da {{provider}} modellaridan foydalanish uchun {{provider}} API kalitini kiriting.",
   "provider.connect.apiKey.label": "{{provider}} API kaliti",
   "provider.connect.apiKey.placeholder": "API kaliti",
   "provider.connect.apiKey.required": "API kaliti talab qilinadi",
@@ -266,7 +266,7 @@ export const dict = {
   "error.page.action.checkUpdates": "Yangilanishlarni tekshiring",
   "error.page.action.updateTo": "{{version}} ga yangilang",
   "error.page.circular": "[Diraviy]",
-  "error.page.report.prefix": "Iltimos, ushbu xato haqida OpenCode jamoasiga xabar bering",
+  "error.page.report.prefix": "Iltimos, ushbu xato haqida Harpress jamoasiga xabar bering",
   "error.page.report.discord": "Discord-da",
   "error.page.version": "Versiya: {{version}}",
   "error.dev.rootNotFound":
@@ -288,7 +288,7 @@ export const dict = {
   "error.chain.modelNotFound": "Model topilmadi: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Konfiguratsiya (opencode.json) provayder/model nomlarini tekshiring",
   "error.chain.mcpFailed":
-    "MCP \"{{name}}\" serveri muvaffaqiyatsiz tugadi. E'tibor bering, OpenCode hali MCP autentifikatsiyasini qo'llab-quvvatlamaydi.",
+    "MCP \"{{name}}\" serveri muvaffaqiyatsiz tugadi. E'tibor bering, Harpress hali MCP autentifikatsiyasini qo'llab-quvvatlamaydi.",
   "error.chain.providerAuthFailed": "Provayder autentifikatsiyasi amalga oshmadi ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     '"{{provider}}" provayderini ishga tushirib boʻlmadi. Hisob ma\'lumotlari va konfiguratsiyani tekshiring.',
@@ -391,16 +391,16 @@ export const dict = {
   "settings.general.section.notifications": "Tizim bildirishnomalari",
   "settings.general.section.sounds": "Ovoz effektlari",
   "settings.general.row.language.title": "Til",
-  "settings.general.row.language.description": "OpenCode uchun ekran tilini o'zgartiring",
+  "settings.general.row.language.description": "Harpress uchun ekran tilini o'zgartiring",
   "settings.general.row.shell.title": "Terminal qobig'i",
   "settings.general.row.shell.description": "Terminal va agent vositalari tomonidan ishlatiladigan qobiq",
   "settings.general.row.shell.autoDefault": "Avtomatik (standart)",
   "settings.general.row.shell.terminalOnly": "faqat terminal",
   "settings.general.row.colorScheme.title": "Rang sxemasi",
   "settings.general.row.colorScheme.description":
-    "OpenCode tizimga, yorugʻlik yoki qorongʻi mavzuga amal qilishini tanlang",
+    "Harpress tizimga, yorugʻlik yoki qorongʻi mavzuga amal qilishini tanlang",
   "settings.general.row.theme.title": "Mavzu",
-  "settings.general.row.theme.description": "OpenCode mavzusini sozlash.",
+  "settings.general.row.theme.description": "Harpress mavzusini sozlash.",
   "settings.general.row.font.title": "Kod shrifti",
   "settings.general.row.font.description": "Kod bloklarida ishlatiladigan shriftni moslashtiring",
   "settings.general.row.terminalFont.title": "Terminal shrifti",
@@ -674,9 +674,7 @@ export const dict = {
   "settings.about.otherContributor.other": "yana {{count}} ta",
   "settings.about.firstPublished": "Ilk bor Missuri, AQSHda nashr etilgan",
   "settings.about.firstIllustrated": "Ilk bor London, Angliyada bezatilgan",
-  "settings.about.website": "www.opencode.ai",
-  "settings.about.description": "OpenCode, ochiq manbali kodlash agenti",
-  "settings.about.trademark": "OpenCode — Anomaly Innovations, Inc. kompaniyasining ro‘yxatdan o‘tgan savdo belgisi.",
+  "settings.about.website": "github.com/juanmanavarro/wordpress-harness",
   "settings.about.typeset": "Inter va IBM Plex Mono shriftlarida terilgan",
   "settings.about.tagline": "Sizsiz AI ajoyib dasturiy ta’minot yarata olmaydi",
   "settings.about.copyright": "© Anomaly Innovations, Inc.",
@@ -727,7 +725,7 @@ export const dict = {
   "server.connect.failed": "Ulanib bo‘lmadi. Server manzili va parolni tekshiring, keyin qayta urinib ko'ring.",
   "server.connect.scan": "QR kodini skanerlang",
   "server.connect.scan.description": "Kamerani opencode pair koʻrsatgan QR kodga qarating.",
-  "server.connect.scan.invalid": "Bu OpenCode ulash kodi emas. opencode pair koʻrsatgan kodni skanerlang.",
+  "server.connect.scan.invalid": "Bu Harpress ulash kodi emas. opencode pair koʻrsatgan kodni skanerlang.",
   "server.connect.camera": "Kamerani ulash",
   "server.connect.camera.starting": "Kamera ochilmoqda…",
   "server.connect.mixedContent":
@@ -768,19 +766,19 @@ export const dict = {
     "Internetda qidirish uchun agentlar foydalanadigan qidiruv provayderini tanlang",
   "settings.projects.search.placeholder": "Loyihalarni qidirish",
   "project.settings.name.title": "Loyiha nomi",
-  "project.settings.name.description": "Ushbu loyiha uchun OpenCode bo'ylab ko'rsatilgan nom",
+  "project.settings.name.description": "Ushbu loyiha uchun Harpress bo'ylab ko'rsatilgan nom",
   "project.settings.icon.description": "Tavsiya etilgan: 128×128 piksel. Rasmni yuklash uchun bosing yoki torting.",
   "project.settings.color.description": "Hech qanday maxsus tasvir o'rnatilmaganda loyiha belgisi uchun ishlatiladi",
   "project.settings.worktree.startup.description": "Yangi ishchi daraxt yaratgandan keyin bir marta ishlaydi",
   "project.settings.worktree.startup.hint.base": "Asosiy ishchi daraxt uchun $OPENCODE_WORKTREE_BASE dan foydalaning.",
   "project.settings.worktree.startup.hint.new": "Yangi ishchi daraxt uchun $OPENCODE_WORKTREE_PATH dan foydalaning.",
   "project.settings.extensions.empty.mcps.title": "Hali MCP mavjud emas",
-  "project.settings.extensions.empty.mcps.description": "OpenCode uchun mavjud MCPlar shu yerda paydo bo'ladi",
+  "project.settings.extensions.empty.mcps.description": "Harpress uchun mavjud MCPlar shu yerda paydo bo'ladi",
   "project.settings.extensions.empty.plugins.title": "Hozircha plaginlar yo‘q",
-  "project.settings.extensions.empty.plugins.description": "OpenCode uchun mavjud plaginlar shu yerda paydo bo'ladi",
+  "project.settings.extensions.empty.plugins.description": "Harpress uchun mavjud plaginlar shu yerda paydo bo'ladi",
   "project.settings.extensions.empty.skills.title": "Hali mahorat yo'q",
   "project.settings.extensions.empty.skills.description":
-    "OpenCode uchun mavjud bo'lgan ko'nikmalar bu erda paydo bo'ladi",
+    "Harpress uchun mavjud bo'lgan ko'nikmalar bu erda paydo bo'ladi",
   "project.settings.extensions.lsp.configured": "Sozlangan til serverlari",
   "project.settings.extensions.lsp.status.enabled": "Konfiguratsiyada yoqilgan",
   "project.settings.extensions.lsp.status.disabled": "Konfiguratsiyada o'chirilgan",
@@ -801,7 +799,7 @@ export const dict = {
   "settings.timeline.collapsed.label": "{{activity}} yopildi",
   "session.new.workspace.search.empty": "Mos keladigan ishchi daraxtlar yo'q",
   "settings.workspaces.description": "Ish daraxtlarini ko'rib chiqing va diskdan foydalanishni boshqaring",
-  "settings.workspaces.empty.description": "OpenCode-da yaratilgan ishchi daraxtlar bu erda paydo bo'ladi",
+  "settings.workspaces.empty.description": "Harpress-da yaratilgan ishchi daraxtlar bu erda paydo bo'ladi",
   "settings.workspaces.sessions.filtered.one": "{{count}} seans",
   "settings.workspaces.sessions.filtered.other": "{{count}} seans",
   "settings.workspaces.deleteAll.confirm.one": "Bu tanlangan {{count}} ta ishchi daraxtni butunlay oʻchirib tashlaydi.",
@@ -839,22 +837,22 @@ export const dict = {
   "voice.captions.hide": "Subtitrlarni yashirish",
   "voice.connecting": "Ulanmoqda…",
   "voice.you": "Siz:",
-  "voice.assistant": "OpenCode:",
+  "voice.assistant": "Harpress:",
   "voice.failure.unavailable": "Ovozli qo‘ng‘iroqlar uchun ushbu serverda OpenAI API kaliti kerak.",
   "voice.failure.microphone": "Qo‘ng‘iroq qilish uchun mikrofonga ruxsat kerak.",
   "voice.failure.dropped": "Qo‘ng‘iroq uzildi.",
   "voice.failure.connection": "Qo‘ng‘iroqni ulab bo‘lmadi.",
-  "desktop.microphoneUsage": "OpenCode ovozli qo‘ng‘iroqlar uchun mikrofoningizdan foydalanadi.",
+  "desktop.microphoneUsage": "Harpress ovozli qo‘ng‘iroqlar uchun mikrofoningizdan foydalanadi.",
   "desktop.documentsFolderUsage":
-    "OpenCode siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun Hujjatlar jildidagi fayllardan foydalanadi.",
+    "Harpress siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun Hujjatlar jildidagi fayllardan foydalanadi.",
   "desktop.desktopFolderUsage":
-    "OpenCode siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun Ish stolidagi fayllardan foydalanadi.",
+    "Harpress siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun Ish stolidagi fayllardan foydalanadi.",
   "desktop.downloadsFolderUsage":
-    "OpenCode siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun Yuklanmalar jildidagi fayllardan foydalanadi.",
+    "Harpress siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun Yuklanmalar jildidagi fayllardan foydalanadi.",
   "desktop.networkVolumesUsage":
-    "OpenCode siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun tarmoq disklaridagi fayllardan foydalanadi.",
+    "Harpress siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun tarmoq disklaridagi fayllardan foydalanadi.",
   "desktop.removableVolumesUsage":
-    "OpenCode siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun olinadigan disklardagi fayllardan foydalanadi.",
+    "Harpress siz ochgan loyihalar va u yerda ishga tushirgan buyruqlaringiz uchun olinadigan disklardagi fayllardan foydalanadi.",
   "desktop.contextMenu.spellcheck": "Imlo tekshiruvi",
   "desktop.contextMenu.spellcheckLanguages": "Imlo tekshiruvi tillari",
   "session.location.unavailable": "Sessiya joylashuvi mavjud emas",
@@ -896,7 +894,7 @@ export const dict = {
   "palette.group.settings": "Sozlamalar",
   "palette.session.location": "{{project}} · {{server}}",
   "dialog.provider.title": "Integratsiyalar",
-  "dialog.provider.description": "OpenCode foydalana olishi uchun xizmatlarni ulang.",
+  "dialog.provider.description": "Harpress foydalana olishi uchun xizmatlarni ulang.",
   "dialog.provider.group.services": "Xizmatlar",
   "dialog.provider.environmentOnly": "Faqat muhit o‘zgaruvchilari",
   "dialog.provider.signInRequired": "Kirish talab qilinadi →",
@@ -953,7 +951,7 @@ export const dict = {
   "provider.connect.models.available": "Mavjud modellar",
   "provider.connect.chatgptWelcome.title": "ChatGPT ulandi",
   "provider.connect.chatgptWelcome.description":
-    "OpenCode’dagi mos so‘rovlar ChatGPT tarifingizdan foydalanishi mumkin.",
+    "Harpress’dagi mos so‘rovlar ChatGPT tarifingizdan foydalanishi mumkin.",
   "provider.connect.chatgptWelcome.usage": "Foydalanishni ChatGPT sozlamalarida boshqaring",
   "provider.connect.chatgptWelcome.confirm": "Tushunarli",
   "provider.connect.models.list": "{{provider}} dagi mavjud modellar",
@@ -971,7 +969,7 @@ export const dict = {
   "provider.connect.console.openingBrowser": "Brauzer ochilmoqda",
   "provider.connect.remote.label": "{{server}} da",
   "provider.connect.remote.description":
-    "OpenCode hisob ma’lumotlaringiz ushbu serverda saqlanadi. Modellar shu server orqali mavjud bo‘ladi.",
+    "Harpress hisob ma’lumotlaringiz ushbu serverda saqlanadi. Modellar shu server orqali mavjud bo‘ladi.",
   "provider.connect.claudeAgent.description":
     "Claude tarifingiz yoki boshqa Claude Code hisobidan foydalaning. Avval Claude Code’ni o‘rnating va unga kiring.",
   "provider.connect.claudeAgent.install": "Claude Code’ni o‘rnatish",
@@ -1005,7 +1003,7 @@ export const dict = {
     "Brauzeringizni ochib bo‘lmadi. Qayta urinish uchun «Brauzerni ochish» ni tanlang.",
   "provider.connect.oauth.paste.toggle": "Boshqa qurilmadan kiryapsizmi?",
   "provider.connect.oauth.paste.description":
-    "Agar brauzeringiz OpenCode ishlayotgan kompyuterga ulana olmasa, u yo‘naltirilgan URL manzilini joylashtiring.",
+    "Agar brauzeringiz Harpress ishlayotgan kompyuterga ulana olmasa, u yo‘naltirilgan URL manzilini joylashtiring.",
   "provider.connect.oauth.expired": "Avtorizatsiya muddati tugadi",
   "model.details.input.text": "Matn",
   "model.details.input.image": "Rasm",
@@ -1042,7 +1040,7 @@ export const dict = {
   "dialog.mcp.signIn": "Kirish",
   "dialog.mcp.signIn.open": "{{name}} ga kirish",
   "dialog.mcp.signIn.description":
-    "{{name}} ga kirishingiz uchun brauzer ochiladi. Agar u OpenCode ishlayotgan kompyuterga ulana olmasa, u yo‘naltirilgan URL manzilini quyiga joylashtiring.",
+    "{{name}} ga kirishingiz uchun brauzer ochiladi. Agar u Harpress ishlayotgan kompyuterga ulana olmasa, u yo‘naltirilgan URL manzilini quyiga joylashtiring.",
   "dialog.mcp.signIn.syncFailed": "Kirildi, lekin {{name}} ni yangilab bo‘lmadi: {{error}}",
   "dialog.mcp.error.details":
     "MCP server: {{name}}\nHolat: muvaffaqiyatsiz\nKonfiguratsiya: mcp.servers.{{name}}\nXato: {{error}}",
@@ -1085,7 +1083,7 @@ export const dict = {
   "server.connect.link.unreachable":
     "{{url}} ga ulanib bo‘lmadi. Ushbu qurilma serverga ulana olishini tekshiring, so‘ng qayta urinib ko‘ring.",
   "server.connect.link.legacy":
-    "Bu ulash kodi OpenCode’ning eski versiyasidan. Serverda OpenCode’ni yangilang, so‘ng opencode pair buyrug‘ini qayta ishga tushiring.",
+    "Bu ulash kodi Harpress’ning eski versiyasidan. Serverda Harpress’ni yangilang, so‘ng opencode pair buyrug‘ini qayta ishga tushiring.",
   "server.connect.camera.native":
     "Bu sahifa HTTP orqali kameradan foydalana olmaydi. Yuqoridagi ulash havolasini joylashtiring.",
   "dialog.server.signedOut":
@@ -1107,7 +1105,7 @@ export const dict = {
   "home.sessions.load.timeout": "Server juda uzoq javob bermadi",
   "tips.browse.title": "Brauzeringizni boshqaring",
   "tips.browse.description":
-    "OpenCode brauzeringizda varaqlaringiz, hisoblaringiz va kengaytmalaringiz bilan ishlashiga ruxsat bering.",
+    "Harpress brauzeringizda varaqlaringiz, hisoblaringiz va kengaytmalaringiz bilan ishlashiga ruxsat bering.",
   "tips.browse.install": "O‘rnatish",
   "tips.hex.title": "Ovozingizdan foydalaning",
   "tips.hex.description":
@@ -1298,7 +1296,7 @@ export const dict = {
     'Kalitlar faqat plaginning desktop interfeysini o‘chiradi. Server qismini o‘chirish uchun global opencode.json dagi plugins ga "-<id>" qo‘shing, TUI qismini o‘chirish uchun esa cli.json dagi plugins ga "-" va uning TUI plagini ID’sini qo‘shing.',
   "settings.about.copyVersionFailed": "Versiyani nusxalab bo‘lmadi",
   "settings.about.notices.title": "Uchinchi tomon bildirishnomalari",
-  "settings.about.notices.description": "OpenCode quyidagi ochiq manbali dasturlarni o‘z ichiga oladi.",
+  "settings.about.notices.description": "Harpress quyidagi ochiq manbali dasturlarni o‘z ichiga oladi.",
   "settings.about.notices.license": "Litsenziya matni",
   "settings.about.notices.fonts.title": "Office oldindan ko‘rishlaridagi shriftlar",
   "settings.about.notices.fonts.description":

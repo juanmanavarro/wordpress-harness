@@ -25,7 +25,7 @@ export const dict = {
     "Kan geen verbinding maken. Controleer het serveradres en het wachtwoord en probeer het opnieuw.",
   "server.connect.scan": "Scan de QR-code",
   "server.connect.scan.description": "Richt uw camera op de QR-code weergegeven door opencode pair.",
-  "server.connect.scan.invalid": "Dit is geen OpenCode-koppelingscode. Scan de code weergegeven door opencode pair.",
+  "server.connect.scan.invalid": "Dit is geen Harpress-koppelingscode. Scan de code weergegeven door opencode pair.",
   "server.connect.camera": "Camera koppelen",
   "server.connect.camera.starting": "Camera openen…",
   "server.connect.mixedContent":
@@ -61,7 +61,7 @@ export const dict = {
     "Selecteer de zoekmachine die agenten gebruiken om op internet te zoeken",
   "settings.projects.search.placeholder": "Zoek projecten",
   "project.settings.name.title": "Projectnaam",
-  "project.settings.name.description": "De naam die overal in OpenCode voor dit project wordt weergegeven",
+  "project.settings.name.description": "De naam die overal in Harpress voor dit project wordt weergegeven",
   "project.settings.icon.description": "Aanbevolen: 128×128px. Klik of sleep om een ​​afbeelding te uploaden.",
   "project.settings.color.description":
     "Wordt gebruikt voor het projectpictogram als er geen aangepaste afbeelding is ingesteld",
@@ -69,13 +69,13 @@ export const dict = {
   "project.settings.worktree.startup.hint.base": "Gebruik $OPENCODE_WORKTREE_BASE voor de basiswerkruimte.",
   "project.settings.worktree.startup.hint.new": "Gebruik $OPENCODE_WORKTREE_PATH voor de nieuwe werkruimte.",
   "project.settings.extensions.empty.mcps.title": "Nog geen MCPs",
-  "project.settings.extensions.empty.mcps.description": "MCPs beschikbaar voor OpenCode wordt hier weergegeven",
+  "project.settings.extensions.empty.mcps.description": "MCPs beschikbaar voor Harpress wordt hier weergegeven",
   "project.settings.extensions.empty.plugins.title": "Nog geen plug-ins",
   "project.settings.extensions.empty.plugins.description":
-    "Plug-ins die beschikbaar zijn voor OpenCode verschijnen hier",
+    "Plug-ins die beschikbaar zijn voor Harpress verschijnen hier",
   "project.settings.extensions.empty.skills.title": "Nog geen vaardigheden",
   "project.settings.extensions.empty.skills.description":
-    "Vaardigheden die beschikbaar zijn voor OpenCode worden hier weergegeven",
+    "Vaardigheden die beschikbaar zijn voor Harpress worden hier weergegeven",
   "project.settings.extensions.lsp.configured": "Geconfigureerde taalservers",
   "project.settings.extensions.lsp.status.enabled": "Ingeschakeld in configuratie",
   "project.settings.extensions.lsp.status.disabled": "Uitgeschakeld in configuratie",
@@ -96,7 +96,7 @@ export const dict = {
   "settings.timeline.collapsed.label": "{{activity}} stortte in",
   "session.new.workspace.search.empty": "Geen bijpassende werkruimten",
   "settings.workspaces.description": "Bekijk werkruimten en beheer het schijfgebruik",
-  "settings.workspaces.empty.description": "Werkbomen die in OpenCode zijn gemaakt, verschijnen hier",
+  "settings.workspaces.empty.description": "Werkbomen die in Harpress zijn gemaakt, verschijnen hier",
   "settings.workspaces.sessions.filtered.one": "{{count}}-sessie",
   "settings.workspaces.sessions.filtered.other": "{{count}}-sessies",
   "settings.workspaces.deleteAll.confirm.one":
@@ -149,9 +149,7 @@ export const dict = {
   "settings.about.otherContributor.other": "{{count}} andere",
   "settings.about.firstPublished": "Voor het eerst gepubliceerd in Missouri, VS",
   "settings.about.firstIllustrated": "Voor het eerst geïllustreerd in Londen, Engeland",
-  "settings.about.website": "www.opencode.ai",
-  "settings.about.description": "OpenCode, de open-source programmeeragent",
-  "settings.about.trademark": "OpenCode is een geregistreerd handelsmerk van Anomaly Innovations, Inc.",
+  "settings.about.website": "github.com/juanmanavarro/wordpress-harness",
   "settings.about.typeset": "Opgemaakt in Inter en IBM Plex Mono",
   "settings.about.tagline": "AI kan geen geweldige software bouwen zonder jou",
   "settings.about.copyright": "© Anomaly Innovations, Inc.",
@@ -204,7 +202,7 @@ export const dict = {
     "Kies of vervolgberichten in de wachtrij komen of de huidige beurt bijsturen. Gebruik {{keybind}} om te wisselen.",
   "settings.general.row.followUpBehavior.queue": "In wachtrij plaatsen",
   "settings.general.row.followUpBehavior.steer": "Bijsturen",
-  "desktop.menu.app": "OpenCode",
+  "desktop.menu.app": "Harpress",
   "desktop.menu.file": "Bestand",
   "desktop.menu.edit": "Bewerken",
   "desktop.menu.view": "Weergave",
@@ -243,18 +241,18 @@ export const dict = {
   "desktop.menu.nextProject": "Volgend project",
   "desktop.menu.minimize": "Minimaliseren",
   "desktop.menu.maximize": "Maximaliseren",
-  "desktop.menu.documentation": "OpenCode-documentatie",
+  "desktop.menu.documentation": "Harpress-documentatie",
   "desktop.menu.supportForum": "Supportforum",
   "desktop.menu.shareFeedback": "Feedback delen",
   "desktop.menu.reportBug": "Een bug melden",
-  "desktop.menu.ariaLabel": "OpenCode-menu",
+  "desktop.menu.ariaLabel": "Harpress-menu",
   "desktop.recovery.action.relaunch": "Opnieuw openen",
   "desktop.recovery.action.exportLogs": "Logboeken exporteren",
   "desktop.recovery.action.keepWaiting": "Blijven wachten",
   "desktop.recovery.action.quit": "Stoppen",
-  "desktop.recovery.loadFailed": "OpenCode kan niet worden geladen",
-  "desktop.recovery.terminated": "Het OpenCode-venster is onverwacht beëindigd",
-  "desktop.recovery.unresponsive": "OpenCode reageert niet",
+  "desktop.recovery.loadFailed": "Harpress kan niet worden geladen",
+  "desktop.recovery.terminated": "Het Harpress-venster is onverwacht beëindigd",
+  "desktop.recovery.unresponsive": "Harpress reageert niet",
   "desktop.recovery.unresponsive.detail": "Je kunt de app opnieuw openen, de logboeken openen of blijven wachten.",
   "desktop.recovery.loadFailed.detail": "Venster: {{window}}\nURL: {{url}}\nFout: {{code}} {{description}}",
   "desktop.recovery.terminated.detail": "Venster: {{window}}\nReden: {{reason}}\nCode: {{code}}",
@@ -357,7 +355,7 @@ export const dict = {
   "provider.connect.status.waiting": "Wachten op autorisatie",
   "provider.connect.status.failed": "Autorisatie mislukt: {{error}}",
   "provider.connect.apiKey.description":
-    "Voer je {{provider}}-API-sleutel in om je account te koppelen en {{provider}}-modellen in OpenCode te gebruiken.",
+    "Voer je {{provider}}-API-sleutel in om je account te koppelen en {{provider}}-modellen in Harpress te gebruiken.",
   "provider.connect.apiKey.label": "{{provider}}-API-sleutel",
   "provider.connect.apiKey.placeholder": "API-sleutel",
   "provider.connect.apiKey.required": "API-sleutel is vereist",
@@ -474,7 +472,7 @@ export const dict = {
   "error.page.action.checkUpdates": "Controleer op updates",
   "error.page.action.updateTo": "Update naar {{version}}",
   "error.page.circular": "[Circulair]",
-  "error.page.report.prefix": "Rapporteer deze fout aan het OpenCode-team",
+  "error.page.report.prefix": "Rapporteer deze fout aan het Harpress-team",
   "error.page.report.discord": "op Discord",
   "error.page.version": "Versie: {{version}}",
   "error.dev.rootNotFound":
@@ -495,7 +493,7 @@ export const dict = {
   "error.chain.didYouMean": "Bedoelde je: {{suggestions}}",
   "error.chain.modelNotFound": "Model niet gevonden: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Controleer de provider- en modelnamen in je configuratie (opencode.json)",
-  "error.chain.mcpFailed": 'MCP-server "{{name}}" is mislukt. Let op: OpenCode ondersteunt nog geen MCP-authenticatie.',
+  "error.chain.mcpFailed": 'MCP-server "{{name}}" is mislukt. Let op: Harpress ondersteunt nog geen MCP-authenticatie.',
   "error.chain.providerAuthFailed": "Authenticatie bij aanbieder mislukt ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     'Kan provider "{{provider}}" niet initialiseren. Controleer de inloggegevens en configuratie.',
@@ -598,16 +596,16 @@ export const dict = {
   "settings.general.section.notifications": "Systeemmeldingen",
   "settings.general.section.sounds": "Geluidseffecten",
   "settings.general.row.language.title": "Taal",
-  "settings.general.row.language.description": "Wijzig de weergavetaal voor OpenCode",
+  "settings.general.row.language.description": "Wijzig de weergavetaal voor Harpress",
   "settings.general.row.shell.title": "Terminalshell",
   "settings.general.row.shell.description": "Shell gebruikt door de terminal- en agenttools",
   "settings.general.row.shell.autoDefault": "Automatisch (standaard)",
   "settings.general.row.shell.terminalOnly": "alleen terminal",
   "settings.general.row.colorScheme.title": "Kleurenschema",
   "settings.general.row.colorScheme.description":
-    "Kies of OpenCode het systeemthema, het lichte thema of het donkere thema gebruikt",
+    "Kies of Harpress het systeemthema, het lichte thema of het donkere thema gebruikt",
   "settings.general.row.theme.title": "Thema",
-  "settings.general.row.theme.description": "Pas het thema van OpenCode aan.",
+  "settings.general.row.theme.description": "Pas het thema van Harpress aan.",
   "settings.general.row.font.title": "Codelettertype",
   "settings.general.row.font.description": "Pas het lettertype aan dat in codeblokken wordt gebruikt",
   "settings.general.row.terminalFont.title": "Terminal-lettertype",
@@ -844,22 +842,22 @@ export const dict = {
   "voice.captions.hide": "Ondertiteling verbergen",
   "voice.connecting": "Verbinden…",
   "voice.you": "Jij:",
-  "voice.assistant": "OpenCode:",
+  "voice.assistant": "Harpress:",
   "voice.failure.unavailable": "Voor spraakoproepen is een OpenAI-API-sleutel op deze server nodig.",
   "voice.failure.microphone": "Microfoontoegang is vereist om te bellen.",
   "voice.failure.dropped": "De verbinding met de oproep is verbroken.",
   "voice.failure.connection": "Kan de oproep niet verbinden.",
-  "desktop.microphoneUsage": "OpenCode gebruikt je microfoon voor spraakoproepen.",
+  "desktop.microphoneUsage": "Harpress gebruikt je microfoon voor spraakoproepen.",
   "desktop.documentsFolderUsage":
-    "OpenCode gebruikt bestanden in je map Documenten voor projecten die je opent en opdrachten die je daar uitvoert.",
+    "Harpress gebruikt bestanden in je map Documenten voor projecten die je opent en opdrachten die je daar uitvoert.",
   "desktop.desktopFolderUsage":
-    "OpenCode gebruikt bestanden op je bureaublad voor projecten die je opent en opdrachten die je daar uitvoert.",
+    "Harpress gebruikt bestanden op je bureaublad voor projecten die je opent en opdrachten die je daar uitvoert.",
   "desktop.downloadsFolderUsage":
-    "OpenCode gebruikt bestanden in je map Downloads voor projecten die je opent en opdrachten die je daar uitvoert.",
+    "Harpress gebruikt bestanden in je map Downloads voor projecten die je opent en opdrachten die je daar uitvoert.",
   "desktop.networkVolumesUsage":
-    "OpenCode gebruikt bestanden op netwerkvolumes voor projecten die je opent en opdrachten die je daar uitvoert.",
+    "Harpress gebruikt bestanden op netwerkvolumes voor projecten die je opent en opdrachten die je daar uitvoert.",
   "desktop.removableVolumesUsage":
-    "OpenCode gebruikt bestanden op verwisselbare volumes voor projecten die je opent en opdrachten die je daar uitvoert.",
+    "Harpress gebruikt bestanden op verwisselbare volumes voor projecten die je opent en opdrachten die je daar uitvoert.",
   "desktop.contextMenu.spellcheck": "Spellingcontrole",
   "desktop.contextMenu.spellcheckLanguages": "Talen voor spellingcontrole",
   "session.location.unavailable": "Sessielocatie niet beschikbaar",
@@ -901,7 +899,7 @@ export const dict = {
   "palette.group.settings": "Instellingen",
   "palette.session.location": "{{project}} · {{server}}",
   "dialog.provider.title": "Integraties",
-  "dialog.provider.description": "Verbind services zodat OpenCode ze kan gebruiken.",
+  "dialog.provider.description": "Verbind services zodat Harpress ze kan gebruiken.",
   "dialog.provider.group.services": "Services",
   "dialog.provider.environmentOnly": "Alleen omgeving",
   "dialog.provider.signInRequired": "Aanmelden vereist →",
@@ -957,7 +955,7 @@ export const dict = {
   "provider.connect.models.available": "Beschikbare modellen",
   "provider.connect.chatgptWelcome.title": "ChatGPT verbonden",
   "provider.connect.chatgptWelcome.description":
-    "Geschikte verzoeken in OpenCode kunnen je ChatGPT-abonnement gebruiken.",
+    "Geschikte verzoeken in Harpress kunnen je ChatGPT-abonnement gebruiken.",
   "provider.connect.chatgptWelcome.usage": "Beheer gebruik in de ChatGPT-instellingen",
   "provider.connect.chatgptWelcome.confirm": "Begrepen",
   "provider.connect.models.list": "Modellen beschikbaar via {{provider}}",
@@ -975,7 +973,7 @@ export const dict = {
   "provider.connect.console.openingBrowser": "Browser openen",
   "provider.connect.remote.label": "op {{server}}",
   "provider.connect.remote.description":
-    "Je OpenCode-inloggegevens worden op deze server opgeslagen. Modellen zijn beschikbaar via deze server.",
+    "Je Harpress-inloggegevens worden op deze server opgeslagen. Modellen zijn beschikbaar via deze server.",
   "provider.connect.claudeAgent.description":
     "Gebruik je Claude-abonnement of een andere Claude Code-aanmelding. Installeer eerst Claude Code en meld je aan.",
   "provider.connect.claudeAgent.install": "Claude Code installeren",
@@ -1009,7 +1007,7 @@ export const dict = {
     "We konden je browser niet openen. Selecteer Browser openen om het opnieuw te proberen.",
   "provider.connect.oauth.paste.toggle": "Aanmelden vanaf een ander apparaat?",
   "provider.connect.oauth.paste.description":
-    "Als je browser de machine waarop OpenCode draait niet kan bereiken, plak dan de URL waarnaar je bent doorgestuurd.",
+    "Als je browser de machine waarop Harpress draait niet kan bereiken, plak dan de URL waarnaar je bent doorgestuurd.",
   "provider.connect.oauth.expired": "Autorisatie verlopen",
   "model.details.input.text": "Tekst",
   "model.details.input.image": "Afbeelding",
@@ -1046,7 +1044,7 @@ export const dict = {
   "dialog.mcp.signIn": "Aanmelden",
   "dialog.mcp.signIn.open": "Aanmelden bij {{name}}",
   "dialog.mcp.signIn.description":
-    "Je browser wordt geopend zodat je je kunt aanmelden bij {{name}}. Als die de machine waarop OpenCode draait niet kan bereiken, plak dan hieronder de URL waarnaar je bent doorgestuurd.",
+    "Je browser wordt geopend zodat je je kunt aanmelden bij {{name}}. Als die de machine waarop Harpress draait niet kan bereiken, plak dan hieronder de URL waarnaar je bent doorgestuurd.",
   "dialog.mcp.signIn.syncFailed": "Aangemeld, maar kan {{name}} niet vernieuwen: {{error}}",
   "dialog.mcp.error.details":
     "MCP-server: {{name}}\nStatus: mislukt\nConfiguratie: mcp.servers.{{name}}\nFout: {{error}}",
@@ -1088,7 +1086,7 @@ export const dict = {
   "server.connect.link.unreachable":
     "Kan {{url}} niet bereiken. Controleer of dit apparaat de server kan bereiken en probeer het opnieuw.",
   "server.connect.link.legacy":
-    "Deze koppelingscode komt van een oudere versie van OpenCode. Werk OpenCode op de server bij en voer opencode pair opnieuw uit.",
+    "Deze koppelingscode komt van een oudere versie van Harpress. Werk Harpress op de server bij en voer opencode pair opnieuw uit.",
   "server.connect.camera.native":
     "Deze pagina kan de camera niet gebruiken via HTTP. Plak de koppelingslink hierboven.",
   "dialog.server.signedOut":
@@ -1110,7 +1108,7 @@ export const dict = {
   "home.sessions.load.failed": "Kan sessies niet laden",
   "home.sessions.load.timeout": "De server deed er te lang over om te antwoorden",
   "tips.browse.title": "Bedien je browser",
-  "tips.browse.description": "Laat OpenCode in je browser werken met je tabbladen, aanmeldingen en extensies.",
+  "tips.browse.description": "Laat Harpress in je browser werken met je tabbladen, aanmeldingen en extensies.",
   "tips.browse.install": "Installeren",
   "tips.hex.title": "Gebruik je stem",
   "tips.hex.description":
@@ -1300,7 +1298,7 @@ export const dict = {
     'Schakelaars zetten alleen de desktop-UI van een plug-in uit. Voeg "-<id>" toe aan plugins in je globale opencode.json om het serverdeel uit te zetten, of "-" plus de ID van de TUI-plug-in aan plugins in cli.json om het TUI-deel uit te zetten.',
   "settings.about.copyVersionFailed": "Kan versie niet kopiëren",
   "settings.about.notices.title": "Kennisgevingen van derden",
-  "settings.about.notices.description": "OpenCode bevat de volgende opensourcesoftware.",
+  "settings.about.notices.description": "Harpress bevat de volgende opensourcesoftware.",
   "settings.about.notices.license": "Licentietekst",
   "settings.about.notices.fonts.title": "Lettertypen in de Office-voorbeelden",
   "settings.about.notices.fonts.description":
@@ -1368,8 +1366,7 @@ export const dict = {
   "settings.timeline.description.quiet":
     "Subagents afzonderlijk tonen en bewerkingen groeperen. Andere activiteit verbergen.",
   "settings.timeline.row.foldUserMessages.title": "Lange berichten inklappen",
-  "settings.timeline.row.foldUserMessages.description":
-    "Klap je berichten na 12 regels in achter een knop Meer lezen",
+  "settings.timeline.row.foldUserMessages.description": "Klap je berichten na 12 regels in achter een knop Meer lezen",
   "settings.timeline.row.turnDiffs.title": "Gewijzigde bestanden",
   "settings.timeline.row.turnDiffs.description":
     "De bestanden tonen die elke beurt heeft gewijzigd wanneer die klaar is",

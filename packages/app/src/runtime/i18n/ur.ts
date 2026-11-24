@@ -1,5 +1,5 @@
 export const dict = {
-  "desktop.menu.app": "OpenCode",
+  "desktop.menu.app": "Harpress",
   "desktop.menu.file": "فائل",
   "desktop.menu.edit": "ترمیم",
   "desktop.menu.view": "دیکھیں",
@@ -38,19 +38,19 @@ export const dict = {
   "desktop.menu.nextProject": "اگلا پروجیکٹ",
   "desktop.menu.minimize": "چھوٹا کریں",
   "desktop.menu.maximize": "بڑا کریں",
-  "desktop.menu.documentation": "OpenCode دستاویزات",
+  "desktop.menu.documentation": "Harpress دستاویزات",
   "desktop.menu.supportForum": "معاونتی فورم",
   "desktop.menu.shareFeedback": "رائے کا اشتراک کریں",
   "desktop.menu.reportBug": "خرابی کی اطلاع دیں",
-  "desktop.menu.ariaLabel": "OpenCode مینو",
+  "desktop.menu.ariaLabel": "Harpress مینو",
 
   "desktop.recovery.action.relaunch": "دوبارہ چلائیں",
   "desktop.recovery.action.exportLogs": "لاگز برآمد کریں",
   "desktop.recovery.action.keepWaiting": "انتظار جاری رکھیں",
   "desktop.recovery.action.quit": "بند کریں",
-  "desktop.recovery.loadFailed": "OpenCode لوڈ نہیں ہو سکا",
-  "desktop.recovery.terminated": "OpenCode ونڈو غیر متوقع طور پر بند ہو گئی",
-  "desktop.recovery.unresponsive": "OpenCode جواب نہیں دے رہا",
+  "desktop.recovery.loadFailed": "Harpress لوڈ نہیں ہو سکا",
+  "desktop.recovery.terminated": "Harpress ونڈو غیر متوقع طور پر بند ہو گئی",
+  "desktop.recovery.unresponsive": "Harpress جواب نہیں دے رہا",
   "desktop.recovery.unresponsive.detail":
     "آپ ایپ کو دوبارہ چلا سکتے ہیں، لاگز کھول سکتے ہیں یا انتظار جاری رکھ سکتے ہیں۔",
   "desktop.recovery.loadFailed.detail":
@@ -159,7 +159,7 @@ export const dict = {
   "provider.connect.status.waiting": "اجازت کا انتظار ہے",
   "provider.connect.status.failed": "اجازت حاصل نہیں ہو سکی: \u2068{{error}}\u2069",
   "provider.connect.apiKey.description":
-    "اپنا اکاؤنٹ منسلک کرنے اور OpenCode میں \u2068{{provider}}\u2069 ماڈلز استعمال کرنے کے لیے اپنی \u2068{{provider}}\u2069 API کلید درج کریں۔",
+    "اپنا اکاؤنٹ منسلک کرنے اور Harpress میں \u2068{{provider}}\u2069 ماڈلز استعمال کرنے کے لیے اپنی \u2068{{provider}}\u2069 API کلید درج کریں۔",
   "provider.connect.apiKey.label": "\u2068{{provider}}\u2069 API کلید",
   "provider.connect.apiKey.placeholder": "API کلید",
   "provider.connect.apiKey.required": "API کلید درکار ہے۔",
@@ -276,7 +276,7 @@ export const dict = {
   "error.page.action.checkUpdates": "اپ ڈیٹس کے لیے چیک کریں۔",
   "error.page.action.updateTo": "\u2068{{version}}\u2069 میں اپ ڈیٹ کریں۔",
   "error.page.circular": "[سرکلر]",
-  "error.page.report.prefix": "براہ کرم OpenCode ٹیم کو اس غلطی کی اطلاع دیں۔",
+  "error.page.report.prefix": "براہ کرم Harpress ٹیم کو اس غلطی کی اطلاع دیں۔",
   "error.page.report.discord": "Discord پر",
   "error.page.version": "ورژن: \u2068{{version}}\u2069",
   "error.dev.rootNotFound":
@@ -298,7 +298,7 @@ export const dict = {
   "error.chain.modelNotFound": "ماڈل نہیں ملا: \u2068{{provider}}\u2069/\u2068{{model}}\u2069",
   "error.chain.checkConfig": "اپنی تشکیل (opencode.json) فراہم کنندہ/ماڈل کے نام چیک کریں۔",
   "error.chain.mcpFailed":
-    'MCP سرور "\u2068{{name}}\u2069" ناکام ہو گیا۔ نوٹ، OpenCode ابھی تک MCP تصدیق کو سپورٹ نہیں کرتا ہے۔',
+    'MCP سرور "\u2068{{name}}\u2069" ناکام ہو گیا۔ نوٹ، Harpress ابھی تک MCP تصدیق کو سپورٹ نہیں کرتا ہے۔',
   "error.chain.providerAuthFailed":
     "فراہم کنندہ کی توثیق ناکام ہوگئی (\u2068{{provider}}\u2069): \u2068{{message}}\u2069",
   "error.chain.providerInitFailed":
@@ -403,16 +403,16 @@ export const dict = {
   "settings.general.section.notifications": "سسٹم کی اطلاعات",
   "settings.general.section.sounds": "صوتی اثرات",
   "settings.general.row.language.title": "زبان",
-  "settings.general.row.language.description": "OpenCode کے لیے ڈسپلے کی زبان تبدیل کریں۔",
+  "settings.general.row.language.description": "Harpress کے لیے ڈسپلے کی زبان تبدیل کریں۔",
   "settings.general.row.shell.title": "ٹرمینل شیل",
   "settings.general.row.shell.description": "ٹرمینل اور ایجنٹ ٹولز کے ذریعے استعمال ہونے والا شیل",
   "settings.general.row.shell.autoDefault": "خودکار (پہلے سے طے شدہ)",
   "settings.general.row.shell.terminalOnly": "صرف ٹرمینل",
   "settings.general.row.colorScheme.title": "رنگ سکیم",
   "settings.general.row.colorScheme.description":
-    "منتخب کریں کہ آیا OpenCode سسٹم، لائٹ یا ڈارک تھیم کی پیروی کرتا ہے۔",
+    "منتخب کریں کہ آیا Harpress سسٹم، لائٹ یا ڈارک تھیم کی پیروی کرتا ہے۔",
   "settings.general.row.theme.title": "تھیم",
-  "settings.general.row.theme.description": "OpenCode کی تھیم حسب ضرورت بنائیں۔",
+  "settings.general.row.theme.description": "Harpress کی تھیم حسب ضرورت بنائیں۔",
   "settings.general.row.font.title": "کوڈ فونٹ",
   "settings.general.row.font.description": "کوڈ بلاکس میں استعمال ہونے والے فونٹ کو حسب ضرورت بنائیں",
   "settings.general.row.terminalFont.title": "ٹرمینل فونٹ",
@@ -681,9 +681,7 @@ export const dict = {
   "settings.about.otherContributor.other": "\u2068{{count}}\u2069 دیگر",
   "settings.about.firstPublished": "پہلی بار میزوری، امریکہ میں شائع ہوا",
   "settings.about.firstIllustrated": "پہلی بار لندن، انگلینڈ میں مصور کیا گیا",
-  "settings.about.website": "www.opencode.ai",
-  "settings.about.description": "OpenCode، اوپن سورس کوڈنگ ایجنٹ",
-  "settings.about.trademark": "OpenCode، Anomaly Innovations, Inc. کا رجسٹرڈ ٹریڈ مارک ہے۔",
+  "settings.about.website": "github.com/juanmanavarro/wordpress-harness",
   "settings.about.typeset": "Inter اور IBM Plex Mono میں ٹائپ سیٹ",
   "settings.about.tagline": "آپ کے بغیر AI بہترین سافٹ ویئر نہیں بنا سکتا",
   "settings.about.copyright": "© Anomaly Innovations, Inc.",
@@ -736,7 +734,7 @@ export const dict = {
   "server.connect.scan": "QR کوڈ اسکین کریں۔",
   "server.connect.scan.description": "اپنے کیمرے کو اوپن کوڈ پیئر کے ذریعے دکھائے گئے QR کوڈ کی طرف پوائنٹ کریں۔",
   "server.connect.scan.invalid":
-    "یہ OpenCode جوڑا بنانے والا کوڈ نہیں ہے۔ اوپن کوڈ جوڑی کے ذریعہ دکھائے گئے کوڈ کو اسکین کریں۔",
+    "یہ Harpress جوڑا بنانے والا کوڈ نہیں ہے۔ اوپن کوڈ جوڑی کے ذریعہ دکھائے گئے کوڈ کو اسکین کریں۔",
   "server.connect.camera": "کیمرہ جوڑنا",
   "server.connect.camera.starting": "کیمرہ کھل رہا ہے…",
   "server.connect.mixedContent":
@@ -777,18 +775,18 @@ export const dict = {
     "تلاش فراہم کرنے والے ایجنٹوں کو منتخب کریں جو ویب کو تلاش کرنے کے لیے استعمال کرتے ہیں۔",
   "settings.projects.search.placeholder": "پروجیکٹس تلاش کریں۔",
   "project.settings.name.title": "پروجیکٹ کا نام",
-  "project.settings.name.description": "پورے OpenCode میں اس پروجیکٹ کے لیے دکھایا گیا نام",
+  "project.settings.name.description": "پورے Harpress میں اس پروجیکٹ کے لیے دکھایا گیا نام",
   "project.settings.icon.description": "تجویز کردہ: 128×128px۔ تصویر اپ لوڈ کرنے کے لیے کلک کریں یا گھسیٹیں۔",
   "project.settings.color.description": "پروجیکٹ آئیکن کے لیے استعمال کیا جاتا ہے جب کوئی حسب ضرورت تصویر سیٹ نہ ہو۔",
   "project.settings.worktree.startup.description": "نیا ورک ٹری بنانے کے بعد ایک بار چلتا ہے۔",
   "project.settings.worktree.startup.hint.base": "بیس ورک ٹری کے لیے $OPENCODE_WORKTREE_BASE استعمال کریں۔",
   "project.settings.worktree.startup.hint.new": "نئے ورک ٹری کے لیے $OPENCODE_WORKTREE_PATH استعمال کریں۔",
   "project.settings.extensions.empty.mcps.title": "ابھی تک کوئی MCPs نہیں ہیں۔",
-  "project.settings.extensions.empty.mcps.description": "OpenCode کو دستیاب MCPs یہاں ظاہر ہوں گے۔",
+  "project.settings.extensions.empty.mcps.description": "Harpress کو دستیاب MCPs یہاں ظاہر ہوں گے۔",
   "project.settings.extensions.empty.plugins.title": "ابھی تک کوئی پلگ ان نہیں ہے۔",
-  "project.settings.extensions.empty.plugins.description": "OpenCode کے لیے دستیاب پلگ انز یہاں ظاہر ہوں گے۔",
+  "project.settings.extensions.empty.plugins.description": "Harpress کے لیے دستیاب پلگ انز یہاں ظاہر ہوں گے۔",
   "project.settings.extensions.empty.skills.title": "ابھی تک کوئی ہنر نہیں ہے۔",
-  "project.settings.extensions.empty.skills.description": "OpenCode کو دستیاب مہارتیں یہاں ظاہر ہوں گی۔",
+  "project.settings.extensions.empty.skills.description": "Harpress کو دستیاب مہارتیں یہاں ظاہر ہوں گی۔",
   "project.settings.extensions.lsp.configured": "کنفیگرڈ لینگویج سرورز",
   "project.settings.extensions.lsp.status.enabled": "تشکیل میں فعال",
   "project.settings.extensions.lsp.status.disabled": "تشکیل میں غیر فعال",
@@ -809,7 +807,7 @@ export const dict = {
   "settings.timeline.collapsed.label": "\u2068{{activity}}\u2069 منہدم ہو گیا۔",
   "session.new.workspace.search.empty": "کوئی مماثل کام کے درخت نہیں ہیں۔",
   "settings.workspaces.description": "ورک ٹریس کا جائزہ لیں اور ڈسک کے استعمال کا انتظام کریں۔",
-  "settings.workspaces.empty.description": "OpenCode میں بنائے گئے ورک ٹریس یہاں ظاہر ہوں گے۔",
+  "settings.workspaces.empty.description": "Harpress میں بنائے گئے ورک ٹریس یہاں ظاہر ہوں گے۔",
   "settings.workspaces.sessions.filtered.one": "\u2068{{count}}\u2069 سیشن",
   "settings.workspaces.sessions.filtered.other": "\u2068{{count}}\u2069 سیشنز",
   "settings.workspaces.deleteAll.confirm.one":
@@ -849,22 +847,22 @@ export const dict = {
   "voice.captions.hide": "کیپشنز چھپائیں",
   "voice.connecting": "منسلک ہو رہا ہے…",
   "voice.you": "آپ:",
-  "voice.assistant": "OpenCode:",
+  "voice.assistant": "Harpress:",
   "voice.failure.unavailable": "وائس کالز کے لیے اس سرور پر OpenAI API کلید درکار ہے۔",
   "voice.failure.microphone": "کال کرنے کے لیے مائیکروفون تک رسائی درکار ہے۔",
   "voice.failure.dropped": "کال منقطع ہو گئی۔",
   "voice.failure.connection": "کال منسلک نہیں ہو سکی۔",
-  "desktop.microphoneUsage": "OpenCode وائس کالز کے لیے آپ کا مائیکروفون استعمال کرتا ہے۔",
+  "desktop.microphoneUsage": "Harpress وائس کالز کے لیے آپ کا مائیکروفون استعمال کرتا ہے۔",
   "desktop.documentsFolderUsage":
-    "OpenCode آپ کے Documents فولڈر میں موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
+    "Harpress آپ کے Documents فولڈر میں موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
   "desktop.desktopFolderUsage":
-    "OpenCode آپ کے Desktop پر موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
+    "Harpress آپ کے Desktop پر موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
   "desktop.downloadsFolderUsage":
-    "OpenCode آپ کے Downloads فولڈر میں موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
+    "Harpress آپ کے Downloads فولڈر میں موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
   "desktop.networkVolumesUsage":
-    "OpenCode نیٹ ورک والیومز پر موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
+    "Harpress نیٹ ورک والیومز پر موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
   "desktop.removableVolumesUsage":
-    "OpenCode قابلِ علیحدگی والیومز پر موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
+    "Harpress قابلِ علیحدگی والیومز پر موجود فائلیں ان پروجیکٹس کے لیے استعمال کرتا ہے جو آپ وہاں کھولتے ہیں اور ان کمانڈز کے لیے جو آپ وہاں چلاتے ہیں۔",
   "desktop.contextMenu.spellcheck": "ہجے کی جانچ",
   "desktop.contextMenu.spellcheckLanguages": "ہجے کی جانچ کی زبانیں",
   "session.location.unavailable": "سیشن کا مقام دستیاب نہیں",
@@ -907,7 +905,7 @@ export const dict = {
   "palette.group.settings": "ترتیبات",
   "palette.session.location": "⁨{{project}}⁩ · ⁨{{server}}⁩",
   "dialog.provider.title": "انٹیگریشنز",
-  "dialog.provider.description": "سروسز منسلک کریں تاکہ OpenCode انہیں استعمال کر سکے۔",
+  "dialog.provider.description": "سروسز منسلک کریں تاکہ Harpress انہیں استعمال کر سکے۔",
   "dialog.provider.group.services": "سروسز",
   "dialog.provider.environmentOnly": "صرف ماحول",
   "dialog.provider.signInRequired": "سائن ان درکار ہے ←",
@@ -959,7 +957,7 @@ export const dict = {
   "provider.connect.models.description": "شروع کرنے کے لیے ایک ماڈل منتخب کریں۔ آپ کسی بھی وقت ماڈل تبدیل کر سکتے ہیں۔",
   "provider.connect.models.available": "دستیاب ماڈلز",
   "provider.connect.chatgptWelcome.title": "ChatGPT منسلک ہو گیا",
-  "provider.connect.chatgptWelcome.description": "OpenCode میں اہل درخواستیں آپ کا ChatGPT پلان استعمال کر سکتی ہیں۔",
+  "provider.connect.chatgptWelcome.description": "Harpress میں اہل درخواستیں آپ کا ChatGPT پلان استعمال کر سکتی ہیں۔",
   "provider.connect.chatgptWelcome.usage": "ChatGPT کی ترتیبات میں استعمال کا نظم کریں",
   "provider.connect.chatgptWelcome.confirm": "سمجھ آ گیا",
   "provider.connect.models.list": "⁨{{provider}}⁩ سے دستیاب ماڈلز",
@@ -977,7 +975,7 @@ export const dict = {
   "provider.connect.console.openingBrowser": "براؤزر کھل رہا ہے",
   "provider.connect.remote.label": "⁨{{server}}⁩ پر",
   "provider.connect.remote.description":
-    "آپ کی OpenCode اسناد اس سرور پر محفوظ ہوں گی۔ ماڈلز اسی سرور کے ذریعے دستیاب ہوں گے۔",
+    "آپ کی Harpress اسناد اس سرور پر محفوظ ہوں گی۔ ماڈلز اسی سرور کے ذریعے دستیاب ہوں گے۔",
   "provider.connect.claudeAgent.description":
     "اپنا Claude پلان یا کوئی دوسرا Claude Code لاگ ان استعمال کریں۔ پہلے Claude Code انسٹال کریں اور سائن ان کریں۔",
   "provider.connect.claudeAgent.install": "Claude Code انسٹال کریں",
@@ -1011,7 +1009,7 @@ export const dict = {
     'ہم آپ کا براؤزر نہیں کھول سکے۔ دوبارہ کوشش کرنے کے لیے "براؤزر کھولیں" منتخب کریں۔',
   "provider.connect.oauth.paste.toggle": "کسی دوسری ڈیوائس سے سائن ان کر رہے ہیں؟",
   "provider.connect.oauth.paste.description":
-    "اگر آپ کا براؤزر OpenCode چلانے والی مشین تک نہیں پہنچ سکتا تو وہ URL چسپاں کریں جس پر اسے ری ڈائریکٹ کیا گیا تھا۔",
+    "اگر آپ کا براؤزر Harpress چلانے والی مشین تک نہیں پہنچ سکتا تو وہ URL چسپاں کریں جس پر اسے ری ڈائریکٹ کیا گیا تھا۔",
   "provider.connect.oauth.expired": "اجازت کی میعاد ختم ہو گئی",
   "model.details.input.text": "متن",
   "model.details.input.image": "تصویر",
@@ -1048,7 +1046,7 @@ export const dict = {
   "dialog.mcp.signIn": "سائن ان کریں",
   "dialog.mcp.signIn.open": "⁨{{name}}⁩ میں سائن ان کریں",
   "dialog.mcp.signIn.description":
-    "آپ کا براؤزر کھلے گا تاکہ آپ ⁨{{name}}⁩ میں سائن ان کر سکیں۔ اگر یہ OpenCode چلانے والی مشین تک نہیں پہنچ سکتا تو وہ URL نیچے چسپاں کریں جس پر اسے ری ڈائریکٹ کیا گیا تھا۔",
+    "آپ کا براؤزر کھلے گا تاکہ آپ ⁨{{name}}⁩ میں سائن ان کر سکیں۔ اگر یہ Harpress چلانے والی مشین تک نہیں پہنچ سکتا تو وہ URL نیچے چسپاں کریں جس پر اسے ری ڈائریکٹ کیا گیا تھا۔",
   "dialog.mcp.signIn.syncFailed": "سائن ان ہو گیا، لیکن ⁨{{name}}⁩ تازہ نہیں ہو سکا: ⁨{{error}}⁩",
   "dialog.mcp.error.details": "MCP سرور: ⁨{{name}}⁩\nحالت: ناکام\nکنفیگریشن: mcp.servers.{{name}}\nخرابی: ⁨{{error}}⁩",
   "dialog.fork.search.empty": "کوئی پیغام نہیں ملا",
@@ -1088,7 +1086,7 @@ export const dict = {
   "server.connect.link.unreachable":
     "⁨{{url}}⁩ تک رسائی نہیں ہو سکی۔ چیک کریں کہ یہ ڈیوائس سرور تک پہنچ سکتی ہے، پھر دوبارہ کوشش کریں۔",
   "server.connect.link.legacy":
-    "جوڑنے کا یہ کوڈ OpenCode کے پرانے ورژن کا ہے۔ سرور پر OpenCode اپ ڈیٹ کریں، پھر دوبارہ opencode pair چلائیں۔",
+    "جوڑنے کا یہ کوڈ Harpress کے پرانے ورژن کا ہے۔ سرور پر Harpress اپ ڈیٹ کریں، پھر دوبارہ opencode pair چلائیں۔",
   "server.connect.camera.native": "یہ صفحہ HTTP پر کیمرہ استعمال نہیں کر سکتا۔ اوپر جوڑنے کا لنک چسپاں کریں۔",
   "dialog.server.signedOut":
     "اس سرور کے لیے آپ کا سائن ان اب درست نہیں رہا۔ جوڑنے کا نیا لنک چسپاں کریں، یا سرور کا پاس ورڈ درج کریں۔",
@@ -1108,7 +1106,7 @@ export const dict = {
   "home.sessions.load.failed": "سیشنز لوڈ نہیں ہو سکے",
   "home.sessions.load.timeout": "سرور نے جواب دینے میں بہت زیادہ وقت لیا",
   "tips.browse.title": "اپنے براؤزر کو کنٹرول کریں",
-  "tips.browse.description": "OpenCode کو اپنے ٹیبز، لاگ انز اور ایکسٹینشنز کے ساتھ اپنے براؤزر میں کام کرنے دیں۔",
+  "tips.browse.description": "Harpress کو اپنے ٹیبز، لاگ انز اور ایکسٹینشنز کے ساتھ اپنے براؤزر میں کام کرنے دیں۔",
   "tips.browse.install": "انسٹال کریں",
   "tips.hex.title": "اپنی آواز استعمال کریں",
   "tips.hex.description":
@@ -1298,7 +1296,7 @@ export const dict = {
     'سوئچز صرف پلگ ان کا ڈیسک ٹاپ UI بند کرتے ہیں۔ اس کا سرور حصہ بند کرنے کے لیے اپنی عالمی opencode.json میں plugins میں "-<id>" شامل کریں، یا اس کا TUI حصہ بند کرنے کے لیے cli.json میں plugins میں "-" اور اس کے TUI پلگ ان کی ID شامل کریں۔',
   "settings.about.copyVersionFailed": "ورژن کاپی کرنے میں ناکام",
   "settings.about.notices.title": "فریق ثالث کے نوٹسز",
-  "settings.about.notices.description": "OpenCode میں درج ذیل اوپن سورس سافٹ ویئر شامل ہے۔",
+  "settings.about.notices.description": "Harpress میں درج ذیل اوپن سورس سافٹ ویئر شامل ہے۔",
   "settings.about.notices.license": "لائسنس کا متن",
   "settings.about.notices.fonts.title": "Office پیش منظر میں فونٹس",
   "settings.about.notices.fonts.description":

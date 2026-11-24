@@ -1,5 +1,4 @@
 import { Splash } from "@opencode/ui/logo"
-import { Wordmark } from "@opencode/ui/wordmark"
 import type { Platform } from "@opencode/app/desktop"
 import { onCleanup, onMount, Show } from "solid-js"
 import "./splash.css"
@@ -67,7 +66,7 @@ export function LoadingSplash(props: {
         aria-hidden="true"
         class="h-dvh w-screen bg-v2-background-bg-base"
         style={{
-          // Match the default session's titlebar, panel insets, and wordmark position.
+          // Match the default session's titlebar and panel insets.
           "padding-block-start": `calc(${titlebarHeight()} + ${props.platform.os === "windows" ? 1 : 8}px)`,
           "padding-block-end": "8px",
           "padding-inline": "32px",
@@ -79,12 +78,7 @@ export function LoadingSplash(props: {
         <div class="relative size-full">
           <div class="absolute inset-x-0 top-[25.375%]">
             <div class="mx-auto w-full max-w-[720px]">
-              <Wordmark
-                outline
-                fade={false}
-                muted={false}
-                class="mx-auto block h-auto w-4/5 text-v2-icon-icon-faint opacity-50"
-              />
+              <Splash class="mx-auto block h-20 w-16 opacity-50" />
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 export const dict = {
-  "desktop.menu.app": "OpenCode",
+  "desktop.menu.app": "Harpress",
   "desktop.menu.file": "Αρχείο",
   "desktop.menu.edit": "Επεξεργασία",
   "desktop.menu.view": "Προβολή",
@@ -38,18 +38,18 @@ export const dict = {
   "desktop.menu.nextProject": "Επόμενο έργο",
   "desktop.menu.minimize": "Ελαχιστοποίηση",
   "desktop.menu.maximize": "Μεγιστοποίηση",
-  "desktop.menu.documentation": "OpenCode Τεκμηρίωση",
+  "desktop.menu.documentation": "Harpress Τεκμηρίωση",
   "desktop.menu.supportForum": "Φόρουμ υποστήριξης",
   "desktop.menu.shareFeedback": "Κοινή χρήση σχολίων",
   "desktop.menu.reportBug": "Αναφορά σφάλματος",
-  "desktop.menu.ariaLabel": "OpenCode μενού",
+  "desktop.menu.ariaLabel": "Harpress μενού",
   "desktop.recovery.action.relaunch": "Επανεκκίνηση",
   "desktop.recovery.action.exportLogs": "Εξαγωγή αρχείων καταγραφής",
   "desktop.recovery.action.keepWaiting": "Συνεχίστε την αναμονή",
   "desktop.recovery.action.quit": "Τερματισμός",
-  "desktop.recovery.loadFailed": "OpenCode απέτυχε η φόρτωση",
-  "desktop.recovery.terminated": "OpenCode το παράθυρο τερματίστηκε απροσδόκητα",
-  "desktop.recovery.unresponsive": "OpenCode δεν αποκρίνεται",
+  "desktop.recovery.loadFailed": "Harpress απέτυχε η φόρτωση",
+  "desktop.recovery.terminated": "Harpress το παράθυρο τερματίστηκε απροσδόκητα",
+  "desktop.recovery.unresponsive": "Harpress δεν αποκρίνεται",
   "desktop.recovery.unresponsive.detail":
     "Μπορείτε να επανεκκινήσετε την εφαρμογή, να ανοίξετε τα αρχεία καταγραφής ή να συνεχίσετε να περιμένετε.",
   "desktop.recovery.loadFailed.detail": "Παράθυρο: {{window}}\nURL: {{url}}\nΣφάλμα: {{code}} {{description}}",
@@ -152,7 +152,7 @@ export const dict = {
   "provider.connect.status.waiting": "Αναμονή για εξουσιοδότηση",
   "provider.connect.status.failed": "Η εξουσιοδότηση απέτυχε: {{error}}",
   "provider.connect.apiKey.description":
-    "Εισαγάγετε το κλειδί {{provider}} API για να συνδέσετε τον λογαριασμό σας και χρησιμοποιήστε μοντέλα {{provider}} στο OpenCode.",
+    "Εισαγάγετε το κλειδί {{provider}} API για να συνδέσετε τον λογαριασμό σας και χρησιμοποιήστε μοντέλα {{provider}} στο Harpress.",
   "provider.connect.apiKey.label": "{{provider}} API κλειδί",
   "provider.connect.apiKey.placeholder": "API κλειδί",
   "provider.connect.apiKey.required": "API απαιτείται κλειδί",
@@ -267,7 +267,7 @@ export const dict = {
   "error.page.action.checkUpdates": "Έλεγχος για ενημερώσεις",
   "error.page.action.updateTo": "Ενημέρωση σε {{version}}",
   "error.page.circular": "[Circular]",
-  "error.page.report.prefix": "Αναφέρετε αυτό το σφάλμα στην ομάδα OpenCode",
+  "error.page.report.prefix": "Αναφέρετε αυτό το σφάλμα στην ομάδα Harpress",
   "error.page.report.discord": "στο Discord",
   "error.page.version": "Έκδοση: {{version}}",
   "error.dev.rootNotFound":
@@ -290,7 +290,7 @@ export const dict = {
   "error.chain.modelNotFound": "Το μοντέλο δεν βρέθηκε: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Ελέγξτε τη διαμόρφωση (opencode.json) ονόματα παρόχου/μοντέλων",
   "error.chain.mcpFailed":
-    'MCP διακομιστής "{{name}}" απέτυχε. Σημείωση, το OpenCode δεν υποστηρίζει ακόμη έλεγχο ταυτότητας MCP.',
+    'MCP διακομιστής "{{name}}" απέτυχε. Σημείωση, το Harpress δεν υποστηρίζει ακόμη έλεγχο ταυτότητας MCP.',
   "error.chain.providerAuthFailed": "Ο έλεγχος ταυτότητας παρόχου απέτυχε ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     'Απέτυχε η προετοιμασία του παρόχου "{{provider}}". Ελέγξτε τα διαπιστευτήρια και τη διαμόρφωση.',
@@ -395,16 +395,16 @@ export const dict = {
   "settings.general.section.notifications": "Ειδοποιήσεις συστήματος",
   "settings.general.section.sounds": "Ηχητικά εφέ",
   "settings.general.row.language.title": "Γλώσσα",
-  "settings.general.row.language.description": "Αλλαγή της γλώσσας εμφάνισης για το OpenCode",
+  "settings.general.row.language.description": "Αλλαγή της γλώσσας εμφάνισης για το Harpress",
   "settings.general.row.shell.title": "Τερματικό κέλυφος",
   "settings.general.row.shell.description": "Κέλυφος που χρησιμοποιείται από το τερματικό και τα εργαλεία του πράκτορα",
   "settings.general.row.shell.autoDefault": "Αυτόματο (Προεπιλογή)",
   "settings.general.row.shell.terminalOnly": "μόνο τερματικό",
   "settings.general.row.colorScheme.title": "Χρωματικός συνδυασμός",
   "settings.general.row.colorScheme.description":
-    "Επιλέξτε εάν το OpenCode ακολουθεί το σύστημα, το ανοιχτό ή το σκοτεινό θέμα",
+    "Επιλέξτε εάν το Harpress ακολουθεί το σύστημα, το ανοιχτό ή το σκοτεινό θέμα",
   "settings.general.row.theme.title": "Θέμα",
-  "settings.general.row.theme.description": "Προσαρμογή του τρόπου με τον οποίο έχει θέμα το OpenCode.",
+  "settings.general.row.theme.description": "Προσαρμογή του τρόπου με τον οποίο έχει θέμα το Harpress.",
   "settings.general.row.font.title": "Γραμματοσειρά κώδικα",
   "settings.general.row.font.description": "Προσαρμογή της γραμματοσειράς που χρησιμοποιείται στα μπλοκ κώδικα",
   "settings.general.row.terminalFont.title": "Τερματική γραμματοσειρά",
@@ -679,9 +679,7 @@ export const dict = {
   "settings.about.otherContributor.other": "{{count}} άλλοι",
   "settings.about.firstPublished": "Πρωτοδημοσιεύτηκε στο Μιζούρι των Η.Π.Α",
   "settings.about.firstIllustrated": "Εικονογραφήθηκε για πρώτη φορά στο Λονδίνο της Αγγλίας",
-  "settings.about.website": "www.opencode.ai",
-  "settings.about.description": "OpenCode, ο παράγοντας κωδικοποίησης ανοιχτού κώδικα",
-  "settings.about.trademark": "Το OpenCode είναι σήμα κατατεθέν της Anomaly Innovations, Inc.",
+  "settings.about.website": "github.com/juanmanavarro/wordpress-harness",
   "settings.about.typeset": "Δακτυλογράφηση σε Inter και IBM Plex Mono",
   "settings.about.tagline": "Το AI δεν μπορεί να δημιουργήσει εξαιρετικό λογισμικό, χωρίς εσάς",
   "settings.about.copyright": "© Anomaly Innovations, Inc.",
@@ -727,7 +725,7 @@ export const dict = {
   "server.connect.scan": "Σάρωση κωδικού QR",
   "server.connect.scan.description": "Στρέψτε την κάμερά σας στον κωδικό QR που εμφανίζεται από το opencode pair.",
   "server.connect.scan.invalid":
-    "Αυτός δεν είναι κωδικός σύζευξης OpenCode. Σαρώστε τον κωδικό που εμφανίζεται από το opencode pair.",
+    "Αυτός δεν είναι κωδικός σύζευξης Harpress. Σαρώστε τον κωδικό που εμφανίζεται από το opencode pair.",
   "server.connect.camera": "Κάμερα ζευγοποίησης",
   "server.connect.camera.starting": "Άνοιγμα κάμερας…",
   "server.connect.mixedContent":
@@ -764,7 +762,7 @@ export const dict = {
     "Επιλέξτε τους πράκτορες παροχής αναζήτησης που χρησιμοποιούν για την αναζήτηση στον ιστό",
   "settings.projects.search.placeholder": "Αναζήτηση έργων",
   "project.settings.name.title": "Όνομα έργου",
-  "project.settings.name.description": "Το όνομα που εμφανίζεται για αυτό το έργο σε όλο το OpenCode",
+  "project.settings.name.description": "Το όνομα που εμφανίζεται για αυτό το έργο σε όλο το Harpress",
   "project.settings.icon.description": "Προτείνεται: 128×128 px. Κάντε κλικ ή σύρετε για να ανεβάσετε μια εικόνα.",
   "project.settings.color.description":
     "Χρησιμοποιείται για το εικονίδιο του έργου όταν δεν έχει οριστεί προσαρμοσμένη εικόνα",
@@ -773,13 +771,13 @@ export const dict = {
     "Χρησιμοποιήστε το $OPENCODE_WORKTREE_BASE για το βασικό δέντρο εργασίας.",
   "project.settings.worktree.startup.hint.new": "Χρησιμοποιήστε το $OPENCODE_WORKTREE_PATH για το νέο δέντρο εργασίας.",
   "project.settings.extensions.empty.mcps.title": "Όχι MCPs ακόμα",
-  "project.settings.extensions.empty.mcps.description": "Το MCPs διαθέσιμο στο OpenCode θα εμφανιστεί εδώ",
+  "project.settings.extensions.empty.mcps.description": "Το MCPs διαθέσιμο στο Harpress θα εμφανιστεί εδώ",
   "project.settings.extensions.empty.plugins.title": "Δεν υπάρχουν πρόσθετα ακόμα",
   "project.settings.extensions.empty.plugins.description":
-    "Τα πρόσθετα που είναι διαθέσιμα στο OpenCode θα εμφανιστούν εδώ",
+    "Τα πρόσθετα που είναι διαθέσιμα στο Harpress θα εμφανιστούν εδώ",
   "project.settings.extensions.empty.skills.title": "Δεν υπάρχουν ακόμη δεξιότητες",
   "project.settings.extensions.empty.skills.description":
-    "Οι δεξιότητες που είναι διαθέσιμες στο OpenCode θα εμφανιστούν εδώ",
+    "Οι δεξιότητες που είναι διαθέσιμες στο Harpress θα εμφανιστούν εδώ",
   "project.settings.extensions.lsp.configured": "Διακομιστές γλώσσας που έχουν διαμορφωθεί",
   "project.settings.extensions.lsp.status.enabled": "Ενεργοποιήθηκε στο config",
   "project.settings.extensions.lsp.status.disabled": "Απενεργοποιήθηκε στη διαμόρφωση",
@@ -801,7 +799,7 @@ export const dict = {
   "settings.timeline.collapsed.label": "Το {{activity}} κατέρρευσε",
   "session.new.workspace.search.empty": "Δεν υπάρχουν δέντρα εργασίας που να ταιριάζουν",
   "settings.workspaces.description": "Ελέγξτε τα δέντρα εργασίας και διαχειριστείτε τη χρήση του δίσκου",
-  "settings.workspaces.empty.description": "Τα δέντρα εργασίας που δημιουργήθηκαν στο OpenCode θα εμφανιστούν εδώ",
+  "settings.workspaces.empty.description": "Τα δέντρα εργασίας που δημιουργήθηκαν στο Harpress θα εμφανιστούν εδώ",
   "settings.workspaces.sessions.filtered.one": "Συνεδρία {{count}}",
   "settings.workspaces.sessions.filtered.other": "Συνεδρίες {{count}}",
   "settings.workspaces.deleteAll.confirm.one": "Αυτό θα διαγράψει οριστικά το επιλεγμένο δέντρο εργασίας {{count}}.",
@@ -853,22 +851,22 @@ export const dict = {
   "voice.captions.hide": "Απόκρυψη υποτίτλων",
   "voice.connecting": "Σύνδεση…",
   "voice.you": "Εσείς:",
-  "voice.assistant": "OpenCode:",
+  "voice.assistant": "Harpress:",
   "voice.failure.unavailable": "Οι φωνητικές κλήσεις απαιτούν κλειδί API του OpenAI σε αυτόν τον διακομιστή.",
   "voice.failure.microphone": "Απαιτείται πρόσβαση στο μικρόφωνο για την κλήση.",
   "voice.failure.dropped": "Η κλήση αποσυνδέθηκε.",
   "voice.failure.connection": "Δεν ήταν δυνατή η σύνδεση της κλήσης.",
-  "desktop.microphoneUsage": "Το OpenCode χρησιμοποιεί το μικρόφωνό σας για φωνητικές κλήσεις.",
+  "desktop.microphoneUsage": "Το Harpress χρησιμοποιεί το μικρόφωνό σας για φωνητικές κλήσεις.",
   "desktop.documentsFolderUsage":
-    "Το OpenCode χρησιμοποιεί αρχεία στον φάκελο Έγγραφα για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
+    "Το Harpress χρησιμοποιεί αρχεία στον φάκελο Έγγραφα για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
   "desktop.desktopFolderUsage":
-    "Το OpenCode χρησιμοποιεί αρχεία στην Επιφάνεια εργασίας για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
+    "Το Harpress χρησιμοποιεί αρχεία στην Επιφάνεια εργασίας για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
   "desktop.downloadsFolderUsage":
-    "Το OpenCode χρησιμοποιεί αρχεία στον φάκελο Λήψεις για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
+    "Το Harpress χρησιμοποιεί αρχεία στον φάκελο Λήψεις για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
   "desktop.networkVolumesUsage":
-    "Το OpenCode χρησιμοποιεί αρχεία σε τόμους δικτύου για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
+    "Το Harpress χρησιμοποιεί αρχεία σε τόμους δικτύου για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
   "desktop.removableVolumesUsage":
-    "Το OpenCode χρησιμοποιεί αρχεία σε αφαιρούμενους τόμους για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
+    "Το Harpress χρησιμοποιεί αρχεία σε αφαιρούμενους τόμους για τα έργα που ανοίγετε και τις εντολές που εκτελείτε εκεί.",
   "desktop.contextMenu.spellcheck": "Ορθογραφικός έλεγχος",
   "desktop.contextMenu.spellcheckLanguages": "Γλώσσες ορθογραφικού ελέγχου",
   "session.location.unavailable": "Η τοποθεσία της συνεδρίας δεν είναι διαθέσιμη",
@@ -910,7 +908,7 @@ export const dict = {
   "palette.group.settings": "Ρυθμίσεις",
   "palette.session.location": "{{project}} · {{server}}",
   "dialog.provider.title": "Ενσωματώσεις",
-  "dialog.provider.description": "Συνδέστε υπηρεσίες ώστε να μπορεί να τις χρησιμοποιεί το OpenCode.",
+  "dialog.provider.description": "Συνδέστε υπηρεσίες ώστε να μπορεί να τις χρησιμοποιεί το Harpress.",
   "dialog.provider.group.services": "Υπηρεσίες",
   "dialog.provider.environmentOnly": "Μόνο από το περιβάλλον",
   "dialog.provider.signInRequired": "Απαιτείται σύνδεση →",
@@ -968,7 +966,7 @@ export const dict = {
   "provider.connect.models.available": "Διαθέσιμα μοντέλα",
   "provider.connect.chatgptWelcome.title": "Το ChatGPT συνδέθηκε",
   "provider.connect.chatgptWelcome.description":
-    "Τα επιλέξιμα αιτήματα στο OpenCode μπορούν να χρησιμοποιούν το πρόγραμμα ChatGPT σας.",
+    "Τα επιλέξιμα αιτήματα στο Harpress μπορούν να χρησιμοποιούν το πρόγραμμα ChatGPT σας.",
   "provider.connect.chatgptWelcome.usage": "Διαχείριση χρήσης στις ρυθμίσεις του ChatGPT",
   "provider.connect.chatgptWelcome.confirm": "Κατάλαβα",
   "provider.connect.models.list": "Διαθέσιμα μοντέλα από {{provider}}",
@@ -986,7 +984,7 @@ export const dict = {
   "provider.connect.console.openingBrowser": "Άνοιγμα προγράμματος περιήγησης",
   "provider.connect.remote.label": "στο {{server}}",
   "provider.connect.remote.description":
-    "Τα διαπιστευτήρια του OpenCode θα αποθηκευτούν σε αυτόν τον διακομιστή. Τα μοντέλα θα είναι διαθέσιμα μέσω αυτού του διακομιστή.",
+    "Τα διαπιστευτήρια του Harpress θα αποθηκευτούν σε αυτόν τον διακομιστή. Τα μοντέλα θα είναι διαθέσιμα μέσω αυτού του διακομιστή.",
   "provider.connect.claudeAgent.description":
     "Χρησιμοποιήστε το πρόγραμμα Claude σας ή άλλη σύνδεση Claude Code. Εγκαταστήστε το Claude Code και συνδεθείτε πρώτα.",
   "provider.connect.claudeAgent.install": "Εγκατάσταση Claude Code",
@@ -1020,7 +1018,7 @@ export const dict = {
     "Δεν ήταν δυνατό το άνοιγμα του προγράμματος περιήγησης. Επιλέξτε Άνοιγμα προγράμματος περιήγησης για να δοκιμάσετε ξανά.",
   "provider.connect.oauth.paste.toggle": "Συνδέεστε από άλλη συσκευή;",
   "provider.connect.oauth.paste.description":
-    "Αν το πρόγραμμα περιήγησης δεν μπορεί να φτάσει στο μηχάνημα που εκτελεί το OpenCode, επικολλήστε το URL στο οποίο ανακατευθύνθηκε.",
+    "Αν το πρόγραμμα περιήγησης δεν μπορεί να φτάσει στο μηχάνημα που εκτελεί το Harpress, επικολλήστε το URL στο οποίο ανακατευθύνθηκε.",
   "provider.connect.oauth.expired": "Η εξουσιοδότηση έληξε",
   "model.details.input.text": "Κείμενο",
   "model.details.input.image": "Εικόνα",
@@ -1057,7 +1055,7 @@ export const dict = {
   "dialog.mcp.signIn": "Σύνδεση",
   "dialog.mcp.signIn.open": "Σύνδεση στο {{name}}",
   "dialog.mcp.signIn.description":
-    "Το πρόγραμμα περιήγησης ανοίγει για να συνδεθείτε στο {{name}}. Αν δεν μπορεί να φτάσει στο μηχάνημα που εκτελεί το OpenCode, επικολλήστε παρακάτω το URL στο οποίο ανακατευθύνθηκε.",
+    "Το πρόγραμμα περιήγησης ανοίγει για να συνδεθείτε στο {{name}}. Αν δεν μπορεί να φτάσει στο μηχάνημα που εκτελεί το Harpress, επικολλήστε παρακάτω το URL στο οποίο ανακατευθύνθηκε.",
   "dialog.mcp.signIn.syncFailed": "Συνδεθήκατε, αλλά δεν ήταν δυνατή η ανανέωση του {{name}}: {{error}}",
   "dialog.mcp.error.details":
     "Διακομιστής MCP: {{name}}\nΚατάσταση: απέτυχε\nΔιαμόρφωση: mcp.servers.{{name}}\nΣφάλμα: {{error}}",
@@ -1102,7 +1100,7 @@ export const dict = {
   "server.connect.link.unreachable":
     "Δεν ήταν δυνατή η πρόσβαση στο {{url}}. Βεβαιωθείτε ότι αυτή η συσκευή μπορεί να φτάσει στον διακομιστή και δοκιμάστε ξανά.",
   "server.connect.link.legacy":
-    "Αυτός ο κωδικός ζευγοποίησης είναι από παλαιότερη έκδοση του OpenCode. Ενημερώστε το OpenCode στον διακομιστή και εκτελέστε ξανά opencode pair.",
+    "Αυτός ο κωδικός ζευγοποίησης είναι από παλαιότερη έκδοση του Harpress. Ενημερώστε το Harpress στον διακομιστή και εκτελέστε ξανά opencode pair.",
   "server.connect.camera.native":
     "Αυτή η σελίδα δεν μπορεί να χρησιμοποιήσει την κάμερα μέσω HTTP. Επικολλήστε τον σύνδεσμο ζευγοποίησης παραπάνω.",
   "dialog.server.signedOut":
@@ -1124,7 +1122,7 @@ export const dict = {
   "home.sessions.load.timeout": "Ο διακομιστής άργησε πολύ να απαντήσει",
   "tips.browse.title": "Ελέγξτε το πρόγραμμα περιήγησής σας",
   "tips.browse.description":
-    "Αφήστε το OpenCode να εργάζεται στο πρόγραμμα περιήγησής σας με τις καρτέλες, τις συνδέσεις και τις επεκτάσεις σας.",
+    "Αφήστε το Harpress να εργάζεται στο πρόγραμμα περιήγησής σας με τις καρτέλες, τις συνδέσεις και τις επεκτάσεις σας.",
   "tips.browse.install": "Εγκατάσταση",
   "tips.hex.title": "Χρησιμοποιήστε τη φωνή σας",
   "tips.hex.description":
@@ -1315,7 +1313,7 @@ export const dict = {
     'Οι διακόπτες απενεργοποιούν μόνο το περιβάλλον επιφάνειας εργασίας ενός πρόσθετου. Προσθέστε "-<id>" στα plugins του καθολικού opencode.json για να απενεργοποιήσετε το τμήμα διακομιστή του, ή "-" και το ID του πρόσθετου TUI του στα plugins του cli.json για να απενεργοποιήσετε το τμήμα TUI του.',
   "settings.about.copyVersionFailed": "Αποτυχία αντιγραφής έκδοσης",
   "settings.about.notices.title": "Σημειώσεις τρίτων",
-  "settings.about.notices.description": "Το OpenCode περιλαμβάνει το ακόλουθο λογισμικό ανοιχτού κώδικα.",
+  "settings.about.notices.description": "Το Harpress περιλαμβάνει το ακόλουθο λογισμικό ανοιχτού κώδικα.",
   "settings.about.notices.license": "Κείμενο άδειας",
   "settings.about.notices.fonts.title": "Γραμματοσειρές στις προεπισκοπήσεις Office",
   "settings.about.notices.fonts.description":

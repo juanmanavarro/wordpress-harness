@@ -70,7 +70,7 @@ export function AppBaseProviders(
 
   return (
     <MetaProvider>
-      <Title>OpenCode</Title>
+      <Title>Harpress</Title>
       <Font />
       <ThemeProvider onThemeApplied={(mode, scheme) => props.onThemeApplied?.(mode, scheme)}>
         <LanguageProvider locale={props.locale} onNativeTranslations={props.onNativeTranslations}>

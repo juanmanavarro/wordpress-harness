@@ -25,7 +25,7 @@ export const dict = {
   "session.background.subagent.many": "{{count}} підагентів",
   "settings.about.otherContributor.few": "{{count}} інші",
   "settings.about.otherContributor.many": "{{count}} інших",
-  "desktop.menu.app": "OpenCode",
+  "desktop.menu.app": "Harpress",
   "desktop.menu.file": "Файл",
   "desktop.menu.edit": "Редагування",
   "desktop.menu.view": "Вигляд",
@@ -64,19 +64,19 @@ export const dict = {
   "desktop.menu.nextProject": "Наступний проєкт",
   "desktop.menu.minimize": "Згорнути",
   "desktop.menu.maximize": "Розгорнути",
-  "desktop.menu.documentation": "Документація OpenCode",
+  "desktop.menu.documentation": "Документація Harpress",
   "desktop.menu.supportForum": "Форум підтримки",
   "desktop.menu.shareFeedback": "Надіслати відгук",
   "desktop.menu.reportBug": "Повідомити про помилку",
-  "desktop.menu.ariaLabel": "Меню OpenCode",
+  "desktop.menu.ariaLabel": "Меню Harpress",
 
   "desktop.recovery.action.relaunch": "Запустити повторно",
   "desktop.recovery.action.exportLogs": "Експортувати журнали",
   "desktop.recovery.action.keepWaiting": "Продовжити очікування",
   "desktop.recovery.action.quit": "Завершити роботу",
-  "desktop.recovery.loadFailed": "Не вдалося завантажити OpenCode",
-  "desktop.recovery.terminated": "Роботу вікна OpenCode несподівано завершено",
-  "desktop.recovery.unresponsive": "OpenCode не відповідає",
+  "desktop.recovery.loadFailed": "Не вдалося завантажити Harpress",
+  "desktop.recovery.terminated": "Роботу вікна Harpress несподівано завершено",
+  "desktop.recovery.unresponsive": "Harpress не відповідає",
   "desktop.recovery.unresponsive.detail":
     "Ви можете повторно запустити програму, відкрити журнали або продовжити очікування.",
   "desktop.recovery.loadFailed.detail": "Вікно: {{window}}\nURL: {{url}}\nПомилка: {{code}} {{description}}",
@@ -193,7 +193,7 @@ export const dict = {
   "provider.connect.status.waiting": "Очікування авторизації",
   "provider.connect.status.failed": "Авторизація не вдалася: {{error}}",
   "provider.connect.apiKey.description":
-    "Введіть ключ API {{provider}}, щоб підключити обліковий запис і використовувати моделі {{provider}} у OpenCode.",
+    "Введіть ключ API {{provider}}, щоб підключити обліковий запис і використовувати моделі {{provider}} у Harpress.",
   "provider.connect.apiKey.label": "Ключ API {{provider}}",
   "provider.connect.apiKey.placeholder": "Ключ API",
   "provider.connect.apiKey.required": "Ключ API обов'язковий",
@@ -327,7 +327,7 @@ export const dict = {
   "error.page.action.checkUpdates": "Перевірити оновлення",
   "error.page.action.updateTo": "Оновити до {{version}}",
   "error.page.circular": "[Циклічне]",
-  "error.page.report.prefix": "Будь ласка, повідомте про цю помилку команді OpenCode",
+  "error.page.report.prefix": "Будь ласка, повідомте про цю помилку команді Harpress",
   "error.page.report.discord": "у Discord",
   "error.page.version": "Версія: {{version}}",
 
@@ -352,7 +352,7 @@ export const dict = {
   "error.chain.modelNotFound": "Модель не знайдено: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Перевірте назви провайдерів/моделей у конфігурації (opencode.json)",
   "error.chain.mcpFailed":
-    'Сервер MCP "{{name}}" не працює. Зверніть увагу, OpenCode ще не підтримує автентифікацію MCP.',
+    'Сервер MCP "{{name}}" не працює. Зверніть увагу, Harpress ще не підтримує автентифікацію MCP.',
   "error.chain.providerAuthFailed": "Автентифікація провайдера не вдалася ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     'Не вдалося ініціалізувати провайдера "{{provider}}". Перевірте облікові дані та конфігурацію.',
@@ -472,16 +472,16 @@ export const dict = {
   "settings.general.section.sounds": "Звукові ефекти",
 
   "settings.general.row.language.title": "Мова",
-  "settings.general.row.language.description": "Змінити мову інтерфейсу OpenCode",
+  "settings.general.row.language.description": "Змінити мову інтерфейсу Harpress",
   "settings.general.row.shell.title": "Командна оболонка термінала",
   "settings.general.row.shell.description":
     "Виберіть оболонку для термінала. Сумісні оболонки також використовуються для викликів інструментів агента.",
   "settings.general.row.shell.autoDefault": "Автоматично (за замовчуванням)",
   "settings.general.row.shell.terminalOnly": "тільки термінал",
   "settings.general.row.colorScheme.title": "Кольорова схема",
-  "settings.general.row.colorScheme.description": "Виберіть, чи OpenCode використовує системну, світлу або темну тему",
+  "settings.general.row.colorScheme.description": "Виберіть, чи Harpress використовує системну, світлу або темну тему",
   "settings.general.row.theme.title": "Тема",
-  "settings.general.row.theme.description": "Налаштуйте тему OpenCode.",
+  "settings.general.row.theme.description": "Налаштуйте тему Harpress.",
   "settings.general.row.font.title": "Шрифт коду",
   "settings.general.row.font.description": "Налаштуйте шрифт, який використовується в блоках коду",
   "settings.general.row.terminalFont.title": "Шрифт термінала",
@@ -761,9 +761,7 @@ export const dict = {
   "settings.about.otherContributor.other": "{{count}} іншого",
   "settings.about.firstPublished": "Вперше опубліковано в Міссурі, США",
   "settings.about.firstIllustrated": "Вперше проілюстровано в Лондоні, Англія",
-  "settings.about.website": "www.opencode.ai",
-  "settings.about.description": "OpenCode, агент кодування з відкритим кодом",
-  "settings.about.trademark": "OpenCode є зареєстрованою торговою маркою Anomaly Innovations, Inc.",
+  "settings.about.website": "github.com/juanmanavarro/wordpress-harness",
   "settings.about.typeset": "Набір на Inter та IBM Plex Mono",
   "settings.about.tagline": "AI не може створити чудове програмне забезпечення без вас",
   "settings.about.copyright": "© Anomaly Innovations, Inc.",
@@ -815,7 +813,7 @@ export const dict = {
   "server.connect.failed": "Не вдалося підключитися. Перевірте адресу сервера та пароль, потім повторіть спробу.",
   "server.connect.scan": "Сканувати QR-код",
   "server.connect.scan.description": "Наведіть камеру на QR-код, показаний opencode pair.",
-  "server.connect.scan.invalid": "Це не код підключення OpenCode. Відскануйте код, показаний opencode pair.",
+  "server.connect.scan.invalid": "Це не код підключення Harpress. Відскануйте код, показаний opencode pair.",
   "server.connect.camera": "Камера для сполучення",
   "server.connect.camera.starting": "Відкриваємо камеру…",
   "server.connect.mixedContent":
@@ -855,7 +853,7 @@ export const dict = {
     "Виберіть провайдера пошуку, якого агенти використовуватимуть для пошуку в інтернеті.",
   "settings.projects.search.placeholder": "Шукати проєкти",
   "project.settings.name.title": "Назва проєкту",
-  "project.settings.name.description": "Назва, що відображається для цього проєкту у всьому OpenCode",
+  "project.settings.name.description": "Назва, що відображається для цього проєкту у всьому Harpress",
   "project.settings.icon.description":
     "Рекомендовано: 128×128px. Клацніть або перетягніть для завантаження зображення.",
   "project.settings.color.description": "Використовується для іконки проєкту, коли не встановлено власне зображення",
@@ -863,11 +861,11 @@ export const dict = {
   "project.settings.worktree.startup.hint.base": "Використовуйте $OPENCODE_WORKTREE_BASE для базового робочого дерева.",
   "project.settings.worktree.startup.hint.new": "Використовуйте $OPENCODE_WORKTREE_PATH для нового робочого дерева.",
   "project.settings.extensions.empty.mcps.title": "Поки немає MCP",
-  "project.settings.extensions.empty.mcps.description": "MCP, доступні для OpenCode, з’являться тут",
+  "project.settings.extensions.empty.mcps.description": "MCP, доступні для Harpress, з’являться тут",
   "project.settings.extensions.empty.plugins.title": "Поки немає плагінів",
-  "project.settings.extensions.empty.plugins.description": "Плагіни, доступні для OpenCode, з’являться тут",
+  "project.settings.extensions.empty.plugins.description": "Плагіни, доступні для Harpress, з’являться тут",
   "project.settings.extensions.empty.skills.title": "Поки немає навичок",
-  "project.settings.extensions.empty.skills.description": "Навички, доступні для OpenCode, з’являться тут",
+  "project.settings.extensions.empty.skills.description": "Навички, доступні для Harpress, з’являться тут",
   "project.settings.extensions.lsp.configured": "Налаштовані мовні сервери",
   "project.settings.extensions.lsp.status.enabled": "Увімкнено в конфігурації",
   "project.settings.extensions.lsp.status.disabled": "Вимкнено в конфігурації",
@@ -887,7 +885,7 @@ export const dict = {
   "settings.timeline.collapsed.label": "{{activity}} згорнуте",
   "session.new.workspace.search.empty": "Немає підходящих робочих дерев",
   "settings.workspaces.description": "Перегляньте робочі дерева та керуйте використанням диска",
-  "settings.workspaces.empty.description": "Робочі дерева, створені в OpenCode, з’являться тут",
+  "settings.workspaces.empty.description": "Робочі дерева, створені в Harpress, з’являться тут",
   "settings.workspaces.sessions.filtered.one": "{{count}} сесія",
   "settings.workspaces.sessions.filtered.other": "{{count}} сесії",
   "settings.workspaces.deleteAll.confirm.one": "Це назавжди видалить {{count}} вибране робоче дерево.",
@@ -923,22 +921,22 @@ export const dict = {
   "voice.captions.hide": "Приховати субтитри",
   "voice.connecting": "Підключення…",
   "voice.you": "Ви:",
-  "voice.assistant": "OpenCode:",
+  "voice.assistant": "Harpress:",
   "voice.failure.unavailable": "Для голосових викликів на цьому сервері потрібен ключ API OpenAI.",
   "voice.failure.microphone": "Для виклику потрібен доступ до мікрофона.",
   "voice.failure.dropped": "Виклик перервано.",
   "voice.failure.connection": "Не вдалося встановити виклик.",
-  "desktop.microphoneUsage": "OpenCode використовує ваш мікрофон для голосових викликів.",
+  "desktop.microphoneUsage": "Harpress використовує ваш мікрофон для голосових викликів.",
   "desktop.documentsFolderUsage":
-    "OpenCode використовує файли з папки «Документи» для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
+    "Harpress використовує файли з папки «Документи» для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
   "desktop.desktopFolderUsage":
-    "OpenCode використовує файли на робочому столі для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
+    "Harpress використовує файли на робочому столі для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
   "desktop.downloadsFolderUsage":
-    "OpenCode використовує файли з папки «Завантаження» для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
+    "Harpress використовує файли з папки «Завантаження» для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
   "desktop.networkVolumesUsage":
-    "OpenCode використовує файли на мережевих томах для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
+    "Harpress використовує файли на мережевих томах для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
   "desktop.removableVolumesUsage":
-    "OpenCode використовує файли на знімних томах для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
+    "Harpress використовує файли на знімних томах для проєктів, які ви відкриваєте, і команд, які ви там запускаєте.",
   "desktop.contextMenu.spellcheck": "Перевірка правопису",
   "desktop.contextMenu.spellcheckLanguages": "Мови перевірки правопису",
   "session.location.unavailable": "Розташування сесії недоступне",
@@ -980,7 +978,7 @@ export const dict = {
   "palette.group.settings": "Налаштування",
   "palette.session.location": "{{project}} · {{server}}",
   "dialog.provider.title": "Інтеграції",
-  "dialog.provider.description": "Підключіть сервіси, щоб OpenCode міг їх використовувати.",
+  "dialog.provider.description": "Підключіть сервіси, щоб Harpress міг їх використовувати.",
   "dialog.provider.group.services": "Сервіси",
   "dialog.provider.environmentOnly": "Лише середовище",
   "dialog.provider.signInRequired": "Потрібно увійти →",
@@ -1038,7 +1036,7 @@ export const dict = {
   "provider.connect.models.available": "Доступні моделі",
   "provider.connect.chatgptWelcome.title": "ChatGPT підключено",
   "provider.connect.chatgptWelcome.description":
-    "Відповідні запити в OpenCode можуть використовувати ваш план ChatGPT.",
+    "Відповідні запити в Harpress можуть використовувати ваш план ChatGPT.",
   "provider.connect.chatgptWelcome.usage": "Керуйте використанням у налаштуваннях ChatGPT",
   "provider.connect.chatgptWelcome.confirm": "Зрозуміло",
   "provider.connect.models.list": "Моделі, доступні від {{provider}}",
@@ -1056,7 +1054,7 @@ export const dict = {
   "provider.connect.console.openingBrowser": "Відкриття браузера",
   "provider.connect.remote.label": "на {{server}}",
   "provider.connect.remote.description":
-    "Ваші облікові дані OpenCode зберігатимуться на цьому сервері. Моделі будуть доступні через цей сервер.",
+    "Ваші облікові дані Harpress зберігатимуться на цьому сервері. Моделі будуть доступні через цей сервер.",
   "provider.connect.claudeAgent.description":
     "Використовуйте свій план Claude або інший вхід у Claude Code. Спершу встановіть Claude Code і увійдіть.",
   "provider.connect.claudeAgent.install": "Встановити Claude Code",
@@ -1090,7 +1088,7 @@ export const dict = {
     "Не вдалося відкрити браузер. Виберіть «Відкрити браузер», щоб спробувати ще раз.",
   "provider.connect.oauth.paste.toggle": "Входите з іншого пристрою?",
   "provider.connect.oauth.paste.description":
-    "Якщо браузер не може зв’язатися з машиною, на якій працює OpenCode, вставте URL, на який вас перенаправило.",
+    "Якщо браузер не може зв’язатися з машиною, на якій працює Harpress, вставте URL, на який вас перенаправило.",
   "provider.connect.oauth.expired": "Термін дії авторизації минув",
   "model.details.input.text": "Текст",
   "model.details.input.image": "Зображення",
@@ -1127,7 +1125,7 @@ export const dict = {
   "dialog.mcp.signIn": "Увійти",
   "dialog.mcp.signIn.open": "Увійти в {{name}}",
   "dialog.mcp.signIn.description":
-    "Відкриється браузер, щоб ви могли увійти в {{name}}. Якщо він не може зв’язатися з машиною, на якій працює OpenCode, вставте нижче URL, на який вас перенаправило.",
+    "Відкриється браузер, щоб ви могли увійти в {{name}}. Якщо він не може зв’язатися з машиною, на якій працює Harpress, вставте нижче URL, на який вас перенаправило.",
   "dialog.mcp.signIn.syncFailed": "Вхід виконано, але не вдалося оновити {{name}}: {{error}}",
   "dialog.mcp.error.details":
     "Сервер MCP: {{name}}\nСтатус: помилка\nКонфігурація: mcp.servers.{{name}}\nПомилка: {{error}}",
@@ -1169,7 +1167,7 @@ export const dict = {
   "server.connect.link.unreachable":
     "Не вдалося зв’язатися з {{url}}. Переконайтеся, що цей пристрій має доступ до сервера, і спробуйте ще раз.",
   "server.connect.link.legacy":
-    "Цей код сполучення зі старішої версії OpenCode. Оновіть OpenCode на сервері, потім знову виконайте opencode pair.",
+    "Цей код сполучення зі старішої версії Harpress. Оновіть Harpress на сервері, потім знову виконайте opencode pair.",
   "server.connect.camera.native":
     "Ця сторінка не може використовувати камеру через HTTP. Вставте посилання для сполучення вище.",
   "dialog.server.signedOut":
@@ -1191,7 +1189,7 @@ export const dict = {
   "home.sessions.load.timeout": "Сервер не відповідав занадто довго",
   "tips.browse.title": "Керуйте своїм браузером",
   "tips.browse.description":
-    "Дозвольте OpenCode працювати у вашому браузері з вашими вкладками, входами та розширеннями.",
+    "Дозвольте Harpress працювати у вашому браузері з вашими вкладками, входами та розширеннями.",
   "tips.browse.install": "Встановити",
   "tips.hex.title": "Використовуйте голос",
   "tips.hex.description":
@@ -1398,7 +1396,7 @@ export const dict = {
     'Перемикачі вимикають лише інтерфейс плагіна в настільному застосунку. Щоб вимкнути його серверну частину, додайте "-<id>" до plugins у глобальному opencode.json, а щоб вимкнути частину TUI — додайте "-" та ID його TUI-плагіна до plugins у cli.json.',
   "settings.about.copyVersionFailed": "Не вдалося скопіювати версію",
   "settings.about.notices.title": "Повідомлення третіх сторін",
-  "settings.about.notices.description": "OpenCode містить таке програмне забезпечення з відкритим кодом.",
+  "settings.about.notices.description": "Harpress містить таке програмне забезпечення з відкритим кодом.",
   "settings.about.notices.license": "Текст ліцензії",
   "settings.about.notices.fonts.title": "Шрифти в попередньому перегляді Office",
   "settings.about.notices.fonts.description":

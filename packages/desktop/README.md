@@ -1,6 +1,10 @@
-# OpenCode Desktop
+# Harpress Desktop
 
-The OpenCode Desktop app, built with Electron.
+Harpress is an independent fork of OpenCode, built with Electron.
+
+Source: https://github.com/juanmanavarro/wordpress-harness
+
+Based on https://github.com/anomalyco/opencode. OpenCode is a trademark of Anomaly Innovations, Inc.
 
 ## Development
 

@@ -14,9 +14,9 @@ import { verifyPreviewBinding } from "./script/preview-binding"
 const { FileMatcher } = createRequire(import.meta.resolve("electron-builder"))("app-builder-lib/out/fileMatcher")
 
 const channels = [
-  { channel: "dev", appId: "ai.opencode.desktop.dev", feed: "dev" },
-  { channel: "beta", appId: "ai.opencode.desktop.beta", feed: "beta" },
-  { channel: "prod", appId: "ai.opencode.desktop", feed: "latest" },
+  { channel: "dev", appId: "io.github.juanmanavarro.harpress.dev" },
+  { channel: "beta", appId: "io.github.juanmanavarro.harpress.beta" },
+  { channel: "prod", appId: "io.github.juanmanavarro.harpress" },
 ] as const
 
 function load(channel: string, target?: string): Configuration {
@@ -48,15 +48,10 @@ function trimFilter(dir: string, config: Configuration) {
   ]).createFilter()
 }
 
-test.each(channels)("channel identity for $channel", ({ channel, appId, feed }) => {
+test.each(channels)("channel identity for $channel", ({ channel, appId }) => {
   const config = load(channel)
   expect(config.appId).toBe(appId)
-  // Every published channel updates from its own feed on the update service.
-  expect(config.publish).toEqual({
-    provider: "generic",
-    url: `https://opencode.ai/update/api/${feed}/desktop/opencode/`,
-    channel: "latest",
-  })
+  expect(config.publish).toBeNull()
   expect(config.extraMetadata?.desktopName).toBe(`${appId}.desktop`)
   // The executable must never end in `.desktop`: libappimage resolves the
   // AppImage's desktop entry by globbing `*.desktop`, and an ELF matching
@@ -70,9 +65,6 @@ test.each(channels)("channel identity for $channel", ({ channel, appId, feed }) 
 
   for (const fpm of [config.deb?.fpm, config.rpm?.fpm]) {
     expect(fpm).toContainEqual(expect.stringContaining(`/usr/share/metainfo/${appId}.metainfo.xml`))
-    expect(
-      fpm?.some((entry) => entry.endsWith("opencode-desktop.desktop=/usr/share/applications/opencode-desktop.desktop")),
-    ).toBe(channel === "prod")
   }
 
   // Shared Electron binaries must not ship /usr/lib/.build-id links that collide with other Electron RPMs.
@@ -215,39 +207,48 @@ test("trims external dependencies without excluding runtime files", () => {
 
 // The loader finds its binding beside it or, as an isolated install may lay it out, nested under it.
 test.each([
-  ["darwin", "arm64", "darwin-arm64", "beside"], ["darwin", "x64", "darwin-x64", "beside"],
-  ["win32", "arm64", "win32-arm64-msvc", "beside"], ["win32", "x64", "win32-x64-msvc", "beside"],
-  ["win32", "x64", "win32-x64-msvc", "nested"], ["darwin", "arm64", "darwin-arm64", "nested"],
-] as const)("packaging %s/%s requires its unpacked preview addon, %s the loader", async (platform, arch, binding, layout) => {
-  const resources = await realpath(await mkdtemp(path.join(os.tmpdir(), "preview-pack-")))
-  const modules = path.join(resources, "app.asar.unpacked/node_modules")
-  const name = `@yuuang/ffi-rs-${binding}`
-  const pkg = path.join(layout === "nested" ? path.join(modules, "ffi-rs/node_modules") : modules, name)
-  const addon = `ffi-rs.${binding}.node`
+  ["darwin", "arm64", "darwin-arm64", "beside"],
+  ["darwin", "x64", "darwin-x64", "beside"],
+  ["win32", "arm64", "win32-arm64-msvc", "beside"],
+  ["win32", "x64", "win32-x64-msvc", "beside"],
+  ["win32", "x64", "win32-x64-msvc", "nested"],
+  ["darwin", "arm64", "darwin-arm64", "nested"],
+] as const)(
+  "packaging %s/%s requires its unpacked preview addon, %s the loader",
+  async (platform, arch, binding, layout) => {
+    const resources = await realpath(await mkdtemp(path.join(os.tmpdir(), "preview-pack-")))
+    const modules = path.join(resources, "app.asar.unpacked/node_modules")
+    const name = `@yuuang/ffi-rs-${binding}`
+    const pkg = path.join(layout === "nested" ? path.join(modules, "ffi-rs/node_modules") : modules, name)
+    const addon = `ffi-rs.${binding}.node`
 
-  try {
-    await Bun.write(path.join(modules, "ffi-rs/package.json"), JSON.stringify({ main: "index.js", optionalDependencies: { [name]: "1.3.7" } }))
-    await Bun.write(path.join(modules, "ffi-rs/index.js"), "module.exports = {}")
-    await Bun.write(path.join(pkg, "package.json"), JSON.stringify({ main: addon, version: "1.3.7" }))
-
-    if (platform === process.platform && arch === process.arch) {
-      const source = createRequire(import.meta.resolve("ffi-rs")).resolve(name)
-      await cp(source, path.join(pkg, addon))
-      await verifyPreviewBinding(resources, platform, arch)
-      // A binding of another version than the loader declares is not the one it was built against.
-      await Bun.write(path.join(pkg, "package.json"), JSON.stringify({ main: addon, version: "1.3.2" }))
-      await expect(verifyPreviewBinding(resources, platform, arch)).rejects.toThrow(addon)
+    try {
+      await Bun.write(
+        path.join(modules, "ffi-rs/package.json"),
+        JSON.stringify({ main: "index.js", optionalDependencies: { [name]: "1.3.7" } }),
+      )
+      await Bun.write(path.join(modules, "ffi-rs/index.js"), "module.exports = {}")
       await Bun.write(path.join(pkg, "package.json"), JSON.stringify({ main: addon, version: "1.3.7" }))
-      await rm(path.join(pkg, addon))
-    }
 
-    await expect(verifyPreviewBinding(resources, platform, arch)).rejects.toThrow(addon)
-    await Bun.write(path.join(pkg, addon), "not a native library")
-    await expect(verifyPreviewBinding(resources, platform, arch)).rejects.toThrow(addon)
-  } finally {
-    await rm(resources, { recursive: true, force: true })
-  }
-})
+      if (platform === process.platform && arch === process.arch) {
+        const source = createRequire(import.meta.resolve("ffi-rs")).resolve(name)
+        await cp(source, path.join(pkg, addon))
+        await verifyPreviewBinding(resources, platform, arch)
+        // A binding of another version than the loader declares is not the one it was built against.
+        await Bun.write(path.join(pkg, "package.json"), JSON.stringify({ main: addon, version: "1.3.2" }))
+        await expect(verifyPreviewBinding(resources, platform, arch)).rejects.toThrow(addon)
+        await Bun.write(path.join(pkg, "package.json"), JSON.stringify({ main: addon, version: "1.3.7" }))
+        await rm(path.join(pkg, addon))
+      }
+
+      await expect(verifyPreviewBinding(resources, platform, arch)).rejects.toThrow(addon)
+      await Bun.write(path.join(pkg, addon), "not a native library")
+      await expect(verifyPreviewBinding(resources, platform, arch)).rejects.toThrow(addon)
+    } finally {
+      await rm(resources, { recursive: true, force: true })
+    }
+  },
+)
 
 // Linux names an open file through /proc, so a Linux package loads no binding and needs none.
 test.each(["arm64", "x64"] as const)("packaging linux/%s needs no preview addon", async (arch) => {

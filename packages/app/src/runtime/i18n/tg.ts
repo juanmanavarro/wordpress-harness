@@ -1,5 +1,5 @@
 export const dict = {
-  "desktop.menu.app": "OpenCode",
+  "desktop.menu.app": "Harpress",
   "desktop.menu.file": "Файл",
   "desktop.menu.edit": "Таҳрир",
   "desktop.menu.view": "Намоиш",
@@ -38,18 +38,18 @@ export const dict = {
   "desktop.menu.nextProject": "Лоиҳаи навбатӣ",
   "desktop.menu.minimize": "Кам кардан",
   "desktop.menu.maximize": "Максимум кардан",
-  "desktop.menu.documentation": "OpenCode Ҳуҷҷатҳо",
+  "desktop.menu.documentation": "Harpress Ҳуҷҷатҳо",
   "desktop.menu.supportForum": "Форуми дастгирӣ",
   "desktop.menu.shareFeedback": "Мубодилаи фикру ақида",
   "desktop.menu.reportBug": "Дар бораи хато хабар диҳед",
-  "desktop.menu.ariaLabel": "OpenCode меню",
+  "desktop.menu.ariaLabel": "Harpress меню",
   "desktop.recovery.action.relaunch": "Аз нав оғоз кунед",
   "desktop.recovery.action.exportLogs": "Содироти гузоришҳо",
   "desktop.recovery.action.keepWaiting": "Интизор бошед",
   "desktop.recovery.action.quit": "Истед",
-  "desktop.recovery.loadFailed": "OpenCode бор карда натавонист",
-  "desktop.recovery.terminated": "OpenCode тиреза ба таври ғайричашмдошт қатъ карда шуд",
-  "desktop.recovery.unresponsive": "OpenCode ҷавоб намедиҳад",
+  "desktop.recovery.loadFailed": "Harpress бор карда натавонист",
+  "desktop.recovery.terminated": "Harpress тиреза ба таври ғайричашмдошт қатъ карда шуд",
+  "desktop.recovery.unresponsive": "Harpress ҷавоб намедиҳад",
   "desktop.recovery.unresponsive.detail":
     "Шумо метавонед барномаро аз нав оғоз кунед, гузоришҳоро кушоед ё интизор шавед.",
   "desktop.recovery.loadFailed.detail": "Тиреза: {{window}}\nURL: {{url}}\nХатогӣ: {{code}} {{description}}",
@@ -152,7 +152,7 @@ export const dict = {
   "provider.connect.status.waiting": "Мунтазири иҷозат",
   "provider.connect.status.failed": "Иҷозат дода нашуд: {{error}}",
   "provider.connect.apiKey.description":
-    "Барои пайваст кардани ҳисоби худ калиди {{provider}} API-ро ворид кунед ва моделҳои {{provider}}-ро дар OpenCode истифода баред.",
+    "Барои пайваст кардани ҳисоби худ калиди {{provider}} API-ро ворид кунед ва моделҳои {{provider}}-ро дар Harpress истифода баред.",
   "provider.connect.apiKey.label": "{{provider}} API калид",
   "provider.connect.apiKey.placeholder": "API калид",
   "provider.connect.apiKey.required": "API калид лозим аст",
@@ -266,7 +266,7 @@ export const dict = {
   "error.page.action.checkUpdates": "Барои навсозиҳо санҷед",
   "error.page.action.updateTo": "Навсозӣ ба {{version}}",
   "error.page.circular": "[Даврача]",
-  "error.page.report.prefix": "Лутфан дар бораи ин хато ба дастаи OpenCode хабар диҳед",
+  "error.page.report.prefix": "Лутфан дар бораи ин хато ба дастаи Harpress хабар диҳед",
   "error.page.report.discord": "дар Discord",
   "error.page.version": "Версия: {{version}}",
   "error.dev.rootNotFound":
@@ -288,7 +288,7 @@ export const dict = {
   "error.chain.modelNotFound": "Модели ёфт нашуд: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Номҳои провайдери конфигуратсияи худро (opencode.json) санҷед",
   "error.chain.mcpFailed":
-    'MCP сервери "{{name}}" ноком шуд. Дар хотир доред, ки OpenCode тасдиқи MCP-ро ҳанӯз дастгирӣ намекунад.',
+    'MCP сервери "{{name}}" ноком шуд. Дар хотир доред, ки Harpress тасдиқи MCP-ро ҳанӯз дастгирӣ намекунад.',
   "error.chain.providerAuthFailed": "Аутентификатсияи провайдер ноком шуд ({{provider}}): {{message}}",
   "error.chain.providerInitFailed": 'Провайдери "{{provider}}" оғоз карда нашуд. Санҷиши эътимоднома ва конфигуратсия.',
   "error.chain.configJsonInvalid": "Файли танзимот дар {{path}} эътибор надорад JSON(C)",
@@ -390,16 +390,16 @@ export const dict = {
   "settings.general.section.notifications": "Огоҳиҳои система",
   "settings.general.section.sounds": "Таъсири садо",
   "settings.general.row.language.title": "Забон",
-  "settings.general.row.language.description": "Забони намоишро барои OpenCode иваз кунед",
+  "settings.general.row.language.description": "Забони намоишро барои Harpress иваз кунед",
   "settings.general.row.shell.title": "Терминал shell",
   "settings.general.row.shell.description": "Shell воситаи терминал ва агент истифода мешавад",
   "settings.general.row.shell.autoDefault": "Авто (Пешфарз)",
   "settings.general.row.shell.terminalOnly": "танҳо терминал",
   "settings.general.row.colorScheme.title": "Схемаи ранг",
   "settings.general.row.colorScheme.description":
-    "Интихоб кунед, ки OpenCode аз рӯи система, равшанӣ ё мавзӯи торик пайравӣ мекунад",
+    "Интихоб кунед, ки Harpress аз рӯи система, равшанӣ ё мавзӯи торик пайравӣ мекунад",
   "settings.general.row.theme.title": "Мавзӯъ",
-  "settings.general.row.theme.description": "Чӣ тавр OpenCode мавзӯъро танзим кунед.",
+  "settings.general.row.theme.description": "Чӣ тавр Harpress мавзӯъро танзим кунед.",
   "settings.general.row.font.title": "Шрифти код",
   "settings.general.row.font.description": "Ҳарферо, ки дар блокҳои код истифода мешавад, танзим кунед",
   "settings.general.row.terminalFont.title": "Шрифти терминал",
@@ -673,9 +673,7 @@ export const dict = {
   "settings.about.otherContributor.other": "{{count}} нафари дигар",
   "settings.about.firstPublished": "Бори аввал дар Миссури, ИМА нашр шудааст",
   "settings.about.firstIllustrated": "Бори аввал дар Лондон, Англия мусаввар шудааст",
-  "settings.about.website": "www.opencode.ai",
-  "settings.about.description": "OpenCode, агенти рамзнависии манбаи кушода",
-  "settings.about.trademark": "OpenCode тамғаи тиҷории бақайдгирифтаи Anomaly Innovations, Inc. мебошад.",
+  "settings.about.website": "github.com/juanmanavarro/wordpress-harness",
   "settings.about.typeset": "Бо Inter ва IBM Plex Mono ҳуруфчинӣ шудааст",
   "settings.about.tagline": "AI бе шумо нармафзори олӣ сохта наметавонад",
   "settings.about.copyright": "© Anomaly Innovations, Inc.",
@@ -728,7 +726,7 @@ export const dict = {
   "server.connect.scan": "Рамзи QR-ро скан кунед",
   "server.connect.scan.description": "Камераро ба рамзи QR, ки opencode pair нишон медиҳад, равона кунед.",
   "server.connect.scan.invalid":
-    "Ин рамзи ҷуфткунии OpenCode нест. Рамзеро, ки opencode pair нишон медиҳад, скан кунед.",
+    "Ин рамзи ҷуфткунии Harpress нест. Рамзеро, ки opencode pair нишон медиҳад, скан кунед.",
   "server.connect.camera": "Камераи ҷуфткунӣ",
   "server.connect.camera.starting": "Кушодани камера…",
   "server.connect.mixedContent":
@@ -769,7 +767,7 @@ export const dict = {
     "Агенти провайдери ҷустуҷӯро интихоб кунед, ки барои ҷустуҷӯ дар веб истифода мебаранд",
   "settings.projects.search.placeholder": "Ҷустуҷӯи лоиҳаҳо",
   "project.settings.name.title": "Номи лоиҳа",
-  "project.settings.name.description": "Номе, ки барои ин лоиҳа дар саросари OpenCode нишон дода шудааст",
+  "project.settings.name.description": "Номе, ки барои ин лоиҳа дар саросари Harpress нишон дода шудааст",
   "project.settings.icon.description":
     "Тавсия дода мешавад: 128×128px. Барои бор кардани тасвир клик кунед ё кашола кунед.",
   "project.settings.color.description":
@@ -778,12 +776,12 @@ export const dict = {
   "project.settings.worktree.startup.hint.base": "Барои дарахти кории асосӣ $OPENCODE_WORKTREE_BASE-ро истифода баред.",
   "project.settings.worktree.startup.hint.new": "Барои дарахти нави корӣ $OPENCODE_WORKTREE_PATH-ро истифода баред.",
   "project.settings.extensions.empty.mcps.title": "Ҳанӯз MCP нест",
-  "project.settings.extensions.empty.mcps.description": "MCP-ҳои барои OpenCode дастрас дар ин ҷо пайдо мешаванд",
+  "project.settings.extensions.empty.mcps.description": "MCP-ҳои барои Harpress дастрас дар ин ҷо пайдо мешаванд",
   "project.settings.extensions.empty.plugins.title": "Ҳоло ягон плагинҳо нест",
   "project.settings.extensions.empty.plugins.description":
-    "Васлкунакҳои дастрас барои OpenCode дар ин ҷо пайдо мешаванд",
+    "Васлкунакҳои дастрас барои Harpress дар ин ҷо пайдо мешаванд",
   "project.settings.extensions.empty.skills.title": "Ҳанӯз малака нест",
-  "project.settings.extensions.empty.skills.description": "Малакаҳои дастрас барои OpenCode дар ин ҷо пайдо мешаванд",
+  "project.settings.extensions.empty.skills.description": "Малакаҳои дастрас барои Harpress дар ин ҷо пайдо мешаванд",
   "project.settings.extensions.lsp.configured": "Серверҳои забонҳои танзимшуда",
   "project.settings.extensions.lsp.status.enabled": "Дар конфигуратсия фаъол карда шудааст",
   "project.settings.extensions.lsp.status.disabled": "Дар конфигуратсия ғайрифаъол",
@@ -804,7 +802,7 @@ export const dict = {
   "settings.timeline.collapsed.label": "{{activity}} фурӯ рехт",
   "session.new.workspace.search.empty": "Дарахти мувофиқ нест",
   "settings.workspaces.description": "Дарахтони корро аз назар гузаронед ва истифодаи дискро идора кунед",
-  "settings.workspaces.empty.description": "Дарахтҳои кории дар OpenCode сохташуда дар ин ҷо пайдо мешаванд",
+  "settings.workspaces.empty.description": "Дарахтҳои кории дар Harpress сохташуда дар ин ҷо пайдо мешаванд",
   "settings.workspaces.sessions.filtered.one": "{{count}} сессия",
   "settings.workspaces.sessions.filtered.other": "{{count}} сессия",
   "settings.workspaces.deleteAll.confirm.one": "Ин {{count}} дарахти кории интихобшударо ба таври доимӣ нест мекунад.",
@@ -842,22 +840,22 @@ export const dict = {
   "voice.captions.hide": "Пинҳон кардани субтитрҳо",
   "voice.connecting": "Пайвастшавӣ…",
   "voice.you": "Шумо:",
-  "voice.assistant": "OpenCode:",
+  "voice.assistant": "Harpress:",
   "voice.failure.unavailable": "Барои зангҳои овозӣ дар ин сервер калиди API-и OpenAI лозим аст.",
   "voice.failure.microphone": "Барои занг задан дастрасӣ ба микрофон лозим аст.",
   "voice.failure.dropped": "Занг қатъ шуд.",
   "voice.failure.connection": "Зангро пайваст карда натавонист.",
-  "desktop.microphoneUsage": "OpenCode микрофони шуморо барои зангҳои овозӣ истифода мебарад.",
+  "desktop.microphoneUsage": "Harpress микрофони шуморо барои зангҳои овозӣ истифода мебарад.",
   "desktop.documentsFolderUsage":
-    "OpenCode файлҳои ҷузвдони Documents-и шуморо барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
+    "Harpress файлҳои ҷузвдони Documents-и шуморо барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
   "desktop.desktopFolderUsage":
-    "OpenCode файлҳои мизи кории шуморо барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
+    "Harpress файлҳои мизи кории шуморо барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
   "desktop.downloadsFolderUsage":
-    "OpenCode файлҳои ҷузвдони Downloads-и шуморо барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
+    "Harpress файлҳои ҷузвдони Downloads-и шуморо барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
   "desktop.networkVolumesUsage":
-    "OpenCode файлҳои дискҳои шабакавиро барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
+    "Harpress файлҳои дискҳои шабакавиро барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
   "desktop.removableVolumesUsage":
-    "OpenCode файлҳои дискҳои ҷудошавандаро барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
+    "Harpress файлҳои дискҳои ҷудошавандаро барои лоиҳаҳое, ки мекушоед, ва фармонҳое, ки дар он ҷо иҷро мекунед, истифода мебарад.",
   "desktop.contextMenu.spellcheck": "Санҷиши имло",
   "desktop.contextMenu.spellcheckLanguages": "Забонҳои санҷиши имло",
   "session.location.unavailable": "Ҷойгиршавии сессия дастрас нест",
@@ -899,7 +897,7 @@ export const dict = {
   "palette.group.settings": "Танзимот",
   "palette.session.location": "{{project}} · {{server}}",
   "dialog.provider.title": "Интегратсияҳо",
-  "dialog.provider.description": "Хизматрасониҳоро пайваст кунед, то OpenCode онҳоро истифода барад.",
+  "dialog.provider.description": "Хизматрасониҳоро пайваст кунед, то Harpress онҳоро истифода барад.",
   "dialog.provider.group.services": "Хизматрасониҳо",
   "dialog.provider.environmentOnly": "Танҳо аз муҳит",
   "dialog.provider.signInRequired": "Воридшавӣ лозим аст →",
@@ -956,7 +954,7 @@ export const dict = {
   "provider.connect.models.available": "Моделҳои дастрас",
   "provider.connect.chatgptWelcome.title": "ChatGPT пайваст шуд",
   "provider.connect.chatgptWelcome.description":
-    "Дархостҳои мувофиқ дар OpenCode метавонанд нақшаи ChatGPT-и шуморо истифода баранд.",
+    "Дархостҳои мувофиқ дар Harpress метавонанд нақшаи ChatGPT-и шуморо истифода баранд.",
   "provider.connect.chatgptWelcome.usage": "Истифодаро дар танзимоти ChatGPT идора кунед",
   "provider.connect.chatgptWelcome.confirm": "Фаҳмидам",
   "provider.connect.models.list": "Моделҳои дастрас аз {{provider}}",
@@ -975,7 +973,7 @@ export const dict = {
   "provider.connect.console.openingBrowser": "Браузер кушода мешавад",
   "provider.connect.remote.label": "дар {{server}}",
   "provider.connect.remote.description":
-    "Маълумоти воридшавии OpenCode-и шумо дар ин сервер нигоҳ дошта мешавад. Моделҳо тавассути ин сервер дастрас хоҳанд буд.",
+    "Маълумоти воридшавии Harpress-и шумо дар ин сервер нигоҳ дошта мешавад. Моделҳо тавассути ин сервер дастрас хоҳанд буд.",
   "provider.connect.claudeAgent.description":
     "Нақшаи Claude ё воридшавии дигари Claude Code-ро истифода баред. Аввал Claude Code-ро насб кунед ва ворид шавед.",
   "provider.connect.claudeAgent.install": "Насб кардани Claude Code",
@@ -1009,7 +1007,7 @@ export const dict = {
     "Браузери шуморо кушода натавонистем. Барои кӯшиши дубора «Кушодани браузер»-ро интихоб кунед.",
   "provider.connect.oauth.paste.toggle": "Аз дастгоҳи дигар ворид мешавед?",
   "provider.connect.oauth.paste.description":
-    "Агар браузери шумо ба мошини иҷрокунандаи OpenCode расида натавонад, URL-еро, ки ба он равона карда шуд, гузоред.",
+    "Агар браузери шумо ба мошини иҷрокунандаи Harpress расида натавонад, URL-еро, ки ба он равона карда шуд, гузоред.",
   "provider.connect.oauth.expired": "Мӯҳлати иҷозат гузашт",
   "model.details.input.text": "Матн",
   "model.details.input.image": "Тасвир",
@@ -1046,7 +1044,7 @@ export const dict = {
   "dialog.mcp.signIn": "Ворид шудан",
   "dialog.mcp.signIn.open": "Ворид шудан ба {{name}}",
   "dialog.mcp.signIn.description":
-    "Браузери шумо кушода мешавад, то ба {{name}} ворид шавед. Агар он ба мошини иҷрокунандаи OpenCode расида натавонад, URL-еро, ки ба он равона карда шуд, дар поён гузоред.",
+    "Браузери шумо кушода мешавад, то ба {{name}} ворид шавед. Агар он ба мошини иҷрокунандаи Harpress расида натавонад, URL-еро, ки ба он равона карда шуд, дар поён гузоред.",
   "dialog.mcp.signIn.syncFailed": "Ворид шудед, аммо {{name}}-ро навсозӣ карда натавонист: {{error}}",
   "dialog.mcp.error.details":
     "Сервери MCP: {{name}}\nҲолат: ноком\nКонфигуратсия: mcp.servers.{{name}}\nХатогӣ: {{error}}",
@@ -1088,7 +1086,7 @@ export const dict = {
   "server.connect.link.unreachable":
     "Ба {{url}} расида натавонист. Санҷед, ки ин дастгоҳ ба сервер дастрасӣ дорад, баъд аз нав кӯшиш кунед.",
   "server.connect.link.legacy":
-    "Ин рамзи ҷуфткунӣ аз версияи кӯҳнаи OpenCode аст. OpenCode-ро дар сервер навсозӣ кунед, баъд opencode pair-ро аз нав иҷро кунед.",
+    "Ин рамзи ҷуфткунӣ аз версияи кӯҳнаи Harpress аст. Harpress-ро дар сервер навсозӣ кунед, баъд opencode pair-ро аз нав иҷро кунед.",
   "server.connect.camera.native":
     "Ин саҳифа камераро тавассути HTTP истифода бурда наметавонад. Пайванди ҷуфткуниро дар боло гузоред.",
   "dialog.server.signedOut":
@@ -1111,7 +1109,7 @@ export const dict = {
   "home.sessions.load.timeout": "Сервер хеле дер ҷавоб дод",
   "tips.browse.title": "Браузери худро идора кунед",
   "tips.browse.description":
-    "Ба OpenCode иҷозат диҳед, ки дар браузери шумо бо варақаҳо, воридшавиҳо ва васеъкуниҳоятон кор кунад.",
+    "Ба Harpress иҷозат диҳед, ки дар браузери шумо бо варақаҳо, воридшавиҳо ва васеъкуниҳоятон кор кунад.",
   "tips.browse.install": "Насб кардан",
   "tips.hex.title": "Овози худро истифода баред",
   "tips.hex.description":
@@ -1301,7 +1299,7 @@ export const dict = {
     'Гузарандаҳо танҳо интерфейси мизи кории плагинро хомӯш мекунанд. Барои хомӯш кардани қисми сервери он "-<id>"-ро ба plugins дар opencode.json-и глобалии худ илова кунед, ё барои хомӯш кардани қисми TUI "-" ва ID-и плагини TUI-и онро ба plugins дар cli.json илова кунед.',
   "settings.about.copyVersionFailed": "Нусхабардории версия муяссар нашуд",
   "settings.about.notices.title": "Огоҳиномаҳои тарафи сеюм",
-  "settings.about.notices.description": "OpenCode нармафзори кушодаасоси зеринро дар бар мегирад.",
+  "settings.about.notices.description": "Harpress нармафзори кушодаасоси зеринро дар бар мегирад.",
   "settings.about.notices.license": "Матни иҷозатнома",
   "settings.about.notices.fonts.title": "Ҳуруфҳо дар пешнамоишҳои Office",
   "settings.about.notices.fonts.description":

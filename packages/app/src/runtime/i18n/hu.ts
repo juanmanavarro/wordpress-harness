@@ -164,7 +164,7 @@ export const dict = {
   "provider.connect.status.waiting": "Várakozás az engedélyezésre",
   "provider.connect.status.failed": "Az engedélyezés sikertelen: {{error}}",
   "provider.connect.apiKey.description":
-    "Enter az Ön {{provider}} API kulcsa fiókja összekapcsolásához és a {{provider}} modellek használatához a OpenCode-ben.",
+    "Enter az Ön {{provider}} API kulcsa fiókja összekapcsolásához és a {{provider}} modellek használatához a Harpress-ben.",
   "provider.connect.apiKey.label": "{{provider}} API kulcs",
   "provider.connect.apiKey.placeholder": "API kulcs",
   "provider.connect.apiKey.required": "API kulcs szükséges",
@@ -278,7 +278,7 @@ export const dict = {
   "error.page.action.checkUpdates": "Ellenőrizze a frissítéseket",
   "error.page.action.updateTo": "Frissítés a {{version}}-re",
   "error.page.circular": "[Kör alakú]",
-  "error.page.report.prefix": "Kérjük, jelentse ezt a hibát a OpenCode csapatának",
+  "error.page.report.prefix": "Kérjük, jelentse ezt a hibát a Harpress csapatának",
   "error.page.report.discord": "a Discord-n",
   "error.page.version": "Kivitel: {{version}}",
   "error.dev.rootNotFound":
@@ -300,7 +300,7 @@ export const dict = {
   "error.chain.modelNotFound": "A modell nem található: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Ellenőrizze a konfigurációs (opencode.json) szolgáltató/modell nevét",
   "error.chain.mcpFailed":
-    'A "{{name}}" MCP szerver meghibásodott. Megjegyzés: a OpenCode még nem támogatja a MCP hitelesítést.',
+    'A "{{name}}" MCP szerver meghibásodott. Megjegyzés: a Harpress még nem támogatja a MCP hitelesítést.',
   "error.chain.providerAuthFailed": "A szolgáltató hitelesítése nem sikerült ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     "Nem sikerült inicializálni a „{{provider}}” szolgáltatót. Ellenőrizze a hitelesítő adatokat és a konfigurációt.",
@@ -403,16 +403,16 @@ export const dict = {
   "settings.general.section.notifications": "Rendszerértesítések",
   "settings.general.section.sounds": "Hangeffektusok",
   "settings.general.row.language.title": "Nyelv",
-  "settings.general.row.language.description": "Módosítsa a OpenCode kijelző nyelvét",
+  "settings.general.row.language.description": "Módosítsa a Harpress kijelző nyelvét",
   "settings.general.row.shell.title": "Terminál shellje",
   "settings.general.row.shell.description": "A terminál és az ügynökeszközök által használt shell",
   "settings.general.row.shell.autoDefault": "Automatikus (alapértelmezett)",
   "settings.general.row.shell.terminalOnly": "csak terminál",
   "settings.general.row.colorScheme.title": "Színséma",
   "settings.general.row.colorScheme.description":
-    "Válassza ki, hogy a OpenCode a rendszer, a világos vagy a sötét témát követi-e",
+    "Válassza ki, hogy a Harpress a rendszer, a világos vagy a sötét témát követi-e",
   "settings.general.row.theme.title": "Téma",
-  "settings.general.row.theme.description": "Szabja személyre a OpenCode témáját.",
+  "settings.general.row.theme.description": "Szabja személyre a Harpress témáját.",
   "settings.general.row.font.title": "Kód betűtípus",
   "settings.general.row.font.description": "Testreszabhatja a kódblokkban használt betűtípust",
   "settings.general.row.terminalFont.title": "Terminal betűtípus",
@@ -679,9 +679,7 @@ export const dict = {
   "settings.about.otherContributor.other": "{{count}} egyebek",
   "settings.about.firstPublished": "Először az Egyesült Államokban, Missouriban jelent meg",
   "settings.about.firstIllustrated": "Először Londonban, Angliában illusztrálták",
-  "settings.about.website": "www.opencode.ai",
-  "settings.about.description": "OpenCode, a nyílt forráskódú kódoló ügynök",
-  "settings.about.trademark": "A OpenCode a Anomaly Innovations, Inc. bejegyzett védjegye.",
+  "settings.about.website": "github.com/juanmanavarro/wordpress-harness",
   "settings.about.typeset": "Betűkészlet Inter és IBM Plex Mono nyelven",
   "settings.about.tagline": "Az AI nem tud nagyszerű szoftvert készíteni nélküled",
   "settings.about.copyright": "© Anomaly Innovations, Inc.",
@@ -725,7 +723,7 @@ export const dict = {
   "server.connect.failed": "Nem sikerült csatlakozni. Ellenőrizze a szerver címét és jelszavát, majd próbálja újra.",
   "server.connect.scan": "QR-kód beolvasása",
   "server.connect.scan.description": "Irányítsa kameráját a opencode pair által mutatott QR kódra.",
-  "server.connect.scan.invalid": "Ez nem egy OpenCode párosítási kód. Olvassa be a opencode pair által mutatott kódot.",
+  "server.connect.scan.invalid": "Ez nem egy Harpress párosítási kód. Olvassa be a opencode pair által mutatott kódot.",
   "server.connect.camera": "Kamera párosítása",
   "server.connect.camera.starting": "Kamera nyitása…",
   "server.connect.mixedContent":
@@ -762,19 +760,19 @@ export const dict = {
     "Válassza ki a keresési szolgáltató ügynökei által használt keresést az interneten",
   "settings.projects.search.placeholder": "Projektek keresése",
   "project.settings.name.title": "Projekt neve",
-  "project.settings.name.description": "A projekt neve a OpenCode",
+  "project.settings.name.description": "A projekt neve a Harpress",
   "project.settings.icon.description": "Javasolt: 128×128 képpont. Kattintson vagy húzza a képet a kép feltöltéséhez.",
   "project.settings.color.description": "A projekt ikonként használatos, ha nincs egyéni kép beállítva",
   "project.settings.worktree.startup.description": "Egyszer lefut egy új munkafa létrehozása után",
   "project.settings.worktree.startup.hint.base": "Használja a $OPENCODE_WORKTREE_BASE-t az alapmunkafához.",
   "project.settings.worktree.startup.hint.new": "Használja a $OPENCODE_WORKTREE_PATH-t az új munkafához.",
   "project.settings.extensions.empty.mcps.title": "Még nincs MCPs",
-  "project.settings.extensions.empty.mcps.description": "A OpenCode számára elérhető MCPs itt jelenik meg",
+  "project.settings.extensions.empty.mcps.description": "A Harpress számára elérhető MCPs itt jelenik meg",
   "project.settings.extensions.empty.plugins.title": "Még nincsenek bővítmények",
   "project.settings.extensions.empty.plugins.description":
-    "A OpenCode számára elérhető beépülő modulok itt jelennek meg",
+    "A Harpress számára elérhető beépülő modulok itt jelennek meg",
   "project.settings.extensions.empty.skills.title": "Még nincsenek készségek",
-  "project.settings.extensions.empty.skills.description": "A OpenCode számára elérhető készségek itt jelennek meg",
+  "project.settings.extensions.empty.skills.description": "A Harpress számára elérhető készségek itt jelennek meg",
   "project.settings.extensions.lsp.configured": "Beállított nyelvi szerverek",
   "project.settings.extensions.lsp.status.enabled": "Engedélyezve a konfigurációban",
   "project.settings.extensions.lsp.status.disabled": "Letiltva a konfigurációban",
@@ -794,7 +792,7 @@ export const dict = {
   "settings.timeline.collapsed.label": "{{activity}} összeomlott",
   "session.new.workspace.search.empty": "Nincs megfelelő munkafa",
   "settings.workspaces.description": "A munkafák áttekintése és a lemezhasználat kezelése",
-  "settings.workspaces.empty.description": "A OpenCode-ben létrehozott munkafák itt jelennek meg",
+  "settings.workspaces.empty.description": "A Harpress-ben létrehozott munkafák itt jelennek meg",
   "settings.workspaces.sessions.filtered.one": "{{count}} munkamenet",
   "settings.workspaces.sessions.filtered.other": "{{count}} munkamenetek",
   "settings.workspaces.deleteAll.confirm.one": "Ezzel véglegesen törli a {{count}} kiválasztott munkafát.",
@@ -845,7 +843,7 @@ export const dict = {
   "voice.captions.hide": "Feliratok elrejtése",
   "voice.connecting": "Csatlakozás…",
   "voice.you": "Ön:",
-  "voice.assistant": "OpenCode:",
+  "voice.assistant": "Harpress:",
   "voice.failure.unavailable": "A hanghívásokhoz OpenAI API-kulcs szükséges ezen a szerveren.",
   "voice.failure.microphone": "A híváshoz mikrofonhozzáférés szükséges.",
   "voice.failure.dropped": "A hívás megszakadt.",
@@ -897,7 +895,7 @@ export const dict = {
   "palette.group.settings": "Beállítások",
   "palette.session.location": "{{project}} · {{server}}",
   "dialog.provider.title": "Integrációk",
-  "dialog.provider.description": "Csatlakoztasson szolgáltatásokat, hogy az OpenCode használhassa őket.",
+  "dialog.provider.description": "Csatlakoztasson szolgáltatásokat, hogy az Harpress használhassa őket.",
   "dialog.provider.group.services": "Szolgáltatások",
   "dialog.provider.environmentOnly": "Csak környezeti változóból",
   "dialog.provider.signInRequired": "Bejelentkezés szükséges →",
@@ -953,7 +951,7 @@ export const dict = {
   "provider.connect.models.available": "Elérhető modellek",
   "provider.connect.chatgptWelcome.title": "ChatGPT csatlakoztatva",
   "provider.connect.chatgptWelcome.description":
-    "Az OpenCode jogosult kérései használhatják az Ön ChatGPT-előfizetését.",
+    "Az Harpress jogosult kérései használhatják az Ön ChatGPT-előfizetését.",
   "provider.connect.chatgptWelcome.usage": "Használat kezelése a ChatGPT beállításaiban",
   "provider.connect.chatgptWelcome.confirm": "Értem",
   "provider.connect.models.list": "A(z) {{provider}} elérhető modelljei",
@@ -972,7 +970,7 @@ export const dict = {
   "provider.connect.console.openingBrowser": "Böngésző megnyitása",
   "provider.connect.remote.label": "itt: {{server}}",
   "provider.connect.remote.description":
-    "Az OpenCode hitelesítő adatait ez a szerver tárolja. A modellek ezen a szerveren keresztül érhetők el.",
+    "Az Harpress hitelesítő adatait ez a szerver tárolja. A modellek ezen a szerveren keresztül érhetők el.",
   "provider.connect.claudeAgent.description":
     "Claude-előfizetés vagy más Claude Code-bejelentkezés használata. Előbb telepítse a Claude Code-ot, és jelentkezzen be.",
   "provider.connect.claudeAgent.install": "Claude Code telepítése",
@@ -1006,7 +1004,7 @@ export const dict = {
     "Nem sikerült megnyitni a böngészőt. Az újrapróbáláshoz válassza a Böngésző megnyitása lehetőséget.",
   "provider.connect.oauth.paste.toggle": "Másik eszközről jelentkezik be?",
   "provider.connect.oauth.paste.description":
-    "Ha a böngésző nem éri el az OpenCode-ot futtató gépet, illessze be az URL-t, amelyre átirányította.",
+    "Ha a böngésző nem éri el az Harpress-ot futtató gépet, illessze be az URL-t, amelyre átirányította.",
   "provider.connect.oauth.expired": "Az engedélyezés lejárt",
   "model.details.input.text": "Szöveg",
   "model.details.input.image": "Kép",
@@ -1043,7 +1041,7 @@ export const dict = {
   "dialog.mcp.signIn": "Bejelentkezés",
   "dialog.mcp.signIn.open": "Bejelentkezés ide: {{name}}",
   "dialog.mcp.signIn.description":
-    "Megnyílik a böngésző, hogy bejelentkezhessen ide: {{name}}. Ha nem éri el az OpenCode-ot futtató gépet, illessze be alább az URL-t, amelyre átirányította.",
+    "Megnyílik a böngésző, hogy bejelentkezhessen ide: {{name}}. Ha nem éri el az Harpress-ot futtató gépet, illessze be alább az URL-t, amelyre átirányította.",
   "dialog.mcp.signIn.syncFailed": "Bejelentkezve, de a(z) {{name}} frissítése nem sikerült: {{error}}",
   "dialog.mcp.error.details":
     "MCP-szerver: {{name}}\nÁllapot: sikertelen\nKonfiguráció: mcp.servers.{{name}}\nHiba: {{error}}",
@@ -1085,13 +1083,13 @@ export const dict = {
   "server.connect.link.unreachable":
     "Nem érhető el: {{url}}. Ellenőrizze, hogy ez az eszköz eléri-e a szervert, majd próbálja újra.",
   "server.connect.link.legacy":
-    "Ez a párosítási kód az OpenCode egy régebbi verziójából származik. Frissítse az OpenCode-ot a szerveren, majd futtassa újra az opencode pair parancsot.",
+    "Ez a párosítási kód az Harpress egy régebbi verziójából származik. Frissítse az Harpress-ot a szerveren, majd futtassa újra az opencode pair parancsot.",
   "server.connect.camera.native":
     "Ez az oldal HTTP-n keresztül nem használhatja a kamerát. Illessze be a párosítási linket fent.",
   "dialog.server.signedOut":
     "A bejelentkezése ehhez a szerverhez már nem érvényes. Illesszen be egy új párosítási linket, vagy adja meg a szerver jelszavát.",
   "toast.permissions.autoaccept.project.title": "Engedélyek automatikus elfogadása ebben a projektben",
-  "toast.permissions.autoaccept.project.description": "Az OpenCode automatikusan jóváhagyja a projekt engedélykéréseit",
+  "toast.permissions.autoaccept.project.description": "Az Harpress automatikusan jóváhagyja a projekt engedélykéréseit",
   "toast.language.loadFailed.title": "Nem sikerült betölteni: {{language}}",
   "toast.session.import.pending": "Munkamenet importálása…",
   "toast.storage.writeFailed.title": "Egyes módosításokat nem sikerül menteni",
@@ -1107,7 +1105,7 @@ export const dict = {
   "home.sessions.load.timeout": "A szerver túl sokáig nem válaszolt",
   "tips.browse.title": "Irányítsa a böngészőjét",
   "tips.browse.description":
-    "Hagyja, hogy az OpenCode a böngészőjében dolgozzon a lapjaival, bejelentkezéseivel és bővítményeivel.",
+    "Hagyja, hogy az Harpress a böngészőjében dolgozzon a lapjaival, bejelentkezéseivel és bővítményeivel.",
   "tips.browse.install": "Telepítés",
   "tips.hex.title": "Használja a hangját",
   "tips.hex.description":
@@ -1298,7 +1296,7 @@ export const dict = {
     'A kapcsolók csak a beépülő modul asztali felületét kapcsolják ki. A szerverrész kikapcsolásához adja hozzá a "-<id>" bejegyzést a plugins listához a globális opencode.json fájlban, a TUI-rész kikapcsolásához pedig a "-" előtagot és a TUI-beépülő modul azonosítóját a cli.json plugins listájához.',
   "settings.about.copyVersionFailed": "Nem sikerült másolni a verziót",
   "settings.about.notices.title": "Harmadik féltől származó közlemények",
-  "settings.about.notices.description": "Az OpenCode a következő nyílt forráskódú szoftvereket tartalmazza.",
+  "settings.about.notices.description": "Az Harpress a következő nyílt forráskódú szoftvereket tartalmazza.",
   "settings.about.notices.license": "Licenc szövege",
   "settings.about.notices.fonts.title": "Betűtípusok az Office-előnézetekben",
   "settings.about.notices.fonts.description":
@@ -1368,8 +1366,7 @@ export const dict = {
   "settings.timeline.description.quiet":
     "Az alügynökök külön megjelenítése és a szerkesztések csoportosítása. Az egyéb tevékenységek elrejtése.",
   "settings.timeline.row.foldUserMessages.title": "Hosszú üzenetek összecsukása",
-  "settings.timeline.row.foldUserMessages.description":
-    "A 12 sornál hosszabb üzenetei egy Tovább gomb mögé kerülnek",
+  "settings.timeline.row.foldUserMessages.description": "A 12 sornál hosszabb üzenetei egy Tovább gomb mögé kerülnek",
   "settings.timeline.row.turnDiffs.title": "Módosított fájlok",
   "settings.timeline.row.turnDiffs.description": "Az egyes körök által módosított fájlok listázása a kör végén",
   "settings.timeline.category.commentary": "Kommentár",

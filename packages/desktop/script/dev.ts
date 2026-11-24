@@ -110,14 +110,14 @@ function buildWebUi() {
 
 function defaultDevUserData() {
   if (process.platform === "win32") {
-    return join(process.env.APPDATA ?? join(homedir(), "AppData", "Roaming"), "ai.opencode.desktop.dev")
+    return join(process.env.APPDATA ?? join(homedir(), "AppData", "Roaming"), "io.github.juanmanavarro.harpress.dev")
   }
 
   if (process.platform === "darwin") {
-    return join(homedir(), "Library", "Application Support", "ai.opencode.desktop.dev")
+    return join(homedir(), "Library", "Application Support", "io.github.juanmanavarro.harpress.dev")
   }
 
-  return join(process.env.XDG_CONFIG_HOME ?? join(homedir(), ".config"), "ai.opencode.desktop.dev")
+  return join(process.env.XDG_CONFIG_HOME ?? join(homedir(), ".config"), "io.github.juanmanavarro.harpress.dev")
 }
 
 function isPidAlive(pid: number) {
@@ -175,7 +175,9 @@ function hasLiveRegisteredService(serviceFile: string) {
   if (!existsSync(serviceFile)) return false
 
   try {
-    const decoded = Option.getOrUndefined(Schema.decodeUnknownOption(RegisteredServicePid)(readFileSync(serviceFile, "utf8")))
+    const decoded = Option.getOrUndefined(
+      Schema.decodeUnknownOption(RegisteredServicePid)(readFileSync(serviceFile, "utf8")),
+    )
 
     return decoded ? isPidAlive(decoded.pid) : false
   } catch {
@@ -183,14 +185,17 @@ function hasLiveRegisteredService(serviceFile: string) {
   }
 }
 
-// When OpenCode Dev is already running, snapshot only its small desktop profile (`drafts.sqlite` + window state)
-// into a per-worktree temp userData dir while sharing the main OpenCode database (`~/.local/share/opencode`) in place.
+// When Harpress Dev is already running, snapshot only its small desktop profile (`drafts.sqlite` + window state)
+// into a per-worktree temp userData dir while sharing the main Harpress database (`~/.local/share/opencode`) in place.
 function cloneLockedDevProfile() {
   if (process.env.OPENCODE_DESKTOP_USER_DATA || process.env.OPENCODE_DESKTOP_TEST_ROOT) return
   const sourceDir = defaultDevUserData()
 
   if (!isProfileLocked(sourceDir)) return
-  const slug = createHash("sha1").update(import.meta.dirname).digest("hex").slice(0, 8)
+  const slug = createHash("sha1")
+    .update(import.meta.dirname)
+    .digest("hex")
+    .slice(0, 8)
   const cloneDir = join(tmpdir(), `opencode-desktop-dev-${slug}`)
   mkdirSync(cloneDir, { recursive: true })
 
@@ -226,7 +231,7 @@ function cloneLockedDevProfile() {
   process.env.OPENCODE_DESKTOP_REUSE_SERVER = "1"
   process.env.OPENCODE_DESKTOP_ISOLATED_SERVER = "0"
   process.env.OPENCODE_DESKTOP_REMOTE_DEBUGGING_PORT ??= "0"
-  console.log(`OpenCode Dev is already running; cloned UI state into ${cloneDir} and reusing live background server`)
+  console.log(`Harpress Dev is already running; cloned UI state into ${cloneDir} and reusing live background server`)
 }
 
 async function startDesktop(args: string[]) {
